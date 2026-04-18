@@ -324,32 +324,61 @@
 
             {/* 2. HERO SECTION (Big Typography) */}
             <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
-              {/* Floating Badges Wrapped for initial fade in */}
-              <div className={`absolute top-24 left-4 md:top-32 md:left-20 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
-                <div className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1">
-                  ⚡ Cepat & Responsif
-                </div>
-              </div>
-              <div className={`absolute top-36 right-4 md:top-40 md:right-20 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
-                <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 animate-float-2">
-                  ✨ Estetik
-                </div>
-              </div>
-
-              {/* Animasi Per Kata pada H1 */}
+              
+              {/* Animasi Per Kata pada H1 & Penempatan Badges */}
               <h1 className="text-[3rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
                 {["Jasa", "Desain", "Grafis."].map((word, i) => (
-                  <Reveal key={`w1-${i}`} delay={100 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4">{word}</Reveal>
+                  <Reveal key={`w1-${i}`} delay={100 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
+                    {word}
+                    
+                    {/* Badge Cepat & Responsif (DESKTOP ONLY): next to J in Jasa */}
+                    {word === "Jasa" && (
+                      <div className={`hidden md:block absolute -top-6 -left-8 md:-top-8 md:-left-12 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                        <div className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
+                          ⚡ Cepat & Responsif
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Badge Estetik (MOBILE ONLY): next to Grafis */}
+                    {word === "Grafis." && (
+                      <div className={`md:hidden absolute -top-8 -right-2 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                        <div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-[10px] font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">
+                          ✨ Estetik
+                        </div>
+                      </div>
+                    )}
+                  </Reveal>
                 ))}
                 <br />
                 <span className="text-gray-400">
                   {["Pembuatan", "Website."].map((word, i) => (
-                    <Reveal key={`w2-${i}`} delay={550 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4">{word}</Reveal>
+                    <Reveal key={`w2-${i}`} delay={550 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
+                      {word}
+                      
+                      {/* Badge Cepat & Responsif (MOBILE ONLY): next to W in Website */}
+                      {word === "Website." && (
+                        <div className={`md:hidden absolute -top-8 -left-4 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                          <div className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-[10px] font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
+                            ⚡ Cepat & Responsif
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Badge Estetik (DESKTOP ONLY): next to Website. */}
+                      {word === "Website." && (
+                        <div className={`hidden md:block absolute -top-8 -right-16 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                          <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">
+                            ✨ Estetik
+                          </div>
+                        </div>
+                      )}
+                    </Reveal>
                   ))}
                 </span>
                 <br />
                 {["Konstruksi", "Presisi."].map((word, i) => (
-                  <Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4">{word}</Reveal>
+                  <Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">{word}</Reveal>
                 ))}
               </h1>
               
