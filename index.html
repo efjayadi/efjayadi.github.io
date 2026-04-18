@@ -235,7 +235,7 @@
 
         if (hasError || !src) {
           return (
-            <div className={`flex flex-col items-center justify-center bg-gray-100 border border-gray-200 border-dashed text-gray-400 p-4 text-center ${className} transition-opacity ease-in-out ${isActive ? 'opacity-100 z-10 duration-300' : 'opacity-0 z-0 duration-1000 delay-150'}`}>
+            <div className={`flex flex-col items-center justify-center bg-gray-100 border border-gray-200 border-dashed text-gray-400 p-4 text-center ${className} transition-opacity ease-in-out ${isActive ? 'opacity-100 duration-300' : 'opacity-0 duration-1000 delay-150'}`}>
               <div className="w-10 h-10 bg-gray-200 rounded-full mb-2 animate-pulse"></div>
               <code className="text-[10px] text-blue-500 bg-white px-1 rounded break-all max-w-[80%] truncate">{src || 'No src'}</code>
             </div>
@@ -248,7 +248,7 @@
             alt={alt}
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}
-            className={`${className} ${objectFit} transition-opacity ease-in-out ${isLoaded && isActive ? 'opacity-100 z-10 duration-300' : 'opacity-0 z-0 duration-1000 delay-150'}`}
+            className={`${className} ${objectFit} transition-opacity ease-in-out ${isLoaded && isActive ? 'opacity-100 duration-300' : 'opacity-0 duration-1000 delay-150'}`}
           />
         );
       };
@@ -287,15 +287,15 @@
         };
 
         const avatars = {
-          default: { img: 'me-default-netral.png', bgImg: 'bg-netral.png', label: 'Netral' },
+          default: { img: 'me-netral.png', bgImg: 'bg-netral.png', label: 'Netral' },
           desain: { img: 'me-desain-grafis.png', bgImg: 'bg-desain.png', label: 'Desain Grafis' },
           website: { img: 'me-website.png', bgImg: 'bg-website.png', label: 'Website Dev' },
           konstruksi: { img: 'me-konstruksi.png', bgImg: 'bg-konstruksi.png', label: 'Konstruksi 3D' }
         };
 
         return (
-          /* Pembungkus luar tanpa overflow-x-clip untuk melepaskan batasan fisik scroll */
-          <div className="w-full min-h-[100dvh] bg-white text-slate-900 selection:bg-black selection:text-white">
+          /* Pembungkus luar dengan overflow-x-clip agar scroll aman dan shadow tidak terpotong */
+          <div className="w-full min-h-[100dvh] overflow-x-clip bg-white text-slate-900 selection:bg-black selection:text-white">
             
             {/* 1. NAVBAR (Notch Style dengan Dropdown) */}
             <header className={`fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl z-50 transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-12'}`}>
@@ -312,9 +312,8 @@
                   
                   <nav className="hidden md:flex gap-8 text-sm font-medium text-slate-500">
                     <a href="#" className="hover:text-black transition-colors">Portofolio</a>
-                    <a href="#" className="hover:text-black transition-colors">Layanan</a>
                     <a href="#" className="hover:text-black transition-colors">Harga</a>
-                    <a href="#" className="hover:text-black transition-colors">Kenapa Fajar?</a>
+                    <a href="#" className="hover:text-black transition-colors">Kenapa harus ke Fajar?</a>
                   </nav>
 
                   <div className="pr-1 flex items-center">
@@ -331,9 +330,8 @@
                 <div className={`md:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-[300px] opacity-100 pb-4' : 'max-h-0 opacity-0'}`}>
                   <nav className="flex flex-col items-center gap-4 pt-4 text-sm font-medium text-slate-500 border-t border-gray-100 mx-4">
                     <a href="#" className="hover:text-black transition-colors">Portofolio</a>
-                    <a href="#" className="hover:text-black transition-colors">Layanan</a>
                     <a href="#" className="hover:text-black transition-colors">Harga</a>
-                    <a href="#" className="hover:text-black transition-colors">Kenapa Fajar?</a>
+                    <a href="#" className="hover:text-black transition-colors">Kenapa harus ke Fajar?</a>
                   </nav>
                 </div>
 
@@ -341,7 +339,8 @@
             </header>
 
             {/* 2. HERO SECTION (Big Typography) */}
-            <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto overflow-x-clip">
+            {/* Class overflow-x-clip dihapus dari section ini untuk membebaskan shadow badge */}
+            <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
               
               {/* Animasi Per Kata pada H1 & Penempatan Badges */}
               <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
@@ -478,14 +477,14 @@
                     ))}
                   </div>
 
-                  {/* Layer Avatar Images (Diperkecil & Shadow Terpotong Rata di Bawah) */}
+                  {/* Layer Avatar Images (Memiliki z-10 absolut untuk di atas background, & Shadow Terpotong Rata di Bawah) */}
                   {Object.keys(avatars).map((key) => (
                     <DynamicImage 
                       key={`me-${key}`}
                       src={avatars[key].img} 
                       alt={`Fajar Jayadi - ${avatars[key].label}`} 
                       isActive={activeCategory === key}
-                      className="absolute bottom-0 h-[85%] md:h-[95%] w-auto drop-shadow-[0_0_20px_rgba(0,0,0,0.4)] [clip-path:inset(-100%_-100%_0px_-100%)]"
+                      className="absolute bottom-0 h-[85%] md:h-[95%] w-auto z-10 drop-shadow-[0_0_20px_rgba(0,0,0,0.4)] [clip-path:inset(-100%_-100%_0px_-100%)]"
                     />
                   ))}
                 </div>
