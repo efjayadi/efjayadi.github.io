@@ -240,7 +240,7 @@
 
         if (hasError || !src) {
           return (
-            <div className={`flex flex-col items-center justify-center bg-gray-100 border border-gray-200 border-dashed text-gray-400 p-4 text-center ${className} transition-all duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${isActive ? 'opacity-100 z-10 scale-100 translate-y-0' : 'opacity-0 z-0 scale-95 translate-y-4'}`}>
+            <div className={`flex flex-col items-center justify-center bg-gray-100 border border-gray-200 border-dashed text-gray-400 p-4 text-center ${className} transition-opacity duration-[800ms] ease-in-out ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
               <div className="w-10 h-10 bg-gray-200 rounded-full mb-2 animate-pulse"></div>
               <code className="text-[10px] text-blue-500 bg-white px-1 rounded break-all max-w-[80%] truncate">{src || 'No src'}</code>
             </div>
@@ -253,7 +253,7 @@
             alt={alt}
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}
-            className={`${className} ${objectFit} transition-all duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${isLoaded && isActive ? 'opacity-100 scale-100 translate-y-0 z-10' : 'opacity-0 scale-95 translate-y-4 z-0'}`}
+            className={`${className} ${objectFit} transition-opacity duration-[800ms] ease-in-out ${isLoaded && isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
           />
         );
       };
@@ -480,8 +480,8 @@
                 {/* Center Image */}
                 <div className="relative z-10 w-full flex justify-center h-full items-end pb-0">
                   
-                  {/* Layer Background 3:1 (Lebar membentang seperti header, shadow dihapus) */}
-                  <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 transition-all duration-700 border border-gray-100 bg-slate-50">
+                  {/* Layer Background 3:1 (Lebar membentang seperti header, shadow dihapus, posisi dinaikkan) */}
+                  <div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 transition-all duration-700 border border-gray-100 bg-slate-50">
                     {Object.keys(avatars).map((key) => (
                       <DynamicImage 
                         key={`bg-${key}`}
@@ -511,7 +511,7 @@
                   <div 
                     onMouseEnter={() => setActiveCategory('desain')}
                     onMouseLeave={() => setActiveCategory('default')}
-                    className="bg-white p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:scale-110 transition-transform border border-gray-100 flex items-center gap-3"
+                    className="bg-white p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-300 border border-gray-100 flex items-center gap-3"
                   >
                     <div className="relative flex items-center justify-center w-10 h-10">
                       <div className={`absolute inset-0 bg-blue-400 rounded-full transition-opacity duration-300 ${activeCategory === 'desain' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
@@ -525,7 +525,7 @@
                   <div 
                     onMouseEnter={() => setActiveCategory('website')}
                     onMouseLeave={() => setActiveCategory('default')}
-                    className="bg-white p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:scale-110 transition-transform border border-gray-100 flex items-center gap-3"
+                    className="bg-white p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-purple-900/20 transition-all duration-300 border border-gray-100 flex items-center gap-3"
                   >
                     <div className="relative flex items-center justify-center w-10 h-10">
                       <div className={`absolute inset-0 bg-purple-400 rounded-full transition-opacity duration-300 ${activeCategory === 'website' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
@@ -539,7 +539,7 @@
                   <div 
                     onMouseEnter={() => setActiveCategory('konstruksi')}
                     onMouseLeave={() => setActiveCategory('default')}
-                    className="bg-white p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:scale-110 transition-transform border border-gray-100 flex items-center gap-3"
+                    className="bg-white p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-orange-900/20 transition-all duration-300 border border-gray-100 flex items-center gap-3"
                   >
                     <div className="relative flex items-center justify-center w-10 h-10">
                       <div className={`absolute inset-0 bg-orange-400 rounded-full transition-opacity duration-300 ${activeCategory === 'konstruksi' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
