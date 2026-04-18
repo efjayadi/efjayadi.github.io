@@ -77,6 +77,12 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
+        /* Mencegah Scroll Locking / Nyangkut di Mobile */
+        html, body {
+          max-width: 100%;
+          overflow-x: hidden;
+        }
+
         body { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
         
         .hide-scrollbar::-webkit-scrollbar {
@@ -112,6 +118,15 @@
         }
         .group:hover .ripple-element {
           animation: ripple-out 1.2s infinite ease-out;
+        }
+
+        /* Animasi ripple konstan untuk ikon trigger hover */
+        @keyframes pulse-ripple {
+          0% { transform: scale(0.9); opacity: 0.6; }
+          100% { transform: scale(1.6); opacity: 0; }
+        }
+        .animate-pulse-ripple {
+          animation: pulse-ripple 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Animasi teks berubah hijau memantul */
@@ -214,7 +229,7 @@
       };
 
       // Komponen helper untuk menangani gambar yang belum ada agar tidak merusak layout
-      const DynamicImage = ({ src, alt, className }) => {
+      const DynamicImage = ({ src, alt, className, isActive = true, objectFit = 'object-contain' }) => {
         const [hasError, setHasError] = useState(false);
         const [isLoaded, setIsLoaded] = useState(false);
 
@@ -225,10 +240,9 @@
 
         if (hasError || !src) {
           return (
-            <div className={`flex flex-col items-center justify-center bg-gray-100 rounded-3xl border border-gray-200 border-dashed text-gray-400 p-4 text-center ${className}`}>
-              <div className="w-16 h-16 bg-gray-200 rounded-full mb-2 animate-pulse"></div>
-              <p className="font-semibold text-xs mb-1 text-gray-500">Gambar Placeholder</p>
-              <code className="text-[10px] text-blue-500 bg-white px-1 rounded">{src || 'Tidak ada src'}</code>
+            <div className={`flex flex-col items-center justify-center bg-gray-100 border border-gray-200 border-dashed text-gray-400 p-4 text-center ${className} transition-all duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${isActive ? 'opacity-100 z-10 scale-100 translate-y-0' : 'opacity-0 z-0 scale-95 translate-y-4'}`}>
+              <div className="w-10 h-10 bg-gray-200 rounded-full mb-2 animate-pulse"></div>
+              <code className="text-[10px] text-blue-500 bg-white px-1 rounded break-all max-w-[80%] truncate">{src || 'No src'}</code>
             </div>
           );
         }
@@ -239,7 +253,7 @@
             alt={alt}
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}
-            className={`${className} object-contain transition-all duration-500 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+            className={`${className} ${objectFit} transition-all duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${isLoaded && isActive ? 'opacity-100 scale-100 translate-y-0 z-10' : 'opacity-0 scale-95 translate-y-4 z-0'}`}
           />
         );
       };
@@ -291,12 +305,12 @@
           carouselRef.current.scrollLeft = scrollLeft - walk;
         };
 
-        // Kategori untuk interaksi gambar di tengah
+        // Kategori untuk interaksi gambar di tengah (Kini ditambahkan bgImg untuk Layer Latar Belakang)
         const avatars = {
-          default: { img: 'me-default-netral.png', label: 'Netral' },
-          desain: { img: 'me-desain-grafis.png', label: 'Desain Grafis' },
-          website: { img: 'me-website.png', label: 'Website Dev' },
-          konstruksi: { img: 'me-konstruksi.png', label: 'Konstruksi 3D' }
+          default: { img: 'me-default-netral.png', bgImg: 'bg-netral.png', label: 'Netral' },
+          desain: { img: 'me-desain-grafis.png', bgImg: 'bg-desain.png', label: 'Desain Grafis' },
+          website: { img: 'me-website.png', bgImg: 'bg-website.png', label: 'Website Dev' },
+          konstruksi: { img: 'me-konstruksi.png', bgImg: 'bg-konstruksi.png', label: 'Konstruksi 3D' }
         };
 
         return (
@@ -319,7 +333,7 @@
                     <a href="#" className="hover:text-black transition-colors">Portofolio</a>
                     <a href="#" className="hover:text-black transition-colors">Layanan</a>
                     <a href="#" className="hover:text-black transition-colors">Harga</a>
-                    <a href="#" className="hover:text-black transition-colors">Kenapa harus ke Fajar?</a>
+                    <a href="#" className="hover:text-black transition-colors">Kenapa Fajar?</a>
                   </nav>
 
                   <div className="pr-1 flex items-center">
@@ -338,7 +352,7 @@
                     <a href="#" className="hover:text-black transition-colors">Portofolio</a>
                     <a href="#" className="hover:text-black transition-colors">Layanan</a>
                     <a href="#" className="hover:text-black transition-colors">Harga</a>
-                    <a href="#" className="hover:text-black transition-colors">Kenapa harus ke Fajar?</a>
+                    <a href="#" className="hover:text-black transition-colors">Kenapa Fajar?</a>
                   </nav>
                 </div>
 
@@ -426,7 +440,6 @@
             </section>
 
             {/* 3. INTERACTIVE AVATAR SECTION */}
-            {/* Ditambahkan class "relative" pada section agar background absolut bisa memusat di area ini */}
             <section className="py-20 px-6 max-w-6xl mx-auto flex flex-col items-center relative">
               
               {/* Latar Belakang Pola Lingkaran memusat dari teks Fajar Jayadi */}
@@ -462,15 +475,35 @@
               </Reveal>
 
               {/* Interactive Hover Area */}
-              <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[28rem] flex justify-center items-end group mx-auto">
+              <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[28rem] flex justify-center items-end group mx-auto mt-10">
                 
                 {/* Center Image */}
-                <div className="relative z-10 w-full flex justify-center h-full items-end">
-                  <DynamicImage 
-                    src={avatars[activeCategory].img} 
-                    alt={`Fajar Jayadi - ${avatars[activeCategory].label} - Jasa Desain dan Website`} 
-                    className="h-[90%] w-auto"
-                  />
+                <div className="relative z-10 w-full flex justify-center h-full items-end pb-0">
+                  
+                  {/* Layer Background 3:1 (Lebar membentang seperti header, shadow dihapus) */}
+                  <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 transition-all duration-700 border border-gray-100 bg-slate-50">
+                    {Object.keys(avatars).map((key) => (
+                      <DynamicImage 
+                        key={`bg-${key}`}
+                        src={avatars[key].bgImg} 
+                        alt={`Background ${avatars[key].label}`} 
+                        isActive={activeCategory === key}
+                        objectFit="object-cover"
+                        className="absolute inset-0 w-full h-full"
+                      />
+                    ))}
+                  </div>
+
+                  {/* Layer Avatar Images (Dengan Drop Shadow Kedalaman) */}
+                  {Object.keys(avatars).map((key) => (
+                    <DynamicImage 
+                      key={`me-${key}`}
+                      src={avatars[key].img} 
+                      alt={`Fajar Jayadi - ${avatars[key].label}`} 
+                      isActive={activeCategory === key}
+                      className="absolute bottom-0 h-[105%] md:h-[115%] w-auto drop-shadow-[0_20px_25px_rgba(0,0,0,0.35)]"
+                    />
+                  ))}
                 </div>
 
                 {/* Floating Hover Triggers */}
@@ -480,7 +513,10 @@
                     onMouseLeave={() => setActiveCategory('default')}
                     className="bg-white p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:scale-110 transition-transform border border-gray-100 flex items-center gap-3"
                   >
-                    <div className="w-10 h-10 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center"><PenTool size={20} /></div>
+                    <div className="relative flex items-center justify-center w-10 h-10">
+                      <div className={`absolute inset-0 bg-blue-400 rounded-full transition-opacity duration-300 ${activeCategory === 'desain' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
+                      <div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><PenTool size={20} /></div>
+                    </div>
                     <span className="font-bold text-sm hidden md:block">Desain Grafis</span>
                   </div>
                 </Reveal>
@@ -491,7 +527,10 @@
                     onMouseLeave={() => setActiveCategory('default')}
                     className="bg-white p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:scale-110 transition-transform border border-gray-100 flex items-center gap-3"
                   >
-                    <div className="w-10 h-10 bg-purple-100 text-purple-500 rounded-full flex items-center justify-center"><Monitor size={20} /></div>
+                    <div className="relative flex items-center justify-center w-10 h-10">
+                      <div className={`absolute inset-0 bg-purple-400 rounded-full transition-opacity duration-300 ${activeCategory === 'website' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
+                      <div className="w-full h-full bg-purple-100 text-purple-500 rounded-full flex items-center justify-center relative z-10"><Monitor size={20} /></div>
+                    </div>
                     <span className="font-bold text-sm hidden md:block">Website</span>
                   </div>
                 </Reveal>
@@ -502,7 +541,10 @@
                     onMouseLeave={() => setActiveCategory('default')}
                     className="bg-white p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:scale-110 transition-transform border border-gray-100 flex items-center gap-3"
                   >
-                    <div className="w-10 h-10 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center"><HardHat size={20} /></div>
+                    <div className="relative flex items-center justify-center w-10 h-10">
+                      <div className={`absolute inset-0 bg-orange-400 rounded-full transition-opacity duration-300 ${activeCategory === 'konstruksi' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
+                      <div className="w-full h-full bg-orange-100 text-orange-500 rounded-full flex items-center justify-center relative z-10"><HardHat size={20} /></div>
+                    </div>
                     <span className="font-bold text-sm hidden md:block">Konstruksi 3D</span>
                   </div>
                 </Reveal>
