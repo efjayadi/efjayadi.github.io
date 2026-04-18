@@ -268,6 +268,20 @@
           carouselRef.current.scrollLeft = scrollLeft - walk;
         };
 
+        // Handler Touch untuk Mobile Swipe
+        const handleTouchStart = (e) => {
+          setIsDragging(true);
+          setStartX(e.touches[0].pageX - carouselRef.current.offsetLeft);
+          setScrollLeft(carouselRef.current.scrollLeft);
+        };
+        const handleTouchEnd = () => setIsDragging(false);
+        const handleTouchMove = (e) => {
+          if (!isDragging) return;
+          const x = e.touches[0].pageX - carouselRef.current.offsetLeft;
+          const walk = (x - startX) * 2;
+          carouselRef.current.scrollLeft = scrollLeft - walk;
+        };
+
         // Kategori untuk interaksi gambar di tengah
         const avatars = {
           default: { img: 'me-default-netral.png', label: 'Netral' },
@@ -326,7 +340,7 @@
             <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
               
               {/* Animasi Per Kata pada H1 & Penempatan Badges */}
-              <h1 className="text-[3rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
+              <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
                 {["Jasa", "Desain", "Grafis."].map((word, i) => (
                   <Reveal key={`w1-${i}`} delay={100 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
                     {word}
@@ -342,7 +356,7 @@
 
                     {/* Badge Estetik (MOBILE ONLY): next to Grafis */}
                     {word === "Grafis." && (
-                      <div className={`md:hidden absolute -top-8 -right-2 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                      <div className={`md:hidden absolute -top-8 -right-8 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
                         <div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-[10px] font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">
                           ✨ Estetik
                         </div>
@@ -358,7 +372,7 @@
                       
                       {/* Badge Cepat & Responsif (MOBILE ONLY): next to W in Website */}
                       {word === "Website." && (
-                        <div className={`md:hidden absolute -top-8 -left-4 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                        <div className={`md:hidden absolute -top-8 -left-10 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
                           <div className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-[10px] font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
                             ⚡ Cepat & Responsif
                           </div>
@@ -610,6 +624,9 @@
                   onMouseLeave={handleMouseLeave}
                   onMouseUp={handleMouseUp}
                   onMouseMove={handleMouseMove}
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={handleTouchEnd}
+                  onTouchMove={handleTouchMove}
                   className={`flex gap-6 px-6 md:px-20 overflow-x-auto pb-10 select-none hide-scrollbar touch-pan-y ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
                 >
                   {[1, 2, 3, 4, 5, 6].map((item) => (
