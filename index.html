@@ -223,6 +223,49 @@
         );
       };
 
+      // Komponen untuk Efek Hover Magnetik (Sticky Elastic)
+      const MagneticButton = ({ children, onMouseEnter, onMouseLeave, className }) => {
+        const ref = useRef(null);
+        const [position, setPosition] = useState({ x: 0, y: 0 });
+        const [isHovered, setIsHovered] = useState(false);
+
+        const handleMouseMove = (e) => {
+          if (!ref.current) return;
+          const rect = ref.current.getBoundingClientRect();
+          const x = (e.clientX - rect.left - rect.width / 2) * 0.3; // Kekuatan tarikan magnet
+          const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
+          setPosition({ x, y });
+        };
+
+        const handleMouseLeave = (e) => {
+          setIsHovered(false);
+          setPosition({ x: 0, y: 0 });
+          if (onMouseLeave) onMouseLeave(e);
+        };
+
+        const handleMouseEnter = (e) => {
+          setIsHovered(true);
+          if (onMouseEnter) onMouseEnter(e);
+        };
+
+        return (
+          <div
+            ref={ref}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            onMouseEnter={handleMouseEnter}
+            className={className}
+            style={{
+              transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${isHovered ? 1.1 : 1})`,
+              transition: isHovered ? 'transform 0.1s ease-out, box-shadow 0.3s ease' : 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease',
+              willChange: 'transform'
+            }}
+          >
+            {children}
+          </div>
+        );
+      };
+
       // Komponen helper untuk menangani gambar yang belum ada agar tidak merusak layout
       const DynamicImage = ({ src, alt, className, isActive = true, objectFit = 'object-contain' }) => {
         const [hasError, setHasError] = useState(false);
@@ -287,7 +330,7 @@
         };
 
         const avatars = {
-          default: { img: 'me-netral.png', bgImg: 'bg-netral.png', label: 'Netral' },
+          default: { img: 'me-default-netral.png', bgImg: 'bg-netral.png', label: 'Netral' },
           desain: { img: 'me-desain-grafis.png', bgImg: 'bg-desain.png', label: 'Desain Grafis' },
           website: { img: 'me-website.png', bgImg: 'bg-website.png', label: 'Website Dev' },
           konstruksi: { img: 'me-konstruksi.png', bgImg: 'bg-konstruksi.png', label: 'Konstruksi 3D' }
@@ -477,59 +520,59 @@
                     ))}
                   </div>
 
-                  {/* Layer Avatar Images (Memiliki z-10 absolut untuk di atas background, & Shadow Terpotong Rata di Bawah) */}
+                  {/* Layer Avatar Images (Memiliki z-10 absolut untuk di atas background, shadow dihapus) */}
                   {Object.keys(avatars).map((key) => (
                     <DynamicImage 
                       key={`me-${key}`}
                       src={avatars[key].img} 
                       alt={`Fajar Jayadi - ${avatars[key].label}`} 
                       isActive={activeCategory === key}
-                      className="absolute bottom-0 h-[85%] md:h-[95%] w-auto z-10 drop-shadow-[0_0_20px_rgba(0,0,0,0.4)] [clip-path:inset(-100%_-100%_0px_-100%)]"
+                      className="absolute bottom-0 h-[85%] md:h-[95%] w-auto z-10"
                     />
                   ))}
                 </div>
 
                 {/* Floating Hover Triggers */}
                 <Reveal delay={400} direction="left" className="absolute top-1/4 left-4 md:left-24 z-20">
-                  <div 
+                  <MagneticButton 
                     onMouseEnter={() => setActiveCategory('desain')}
                     onMouseLeave={() => setActiveCategory('default')}
-                    className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-300 border border-gray-100 flex items-center gap-3"
+                    className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:shadow-2xl hover:shadow-blue-900/20 border border-gray-100 flex items-center gap-3"
                   >
                     <div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10">
                       <div className={`absolute inset-0 bg-blue-400 rounded-full transition-opacity duration-300 ${activeCategory === 'desain' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
                       <div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><PenTool size={16} className="md:w-5 md:h-5" /></div>
                     </div>
                     <span className="font-bold text-xs md:text-sm hidden md:block">Desain Grafis</span>
-                  </div>
+                  </MagneticButton>
                 </Reveal>
 
                 <Reveal delay={500} direction="right" className="absolute top-1/3 right-4 md:right-24 z-20">
-                  <div 
+                  <MagneticButton 
                     onMouseEnter={() => setActiveCategory('website')}
                     onMouseLeave={() => setActiveCategory('default')}
-                    className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-purple-900/20 transition-all duration-300 border border-gray-100 flex items-center gap-3"
+                    className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:shadow-2xl hover:shadow-purple-900/20 border border-gray-100 flex items-center gap-3"
                   >
                     <div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10">
                       <div className={`absolute inset-0 bg-purple-400 rounded-full transition-opacity duration-300 ${activeCategory === 'website' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
                       <div className="w-full h-full bg-purple-100 text-purple-500 rounded-full flex items-center justify-center relative z-10"><Monitor size={16} className="md:w-5 md:h-5" /></div>
                     </div>
                     <span className="font-bold text-xs md:text-sm hidden md:block">Website</span>
-                  </div>
+                  </MagneticButton>
                 </Reveal>
 
                 <Reveal delay={600} direction="up" className="absolute bottom-1/4 left-10 md:left-32 z-20">
-                  <div 
+                  <MagneticButton 
                     onMouseEnter={() => setActiveCategory('konstruksi')}
                     onMouseLeave={() => setActiveCategory('default')}
-                    className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-orange-900/20 transition-all duration-300 border border-gray-100 flex items-center gap-3"
+                    className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:shadow-2xl hover:shadow-orange-900/20 border border-gray-100 flex items-center gap-3"
                   >
                     <div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10">
                       <div className={`absolute inset-0 bg-orange-400 rounded-full transition-opacity duration-300 ${activeCategory === 'konstruksi' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
                       <div className="w-full h-full bg-orange-100 text-orange-500 rounded-full flex items-center justify-center relative z-10"><HardHat size={16} className="md:w-5 md:h-5" /></div>
                     </div>
                     <span className="font-bold text-xs md:text-sm hidden md:block">Konstruksi 3D</span>
-                  </div>
+                  </MagneticButton>
                 </Reveal>
 
               </Reveal>
