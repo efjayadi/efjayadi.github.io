@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fajar Jayadi</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        
+        /* Animasi mengambang untuk Badges */
+        @keyframes float-1 {
+          0%, 100% { transform: translateY(0) rotate(-10deg); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+          50% { transform: translateY(-15px) rotate(-10deg); box-shadow: 0 25px 25px rgba(0,0,0,0.15); }
+        }
+        @keyframes float-2 {
+          0%, 100% { transform: translateY(0) rotate(12deg); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+          50% { transform: translateY(-12px) rotate(12deg); box-shadow: 0 20px 20px rgba(0,0,0,0.15); }
+        }
+        .animate-float-1 { animation: float-1 4s ease-in-out infinite; }
+        .animate-float-2 { animation: float-2 3.5s ease-in-out infinite; }
+
+        /* Animasi wave outline untuk icon Play diperbaiki */
+        @keyframes ripple-out {
+          0% { transform: scale(1); opacity: 0.8; }
+          100% { transform: scale(2.8); opacity: 0; border-width: 1px; }
+        }
+        .group:hover .ripple-element {
+          animation: ripple-out 1.2s infinite ease-out;
+        }
+
+        /* Animasi teks berubah hijau memantul */
+        @keyframes bounce-green {
+          0% { transform: translateY(0); color: #9ca3af; } 
+          30% { transform: translateY(-15px) scale(1.1); color: #22c55e; } 
+          50% { transform: translateY(5px) scale(1.05); color: #22c55e; }
+          70% { transform: translateY(-3px) scale(1); color: #22c55e; }
+          100% { transform: translateY(0); color: #22c55e; } 
+        }
+        .animate-bounce-color {
+          animation: bounce-green 0.7s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
+        }
+
+        /* Animasi roket terbang keluar layar */
+        @keyframes fly-away {
+          0% { transform: translate(0, 0) scale(1); opacity: 1; }
+          15% { transform: translate(-5px, 5px) rotate(-10deg) scale(0.9); opacity: 1; } 
+          100% { transform: translate(150vw, -150vh) rotate(45deg) scale(3); opacity: 0; } 
+        }
+        .animate-rocket-fly {
+          animation: fly-away 2.5s ease-in forwards;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect, useRef } = React;
+
+      // --- ICON COMPONENTS (Menggantikan lucide-react agar berjalan di single HTML) ---
+      const ArrowRight = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>;
+      const Play = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>;
+      const PenTool = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>;
+      const Monitor = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>;
+      const HardHat = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"></path><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"></path><path d="M4 15v-3a6 6 0 0 1 6-6h0"></path><path d="M14 6h0a6 6 0 0 1 6 6v3"></path></svg>;
+      const Layout = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>;
+      const Smartphone = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>;
+      const Box = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>;
+      const Zap = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>;
+      const CheckCircle2 = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><path d="M9 12l2 2 4-4"></path></svg>;
+      const Star = ({ size = 24, fill = "none", className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>;
+      const ChevronRight = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="9 18 15 12 9 6"></polyline></svg>;
+      const ChevronLeft = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="15 18 9 12 15 6"></polyline></svg>;
+      // -------------------------------------------------------------------------
+
+      // Hook kustom untuk memicu animasi hanya saat elemen terlihat di layar (scroll)
+      const useScrollTrigger = (options = {}) => {
+        const ref = useRef(null);
+        const [triggered, setTriggered] = useState(false);
+
+        useEffect(() => {
+          const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+              setTriggered(true);
+              observer.disconnect(); // Hanya memicu animasi 1x
+            }
+          }, { threshold: 0.5, ...options });
+          
+          if (ref.current) observer.observe(ref.current);
+          return () => observer.disconnect();
+        }, [options]);
+        
+        return [ref, triggered];
+      };
+
+      // Komponen helper untuk menangani gambar yang belum ada agar tidak merusak layout
+      const DynamicImage = ({ src, alt, className }) => {
+        const [hasError, setHasError] = useState(false);
+        const [isLoaded, setIsLoaded] = useState(false);
+
+        useEffect(() => {
+          setHasError(false);
+          setIsLoaded(false);
+        }, [src]);
+
+        if (hasError || !src) {
+          return (
+            <div className={`flex flex-col items-center justify-center bg-gray-100 rounded-3xl border border-gray-200 border-dashed text-gray-400 p-4 text-center ${className}`}>
+              <div className="w-16 h-16 bg-gray-200 rounded-full mb-2 animate-pulse"></div>
+              <p className="font-semibold text-xs mb-1 text-gray-500">Gambar Placeholder</p>
+              <code className="text-[10px] text-blue-500 bg-white px-1 rounded">{src || 'Tidak ada src'}</code>
+            </div>
+          );
+        }
+
+        return (
+          <img 
+            src={src} 
+            alt={alt}
+            onLoad={() => setIsLoaded(true)}
+            onError={() => setHasError(true)}
+            className={`${className} object-contain transition-all duration-500 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+          />
+        );
+      };
+
+      function App() {
+        const [activeCategory, setActiveCategory] = useState('default');
+
+        // State untuk memicu animasi saat di-scroll
+        const [wordsRef, wordsTriggered] = useScrollTrigger({ threshold: 0.8 });
+        const [rocketRef, rocketTriggered] = useScrollTrigger({ threshold: 0.5 });
+        const bouncyWords = ["mulus,", "cepat,", "dan", "professional."];
+
+        // State dan Ref untuk Carousel Dragging (Pan)
+        const carouselRef = useRef(null);
+        const [isDragging, setIsDragging] = useState(false);
+        const [startX, setStartX] = useState(0);
+        const [scrollLeft, setScrollLeft] = useState(0);
+
+        const handleMouseDown = (e) => {
+          setIsDragging(true);
+          setStartX(e.pageX - carouselRef.current.offsetLeft);
+          setScrollLeft(carouselRef.current.scrollLeft);
+        };
+        const handleMouseLeave = () => setIsDragging(false);
+        const handleMouseUp = () => setIsDragging(false);
+        const handleMouseMove = (e) => {
+          if (!isDragging) return;
+          e.preventDefault();
+          const x = e.pageX - carouselRef.current.offsetLeft;
+          const walk = (x - startX) * 2; // kecepatan geser saat ditarik
+          carouselRef.current.scrollLeft = scrollLeft - walk;
+        };
+
+        // Kategori untuk interaksi gambar di tengah
+        const avatars = {
+          default: { img: 'me-default-netral.png', label: 'Netral' },
+          desain: { img: 'me-desain-grafis.png', label: 'Desain Grafis' },
+          website: { img: 'me-website.png', label: 'Website Dev' },
+          konstruksi: { img: 'me-konstruksi.png', label: 'Konstruksi 3D' }
+        };
+
+        return (
+          <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden selection:bg-black selection:text-white">
+            
+            {/* 1. NAVBAR (Notch Style) */}
+            <header className="fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl px-2 py-2 flex justify-between items-center z-50 bg-white/70 backdrop-blur-xl border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-full">
+              <div className="pl-6 flex items-center">
+                <span className="font-bold text-lg tracking-tight">Fajar Jayadi<span className="text-green-500 font-black text-xl leading-none">.</span></span>
+              </div>
+              
+              <nav className="hidden md:flex gap-8 text-sm font-medium text-slate-500">
+                <a href="#" className="hover:text-black transition-colors">Portofolio</a>
+                <a href="#" className="hover:text-black transition-colors">Layanan</a>
+                <a href="#" className="hover:text-black transition-colors">Harga</a>
+                <a href="#" className="hover:text-black transition-colors">Kenapa Fajar?</a>
+              </nav>
+
+              <div className="pr-1">
+                <button className="px-6 py-2.5 text-sm font-bold bg-green-400 hover:bg-green-500 text-white rounded-full transition-colors shadow-[0_0_15px_rgba(74,222,128,0.4)]">
+                  Mulai Proyek
+                </button>
+              </div>
+            </header>
+
+            {/* 2. HERO SECTION (Big Typography) */}
+            <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
+              {/* Floating Badges */}
+              <div className="absolute top-32 left-10 md:left-20 bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1">
+                ⚡ Cepat & Responsif
+              </div>
+              <div className="absolute top-40 right-10 md:right-20 bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 animate-float-2">
+                ✨ Estetik
+              </div>
+
+              <h1 className="text-6xl md:text-[5.5rem] font-black tracking-tighter leading-[0.95] text-slate-900 mb-6">
+                Desain Estetik.<br />
+                <span className="text-gray-400">Website Dinamis.</span><br />
+                Konstruksi Presisi.
+              </h1>
+              
+              <p className="text-lg text-slate-500 max-w-2xl font-medium mb-10">
+                Satu spesialis untuk semua kebutuhan visual dan digital Anda. Dari logo perusahaan hingga render 3D arsitektur, dieksekusi dengan sempurna.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button className="group px-8 py-4 bg-black text-white font-bold rounded-full flex items-center gap-2 hover:bg-gray-800 transition-colors">
+                  Lihat Portofolio <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform duration-300" />
+                </button>
+                <button className="group px-8 py-4 bg-white text-black border border-gray-200 font-bold rounded-full flex items-center gap-2 hover:bg-gray-50 transition-colors">
+                  <div className="relative flex items-center justify-center w-5 h-5">
+                    <div className="absolute inset-0 border-2 border-black rounded-full opacity-0 ripple-element"></div>
+                    <Play size={18} className="text-black relative z-10" />
+                  </div>
+                  Cara Kerja
+                </button>
+              </div>
+            </section>
+
+            {/* 3. INTERACTIVE AVATAR SECTION */}
+            <section className="py-20 px-6 max-w-6xl mx-auto flex flex-col items-center">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[10px] font-bold">F</div>
+                <span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span>
+              </div>
+              
+              {/* Animasi Bouncy Words On Scroll */}
+              <p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-16 text-slate-900">
+                Satu partner multi-disiplin untuk merealisasikan ide Anda—
+                <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">
+                  {bouncyWords.map((word, i) => (
+                    <span 
+                      key={i} 
+                      className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`}
+                      style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}
+                    >
+                      {word}
+                    </span>
+                  ))}
+                </span>
+                Dirancang agar Anda fokus pada bisnis, bukan pada kendala teknis.
+              </p>
+
+              {/* Interactive Hover Area */}
+              <div className="relative w-full max-w-3xl h-[450px] flex justify-center items-end group">
+                
+                {/* Center Image */}
+                <div className="relative z-10 w-full flex justify-center h-full items-end">
+                  <DynamicImage 
+                    src={avatars[activeCategory].img} 
+                    alt="Fajar Jayadi" 
+                    className="h-[90%] w-auto"
+                  />
+                </div>
+
+                {/* Floating Hover Triggers */}
+                <div 
+                  onMouseEnter={() => setActiveCategory('desain')}
+                  onMouseLeave={() => setActiveCategory('default')}
+                  className="absolute top-1/4 left-8 md:left-24 bg-white p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:scale-110 transition-transform border border-gray-100 flex items-center gap-3 z-20"
+                >
+                  <div className="w-10 h-10 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center"><PenTool size={20} /></div>
+                  <span className="font-bold text-sm hidden md:block">Desain Grafis</span>
+                </div>
+
+                <div 
+                  onMouseEnter={() => setActiveCategory('website')}
+                  onMouseLeave={() => setActiveCategory('default')}
+                  className="absolute top-1/3 right-8 md:right-24 bg-white p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:scale-110 transition-transform border border-gray-100 flex items-center gap-3 z-20"
+                >
+                  <div className="w-10 h-10 bg-purple-100 text-purple-500 rounded-full flex items-center justify-center"><Monitor size={20} /></div>
+                  <span className="font-bold text-sm hidden md:block">Website</span>
+                </div>
+
+                <div 
+                  onMouseEnter={() => setActiveCategory('konstruksi')}
+                  onMouseLeave={() => setActiveCategory('default')}
+                  className="absolute bottom-1/4 left-12 md:left-32 bg-white p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:scale-110 transition-transform border border-gray-100 flex items-center gap-3 z-20"
+                >
+                  <div className="w-10 h-10 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center"><HardHat size={20} /></div>
+                  <span className="font-bold text-sm hidden md:block">Konstruksi 3D</span>
+                </div>
+
+              </div>
+            </section>
+
+            {/* 4. BENTO GRID SECTION ("Everything You Need...") */}
+            <section className="py-24 px-6 bg-white">
+              <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-16">
+                  <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
+                    Layanan Lengkap <br/>untuk Bisnis Anda 
+                    {/* Animasi Roket Terbang */}
+                    <span 
+                      ref={rocketRef} 
+                      className={`inline-block ml-3 origin-bottom-left ${rocketTriggered ? 'animate-rocket-fly pointer-events-none' : ''}`}
+                    >
+                      🚀
+                    </span>
+                  </h2>
+                  <p className="text-slate-500 font-medium">Semua keahlian yang dibutuhkan untuk melesatkan brand Anda, tersedia di sini.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[240px]">
+                  
+                  {/* Card 1: Desain Grafis */}
+                  <div className="md:col-span-2 lg:col-span-2 bg-[#F5F5F7] rounded-[32px] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50">
+                    <h3 className="text-xl font-bold mb-1">Desain Grafis</h3>
+                    <p className="text-slate-500 text-sm">Logo, Spanduk, Company Profile</p>
+                    <div className="absolute right-0 bottom-0 w-64 h-48 bg-gradient-to-tl from-blue-200 to-transparent rounded-tl-full opacity-50 translate-x-10 translate-y-10 group-hover:scale-110 transition-transform duration-500"></div>
+                    <PenTool className="absolute bottom-8 right-12 text-blue-500 w-24 h-24 opacity-20 group-hover:opacity-40 transition-opacity" />
+                  </div>
+
+                  {/* Card 2: Website Landing Page */}
+                  <div className="bg-slate-900 text-white rounded-[32px] p-8 relative overflow-hidden group border border-slate-800">
+                    <h3 className="text-xl font-bold mb-1 text-white">Website Web</h3>
+                    <p className="text-slate-400 text-sm">Landing Page Cepat</p>
+                    <Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" />
+                  </div>
+
+                  {/* Card 3: 3D Render */}
+                  <div className="bg-[#F5F5F7] rounded-[32px] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50">
+                    <h3 className="text-xl font-bold mb-1">Render 3D</h3>
+                    <p className="text-slate-500 text-sm">Sketchup & Realistik</p>
+                    <Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" />
+                  </div>
+
+                  {/* Card 4: Gambar Teknik */}
+                  <div className="md:col-span-2 lg:col-span-2 bg-[#F5F5F7] rounded-[32px] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center">
+                     <h3 className="text-xl font-bold mb-1">Gambar Teknik Konstruksi</h3>
+                     <p className="text-slate-500 text-sm">Presisi dan siap bangun.</p>
+                     <div className="mt-6 flex gap-2 items-end h-16">
+                       {[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (
+                         <div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>
+                       ))}
+                     </div>
+                  </div>
+
+                  {/* Card 5: Aplikasi Web */}
+                  <div className="md:row-span-2 lg:col-span-1 bg-[#F5F5F7] rounded-[32px] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50">
+                    <h3 className="text-xl font-bold mb-1">Aplikasi Web</h3>
+                    <p className="text-slate-500 text-sm">Dashboard & Sistem</p>
+                    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[20px] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500">
+                      <div className="w-full h-4 bg-blue-200 rounded-full"></div>
+                      <div className="w-full flex-grow bg-blue-50 rounded-lg"></div>
+                    </div>
+                  </div>
+
+                  {/* Card 6: Company Profile */}
+                  <div className="bg-[#F5F5F7] rounded-[32px] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50">
+                    <h3 className="text-xl font-bold mb-1">Katalog</h3>
+                    <p className="text-slate-500 text-sm">Company Profile Elegan</p>
+                    <Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" />
+                  </div>
+
+                </div>
+              </div>
+            </section>
+
+            {/* 5. TESTIMONIAL SECTION */}
+            <section className="py-24 px-6 max-w-4xl mx-auto">
+              <div className="bg-gray-50 rounded-[40px] p-10 md:p-16 text-center md:text-left flex flex-col md:flex-row gap-10 items-center border border-gray-100">
+                <div className="flex-1">
+                  <div className="flex gap-1 text-orange-400 mb-6 justify-center md:justify-start">
+                    <Star fill="currentColor" size={20} />
+                    <Star fill="currentColor" size={20} />
+                    <Star fill="currentColor" size={20} />
+                    <Star fill="currentColor" size={20} />
+                    <Star fill="currentColor" size={20} />
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold leading-tight mb-8">
+                    "Hasil desain dan website dari Fajar terasa sangat profesional. Komunikasinya mudah dan pengerjaannya sangat cepat. Salah satu freelancer terbaik yang pernah saya sewa."
+                  </h3>
+                  <div className="flex items-center gap-4 justify-center md:justify-start">
+                    <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+                    <div className="text-left">
+                      <p className="font-bold text-sm">Budi Santoso</p>
+                      <p className="text-slate-500 text-xs">CEO, TechNusa</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="hidden md:flex gap-2">
+                   <button className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100"><ChevronLeft size={20}/></button>
+                   <button className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800"><ChevronRight size={20}/></button>
+                </div>
+              </div>
+            </section>
+
+            {/* 6. SHOWCASE CAROUSEL */}
+            <section className="py-20 bg-slate-900 text-white overflow-hidden">
+              <div className="max-w-6xl mx-auto px-6 mb-12 text-center pointer-events-none">
+                <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">Karya Pilihan</h2>
+                <p className="text-slate-400">Jelajahi beberapa proyek terbaik yang telah diselesaikan. (Geser dengan mouse)</p>
+              </div>
+              
+              {/* Horizontal Scroll Area */}
+              <div 
+                ref={carouselRef}
+                onMouseDown={handleMouseDown}
+                onMouseLeave={handleMouseLeave}
+                onMouseUp={handleMouseUp}
+                onMouseMove={handleMouseMove}
+                className={`flex gap-6 px-6 md:px-20 overflow-x-auto pb-10 select-none hide-scrollbar ${isDragging ? 'cursor-grabbing snap-none' : 'cursor-grab snap-x'}`}
+              >
+                {[1, 2, 3, 4, 5, 6].map((item) => (
+                  <div key={item} className="min-w-[300px] md:min-w-[500px] aspect-video bg-slate-800 rounded-3xl snap-center relative overflow-hidden group border border-slate-700 pointer-events-auto">
+                    <div className="absolute inset-0 flex items-center justify-center text-slate-600 font-bold text-2xl group-hover:scale-105 transition-transform duration-500">
+                      Gambar Proyek {item}
+                    </div>
+                    <div className="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                      <p className="font-bold text-lg">Judul Proyek {item}</p>
+                      <p className="text-sm text-slate-300">Desain Grafis / Website</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* 7. BOTTOM CTA SECTION */}
+            <section className="py-24 px-6 max-w-6xl mx-auto border-b border-gray-100">
+              <div className="flex flex-col md:flex-row gap-16 items-center">
+                <div className="flex-1">
+                  <h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">
+                    Berhenti Bingung.<br/>Mulai Berkarya. 🚀
+                  </h2>
+                  <p className="text-slate-500 font-medium mb-10 max-w-md">
+                    Serahkan urusan visual dan teknis kepada saya. Dapatkan hasil maksimal untuk bisnis Anda hari ini.
+                  </p>
+                  <div className="flex gap-4">
+                    <button className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">
+                      Hubungi Sekarang
+                    </button>
+                    <button className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">
+                      Lihat Harga
+                    </button>
+                  </div>
+                </div>
+
+                {/* Right side Feature List */}
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+                  {[
+                    { icon: PenTool, text: 'Desain Logo', color: 'text-blue-500', bg: 'bg-blue-100' },
+                    { icon: Monitor, text: 'Website Cepat', color: 'text-purple-500', bg: 'bg-purple-100' },
+                    { icon: Box, text: 'Render 3D', color: 'text-orange-500', bg: 'bg-orange-100' },
+                    { icon: Zap, text: 'Performa Tinggi', color: 'text-yellow-500', bg: 'bg-yellow-100' },
+                    { icon: Layout, text: 'UI/UX Responsif', color: 'text-pink-500', bg: 'bg-pink-100' },
+                    { icon: CheckCircle2, text: 'Tepat Waktu', color: 'text-green-500', bg: 'bg-green-100' },
+                  ].map((feat, i) => (
+                    <div key={i} className="flex items-center gap-4 p-2">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${feat.bg} ${feat.color}`}>
+                        <feat.icon size={18} />
+                      </div>
+                      <span className="font-bold text-slate-800">{feat.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* 8. FOOTER (Changed background to match Carousel: bg-slate-900) */}
+            <footer className="bg-slate-900 text-white pt-20 pb-10 px-6">
+              <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-16 mb-16">
+                <div className="max-w-sm">
+                  <h3 className="text-2xl font-bold mb-6 text-white">Mari terhubung dan diskusikan ide Anda.</h3>
+                  
+                  <button className="w-full flex items-center justify-center gap-2 bg-[#128C7E] hover:bg-[#25D366] text-white py-4 px-6 rounded-full text-sm font-bold transition-colors shadow-lg shadow-green-900/30">
+                    Hubungi via WhatsApp
+                  </button>
+                  
+                  <p className="text-xs text-slate-400 mt-4 opacity-80">Balasan super cepat dalam 1x24 jam kerja.</p>
+                </div>
+
+                <div className="flex gap-16">
+                  <div>
+                    <h4 className="font-bold mb-4 text-white">Layanan</h4>
+                    <ul className="space-y-3 text-sm text-slate-400">
+                      <li><a href="#" className="hover:text-green-400 transition-colors">Desain Grafis</a></li>
+                      <li><a href="#" className="hover:text-green-400 transition-colors">Pembuatan Website</a></li>
+                      <li><a href="#" className="hover:text-green-400 transition-colors">Konstruksi & 3D</a></li>
+                      <li><a href="#" className="hover:text-green-400 transition-colors">Konsultasi IT</a></li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-bold mb-4 text-white">Fajar</h4>
+                    <ul className="space-y-3 text-sm text-slate-400">
+                      <li><a href="#" className="hover:text-green-400 transition-colors">Tentang Saya</a></li>
+                      <li><a href="#" className="hover:text-green-400 transition-colors">Portofolio</a></li>
+                      <li><a href="#" className="hover:text-green-400 transition-colors">Harga</a></li>
+                      <li><a href="#" className="hover:text-green-400 transition-colors">Kontak</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="max-w-6xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium">
+                <p>© 2026 Fajar Jayadi. All rights reserved.</p>
+                <div className="flex gap-4">
+                  <a href="#" className="hover:text-white transition-colors">Instagram</a>
+                  <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
+                  <a href="#" className="hover:text-white transition-colors">Behance</a>
+                </div>
+              </div>
+            </footer>
+          </div>
+        );
+      }
+
+      // Render App
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+</body>
+</html>
