@@ -135,6 +135,15 @@
         .animate-rocket-fly {
           animation: fly-away 2.5s ease-in forwards;
         }
+
+        /* Latar Belakang Pola Lingkaran (Diperbarui agar riaknya terlihat jelas 3D) */
+        .bg-circle-pattern {
+          background: repeating-radial-gradient(
+            circle at center,
+            #ffffff 0px,
+            #eef1f5 60px
+          );
+        }
     </style>
 </head>
 <body>
@@ -310,7 +319,7 @@
                     <a href="#" className="hover:text-black transition-colors">Portofolio</a>
                     <a href="#" className="hover:text-black transition-colors">Layanan</a>
                     <a href="#" className="hover:text-black transition-colors">Harga</a>
-                    <a href="#" className="hover:text-black transition-colors">Kenapa Fajar?</a>
+                    <a href="#" className="hover:text-black transition-colors">Kenapa harus ke Fajar?</a>
                   </nav>
 
                   <div className="pr-1 flex items-center">
@@ -329,7 +338,7 @@
                     <a href="#" className="hover:text-black transition-colors">Portofolio</a>
                     <a href="#" className="hover:text-black transition-colors">Layanan</a>
                     <a href="#" className="hover:text-black transition-colors">Harga</a>
-                    <a href="#" className="hover:text-black transition-colors">Kenapa Fajar?</a>
+                    <a href="#" className="hover:text-black transition-colors">Kenapa harus ke Fajar?</a>
                   </nav>
                 </div>
 
@@ -372,7 +381,7 @@
                       
                       {/* Badge Cepat & Responsif (MOBILE ONLY): di sebelah kiri kata "Website." */}
                       {word === "Website." && (
-                        <div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[12px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                        <div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[32px] -mt-[6px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
                           <div className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-[10px] font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
                             ⚡ Cepat & Responsif
                           </div>
@@ -417,7 +426,15 @@
             </section>
 
             {/* 3. INTERACTIVE AVATAR SECTION */}
-            <section className="py-20 px-6 max-w-6xl mx-auto flex flex-col items-center">
+            {/* Ditambahkan class "relative" pada section agar background absolut bisa memusat di area ini */}
+            <section className="py-20 px-6 max-w-6xl mx-auto flex flex-col items-center relative">
+              
+              {/* Latar Belakang Pola Lingkaran memusat dari teks Fajar Jayadi */}
+              <div 
+                className="absolute top-[6rem] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] bg-circle-pattern rounded-full pointer-events-none -z-10"
+                style={{ maskImage: 'radial-gradient(circle, black 20%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}
+              ></div>
+
               <Reveal delay={100} direction="up">
                 <div className="flex items-center gap-2 mb-6">
                   <div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div>
