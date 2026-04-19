@@ -149,6 +149,28 @@
             -12px 12px 20px rgba(0,0,0,0.15);
           color: #000000;
         }
+        
+        /* Custom range slider styling */
+        input[type=range]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: #0f172a;
+          cursor: pointer;
+          border: 4px solid #fff;
+          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        input[type=range]::-moz-range-thumb {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: #0f172a;
+          cursor: pointer;
+          border: 4px solid #fff;
+          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
     </style>
 </head>
 <body>
@@ -192,6 +214,15 @@
       const Star = ({ size = 24, fill = "none", className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>;
       const ChevronRight = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="9 18 15 12 9 6"></polyline></svg>;
       const ChevronLeft = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="15 18 9 12 15 6"></polyline></svg>;
+      const XCircle = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>;
+      const Brain = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>;
+      const ChevronDown = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"></polyline></svg>;
+      const Calculator = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="14.01"></line><line x1="16" y1="10" x2="16" y2="10.01"></line><line x1="16" y1="18" x2="16" y2="18.01"></line><line x1="12" y1="14" x2="12" y2="14.01"></line><line x1="12" y1="10" x2="12" y2="10.01"></line><line x1="12" y1="18" x2="12" y2="18.01"></line><line x1="8" y1="14" x2="8" y2="14.01"></line><line x1="8" y1="10" x2="8" y2="10.01"></line><line x1="8" y1="18" x2="8" y2="18.01"></line></svg>;
+      const CalendarClock = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h5"></path><path d="M17.5 17.5 16 16.25V14"></path><path d="M22 16a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z"></path></svg>;
+      const User = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>;
+      const Briefcase = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>;
+      const Phone = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>;
+      const Send = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="22" x2="11" y1="2" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>;
 
       const useScrollTrigger = (options = {}) => {
         const ref = useRef(null);
@@ -284,6 +315,43 @@
         
         useEffect(() => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, [currentPage]);
+
+        // --- Screenshot Protection for Portfolio ---
+        useEffect(() => {
+            const handleScreenshotAttempt = (e) => {
+                if (currentPage !== 'portfolio') return;
+
+                const isMacScreenshot = e.metaKey && e.shiftKey && ['3', '4', '5', 's', 'S'].includes(e.key);
+                const isWinScreenshot = e.key === 'PrintScreen';
+
+                if (isMacScreenshot || isWinScreenshot) {
+                    // Try to overwrite clipboard data
+                    try {
+                        navigator.clipboard.writeText('Screenshots are disabled for portfolio items.');
+                    } catch (err) {}
+
+                    // Display "nonow.." in the middle of the screen
+                    const el = document.createElement('div');
+                    el.textContent = 'nonow..';
+                    el.className = 'nonow-text';
+                    const rot = Math.random() * 50 - 25;
+                    el.style.setProperty('--rot', `${rot}deg`);
+                    el.style.left = `50%`;
+                    el.style.top = `50%`;
+                    el.style.position = 'fixed';
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), 1000);
+                }
+            };
+
+            window.addEventListener('keyup', handleScreenshotAttempt);
+            window.addEventListener('keydown', handleScreenshotAttempt);
+
+            return () => {
+                window.removeEventListener('keyup', handleScreenshotAttempt);
+                window.removeEventListener('keydown', handleScreenshotAttempt);
+            };
         }, [currentPage]);
 
         const [isLoaded, setIsLoaded] = useState(false);
@@ -406,6 +474,120 @@
           return () => clearTimeout(preloadTimer);
         }, [isLoaded, allPortfolioItems]);
 
+        // --- Estimasi Page Logic ---
+        const pricingCategories = [
+            {
+                id: 'desain', title: 'Desain Grafis', icon: PenTool, color: 'text-blue-500', bg: 'bg-blue-100',
+                items: [
+                    { id: 'd-logo', name: 'Logo', price: 1500000 },
+                    { id: 'd-banner', name: 'Banner', price: 300000 },
+                    { id: 'd-flyer', name: 'Flyer', price: 300000 },
+                    { id: 'd-pack', name: 'Packaging', price: 1000000 },
+                    { id: 'd-cp', name: 'Company Profile', price: 2000000 }
+                ]
+            },
+            {
+                id: 'website', title: 'Website', icon: Monitor, color: 'text-purple-500', bg: 'bg-purple-100',
+                items: [
+                    { id: 'w-toko', name: 'Toko Online', price: 5000000 },
+                    { id: 'w-cp', name: 'Company Profile', price: 3000000 },
+                    { id: 'w-lp', name: 'Landing Page', price: 1500000 },
+                    { id: 'w-link', name: 'Link Tree Custom', price: 500000 }
+                ]
+            },
+            {
+                id: 'konstruksi', title: 'Konstruksi', icon: HardHat, color: 'text-orange-500', bg: 'bg-orange-100',
+                items: [
+                    { id: 'k-3d', name: 'Sketchup 3D', price: 2000000 },
+                    { id: 'k-teknik', name: 'Gambar Teknik', price: 1500000 },
+                    { id: 'k-render', name: 'Render Realistis', price: 1000000 }
+                ]
+            }
+        ];
+
+        const [estimasiExpandedCat, setEstimasiExpandedCat] = useState(null);
+        const [estimasiSelectedItems, setEstimasiSelectedItems] = useState({}); // { itemId: true }
+        const [estimasiDeadline, setEstimasiDeadline] = useState(7); // Days
+
+        const toggleEstimasiCategory = (catId) => {
+            setEstimasiExpandedCat(prev => prev === catId ? null : catId);
+        };
+
+        const toggleEstimasiItem = (itemId, e) => {
+            e.stopPropagation();
+            setEstimasiSelectedItems(prev => ({
+                ...prev,
+                [itemId]: !prev[itemId]
+            }));
+        };
+
+        const calculateEstimasiTotal = useMemo(() => {
+            let baseTotal = 0;
+            pricingCategories.forEach(cat => {
+                cat.items.forEach(item => {
+                    if (estimasiSelectedItems[item.id]) {
+                        baseTotal += item.price;
+                    }
+                });
+            });
+
+            // Deadline multiplier logic
+            let multiplier = 1.0;
+            if (estimasiDeadline === 1) multiplier = 2.0;
+            else if (estimasiDeadline === 2) multiplier = 1.8;
+            else if (estimasiDeadline === 3) multiplier = 1.5;
+            else if (estimasiDeadline === 4) multiplier = 1.3;
+            else if (estimasiDeadline <= 6) multiplier = 1.1;
+            else multiplier = 1.0; // 7+ days
+
+            return baseTotal * multiplier;
+        }, [estimasiSelectedItems, estimasiDeadline]);
+
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+        };
+
+        // --- Mulai Proyek Page Logic ---
+        const [mulaiProyekStep, setMulaiProyekStep] = useState(1);
+        const [mulaiProyekForm, setMulaiProyekForm] = useState({
+            nama: '', brand: '', whatsapp: '', layanan: [], deskripsi: '', targetPasar: '', referensi: '', budget: '', timeline: ''
+        });
+
+        const handleMulaiProyekChange = (e) => {
+            const { name, value } = e.target;
+            setMulaiProyekForm(prev => ({ ...prev, [name]: value }));
+        };
+
+        const toggleLayananProyek = (layanan) => {
+            setMulaiProyekForm(prev => {
+                const isSelected = prev.layanan.includes(layanan);
+                return { 
+                    ...prev, 
+                    layanan: isSelected ? prev.layanan.filter(l => l !== layanan) : [...prev.layanan, layanan] 
+                };
+            });
+        };
+
+        const nextMulaiProyekStep = () => {
+            setMulaiProyekStep(prev => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return Math.min(prev + 1, 5);
+            });
+        };
+        
+        const prevMulaiProyekStep = () => {
+            setMulaiProyekStep(prev => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return Math.max(prev - 1, 1);
+            });
+        };
+
+        const sendMulaiProyekWa = () => {
+            const msg = `Halo Fajar, saya tertarik untuk mulai proyek!\n\n*1. Identitas*\nNama: ${mulaiProyekForm.nama}\nBrand/Perusahaan: ${mulaiProyekForm.brand}\nWhatsApp: ${mulaiProyekForm.whatsapp}\n\n*2. Layanan*\nKebutuhan: ${mulaiProyekForm.layanan.length > 0 ? mulaiProyekForm.layanan.join(', ') : '-'}\n\n*3. Brief Singkat*\nDeskripsi Bisnis: ${mulaiProyekForm.deskripsi || '-'}\nTarget Pasar: ${mulaiProyekForm.targetPasar || '-'}\nReferensi Visual: ${mulaiProyekForm.referensi || '-'}\n\n*4. Timeline & Budget*\nTimeline: ${mulaiProyekForm.timeline || '-'}\nEstimasi Budget: ${mulaiProyekForm.budget || '-'}`;
+            window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`, '_blank');
+        };
+        // -------------------------
+
         const [testiIdx, setTestiIdx] = useState(0);
         const [slideDir, setSlideDir] = useState('next');
         const nextTesti = () => { setSlideDir('next'); setTestiIdx((prev) => (prev + 1) % testimonials.length); };
@@ -524,18 +706,19 @@
                   </div>
                   <nav className="hidden md:flex gap-8 text-sm font-medium text-slate-500 items-center translate-y-[1px]" onMouseLeave={() => updateDot(logoTargetRef.current)}>
                     <a href="#" className={`hover:text-black transition-colors flex items-center ${currentPage === 'portfolio' ? 'text-black font-bold' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('portfolio'); }} onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Portofolio<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
-                    <a href="#" className="hover:text-black transition-colors flex items-center" onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Estimasi<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
-                    <a href="#" className="hover:text-black transition-colors flex items-center" onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Kenapa mending ke Fajar?<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
+                    <a href="#" className={`hover:text-black transition-colors flex items-center ${currentPage === 'estimasi' ? 'text-black font-bold' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('estimasi'); }} onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Estimasi<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
+                    <a href="#" className={`hover:text-black transition-colors flex items-center ${currentPage === 'why-fajar' ? 'text-black font-bold' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('why-fajar'); }} onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Kenapa mending ke Fajar?<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
                   </nav>
                   <div className="pr-1 flex items-center">
-                    <button className="px-4 py-2 md:px-6 md:py-2.5 text-xs md:text-sm font-bold bg-green-400 hover:bg-green-500 text-white rounded-full transition-colors" onClick={(e) => e.stopPropagation()}>Mulai Proyek</button>
+                    <button onClick={(e) => { e.stopPropagation(); setCurrentPage('mulai-proyek'); }} className="px-4 py-2 md:px-6 md:py-2.5 text-xs md:text-sm font-bold bg-green-400 hover:bg-green-500 text-white rounded-full transition-colors">Mulai Proyek</button>
                   </div>
                 </div>
                 <div className={`md:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-[300px] opacity-100 pb-4' : 'max-h-0 opacity-0'}`}>
                   <nav className="flex flex-col items-center gap-4 pt-4 text-sm font-medium text-slate-500 border-t border-gray-100 mx-4">
                     <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('portfolio'); setIsMenuOpen(false); }} className={`hover:text-black transition-colors ${currentPage === 'portfolio' ? 'text-black font-bold' : ''}`}>Portofolio</a>
-                    <a href="#" className="hover:text-black transition-colors">Estimasi</a>
-                    <a href="#" className="hover:text-black transition-colors">Kenapa mending ke Fajar?</a>
+                    <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('estimasi'); setIsMenuOpen(false); }} className={`hover:text-black transition-colors ${currentPage === 'estimasi' ? 'text-black font-bold' : ''}`}>Estimasi</a>
+                    <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('why-fajar'); setIsMenuOpen(false); }} className={`hover:text-black transition-colors ${currentPage === 'why-fajar' ? 'text-black font-bold' : ''}`}>Kenapa mending ke Fajar?</a>
+                    <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('mulai-proyek'); setIsMenuOpen(false); }} className={`hover:text-black transition-colors ${currentPage === 'mulai-proyek' ? 'text-black font-bold' : ''}`}>Mulai Proyek</a>
                   </nav>
                 </div>
               </div>
@@ -699,7 +882,7 @@
 
                 <section className="py-24 px-6 max-w-6xl mx-auto border-b border-gray-100">
                   <div className="flex flex-col md:flex-row gap-16 items-center">
-                    <Reveal direction="right" className="flex-1"><h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">Wujudkan Visi.<br/>Mulai Hari Ini.</h2><p className="text-slate-500 font-medium mb-10 max-w-md">Serahkan tantangan visual and teknis Anda kepada partner yang tepat. Dapatkan hasil maksimal untuk perkembangan bisnis Anda.</p><div className="flex gap-4"><button className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">Konsultasi Sekarang</button><button className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">Detail Estimasi</button></div></Reveal>
+                    <Reveal direction="right" className="flex-1"><h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">Wujudkan Visi.<br/>Mulai Hari Ini.</h2><p className="text-slate-500 font-medium mb-10 max-w-md">Serahkan tantangan visual and teknis Anda kepada partner yang tepat. Dapatkan hasil maksimal untuk perkembangan bisnis Anda.</p><div className="flex gap-4"><button className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">Konsultasi Sekarang</button><button onClick={() => setCurrentPage('estimasi')} className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">Detail Estimasi</button></div></Reveal>
                     <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">{[{ icon: PenTool, text: 'Identitas Visual', color: 'text-blue-500', bg: 'bg-blue-100' },{ icon: Monitor, text: 'Web Professional', color: 'text-purple-500', bg: 'bg-purple-100' },{ icon: Box, text: 'Gambar 3D Realis', color: 'text-orange-500', bg: 'bg-orange-100' },{ icon: Zap, text: 'Eksekusi Tangkas', color: 'text-yellow-500', bg: 'bg-yellow-100' },{ icon: Layout, text: 'User Experience', color: 'text-pink-500', bg: 'bg-pink-100' },{ icon: CheckCircle2, text: 'Komitmen Kualitas', color: 'text-green-500', bg: 'bg-green-100' }].map((feat, i) => (<Reveal key={i} delay={i * 100} direction="left"><div className="flex items-center gap-4 p-2"><div className={`w-10 h-10 rounded-full flex items-center justify-center ${feat.bg} ${feat.color}`}><feat.icon size={18} /></div><span className="font-bold text-slate-800">{feat.text}</span></div></Reveal>))}</div>
                   </div>
                 </section>
@@ -753,9 +936,413 @@
                 )}
             </div>
 
+            {/* --- WHY FAJAR VIEW --- */}
+            <div className={currentPage === 'why-fajar' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen' : 'hidden'}>
+                <Reveal direction="up" className="text-center mb-16">
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-6 text-slate-900">Kenapa Mending ke Fajar?</h1>
+                    <p className="text-slate-500 font-medium max-w-3xl mx-auto text-lg">Bukan sekadar biro jasa biasa. Saya membawa dedikasi personal, value maksimal, dan kedalaman pengetahuan untuk memastikan karya Anda berada di level tertinggi.</p>
+                </Reveal>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                    {/* Agency vs Fajar */}
+                    <Reveal delay={100} direction="up" className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-10 border border-gray-200/50">
+                        <h3 className="text-2xl font-bold mb-8 flex items-center gap-3"><Monitor className="text-slate-400"/> Design Agency</h3>
+                        <div className="space-y-6">
+                            <div className="flex items-start gap-4"><XCircle className="text-red-400 mt-1 shrink-0"/><p className="text-slate-600">Fokus pada <strong className="text-slate-900">kuantitas klien</strong> demi memenuhi target omset perusahaan.</p></div>
+                            <div className="flex items-start gap-4"><XCircle className="text-red-400 mt-1 shrink-0"/><p className="text-slate-600">Komunikasi sering berlapis lewat akun eksekutif atau manajer, yang rentan miskomunikasi.</p></div>
+                        </div>
+                        <div className="my-8 border-t border-gray-300/50 relative"><span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] px-4 text-xs font-bold text-slate-400 uppercase tracking-widest">VS Fajar Jayadi</span></div>
+                        <div className="space-y-6">
+                            <div className="flex items-start gap-4"><CheckCircle2 className="text-green-500 mt-1 shrink-0"/><p className="text-slate-800">Fokus 100% pada <strong className="text-black">kualitas dan legacy nama baik</strong>. Satu desainer berdedikasi penuh untuk hasil yang membanggakan.</p></div>
+                            <div className="flex items-start gap-4"><CheckCircle2 className="text-green-500 mt-1 shrink-0"/><p className="text-slate-800">Komunikasi langsung tanpa perantara, visi Anda didengar dan langsung dieksekusi oleh ahlinya.</p></div>
+                        </div>
+                    </Reveal>
+
+                    {/* Famous Freelancer vs Fajar */}
+                    <Reveal delay={200} direction="up" className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-10 border border-gray-200/50">
+                        <h3 className="text-2xl font-bold mb-8 flex items-center gap-3"><Star className="text-slate-400"/> "Famous" Freelancer</h3>
+                        <div className="space-y-6">
+                            <div className="flex items-start gap-4"><XCircle className="text-red-400 mt-1 shrink-0"/><p className="text-slate-600">Harga seringkali terlalu mahal (overpriced) namun dengan <strong className="text-slate-900">value paket yang sangat dibatasi</strong>.</p></div>
+                            <div className="flex items-start gap-4"><XCircle className="text-red-400 mt-1 shrink-0"/><p className="text-slate-600">Pada praktiknya, pekerjaan sering dilempar ke tim atau junior di balik layar.</p></div>
+                        </div>
+                        <div className="my-8 border-t border-gray-300/50 relative"><span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] px-4 text-xs font-bold text-slate-400 uppercase tracking-widest">VS Fajar Jayadi</span></div>
+                        <div className="space-y-6">
+                            <div className="flex items-start gap-4"><CheckCircle2 className="text-green-500 mt-1 shrink-0"/><p className="text-slate-800">Menawarkan <strong className="text-black">harga menengah (mid-price)</strong> dengan value fitur yang jauh lebih komplit, fair, dan transparan.</p></div>
+                            <div className="flex items-start gap-4"><CheckCircle2 className="text-green-500 mt-1 shrink-0"/><p className="text-slate-800">Dikerjakan murni 100% oleh saya sendiri (One-Man Army) demi menjaga standar presisi tingkat tinggi.</p></div>
+                        </div>
+                    </Reveal>
+                </div>
+
+                {/* Multi-talent Edge */}
+                <Reveal delay={300} direction="up" className="bg-slate-900 text-white rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
+                    
+                    <div className="relative z-10">
+                        <h3 className="text-3xl md:text-4xl font-black mb-6">The Multi-Talent Edge <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">✨</span></h3>
+                        <p className="text-slate-300 text-lg md:text-xl max-w-3xl mb-12">Tidak sedikit freelancer di luar sana yang bahkan belum bisa mengeja kosa kata bahasa Inggris dengan benar, apalagi menerjemahkan strategi bisnis. Dengan wawasan generalis yang luas dan mendalam, karya yang saya hasilkan jauh lebih strategis, rapi, dan profesional.</p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
+                                <Brain className="w-10 h-10 text-purple-400 mb-4"/>
+                                <h4 className="text-lg font-bold mb-2">Psikologi</h4>
+                                <p className="text-sm text-slate-400">Memahami persepsi audiens, emosi warna, dan bagaimana visual dapat mempengaruhi keputusan klien Anda.</p>
+                            </div>
+                            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
+                                <Layout className="w-10 h-10 text-blue-400 mb-4"/>
+                                <h4 className="text-lg font-bold mb-2">Linguistik & Bahasa</h4>
+                                <p className="text-sm text-slate-400">Copywriting yang rapi, struktur tata bahasa (termasuk English) terukur, terhindar dari typo yang memalukan brand.</p>
+                            </div>
+                            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
+                                <Monitor className="w-10 h-10 text-green-400 mb-4"/>
+                                <h4 className="text-lg font-bold mb-2">Teknologi</h4>
+                                <p className="text-sm text-slate-400">Paham arsitektur digital, optimalisasi kinerja web modern, integrasi SEO, dan logika UX/UI yang berbasis sistem.</p>
+                            </div>
+                            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
+                                <PenTool className="w-10 h-10 text-orange-400 mb-4"/>
+                                <h4 className="text-lg font-bold mb-2">Eksekusi Desain</h4>
+                                <p className="text-sm text-slate-400">Meleburkan seluruh knowledge lintas-disiplin di atas ke dalam satu output visual yang estetik dan tajam fungsinya.</p>
+                            </div>
+                        </div>
+                    </div>
+                </Reveal>
+            </div>
+
+            {/* --- ESTIMASI VIEW --- */}
+            <div className={currentPage === 'estimasi' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen' : 'hidden'}>
+                <Reveal direction="up" className="text-center mb-12">
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Kalkulator Estimasi</h1>
+                    <p className="text-slate-500 font-medium max-w-2xl mx-auto">Sesuaikan kebutuhan project dan deadline yang Anda inginkan. Perhitungan ini transparan untuk membantu Anda mengambil keputusan terbaik.</p>
+                </Reveal>
+
+                <div className="flex flex-col lg:flex-row gap-8 items-start">
+                    {/* Left Column: Form / Inputs */}
+                    <div className="w-full lg:w-2/3 flex flex-col gap-6">
+                        
+                        <Reveal delay={100} direction="right" className="bg-[#F5F5F7] rounded-[2rem] p-6 md:p-8 border border-gray-200/50">
+                            <h3 className="text-xl font-bold mb-6 flex items-center gap-3"><Layout className="text-slate-400"/> Pilih Kebutuhan Layanan</h3>
+                            
+                            <div className="flex flex-col gap-4">
+                                {pricingCategories.map((category) => (
+                                    <div key={category.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                                        <button 
+                                            onClick={() => toggleEstimasiCategory(category.id)}
+                                            className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${category.bg} ${category.color}`}>
+                                                    <category.icon size={18} />
+                                                </div>
+                                                <span className="font-bold text-slate-800 text-lg">{category.title}</span>
+                                            </div>
+                                            <ChevronDown size={20} className={`text-slate-400 transition-transform duration-300 ${estimasiExpandedCat === category.id ? 'rotate-180' : ''}`} />
+                                        </button>
+                                        
+                                        {/* Dropdown Content */}
+                                        <div className={`transition-all duration-500 ease-in-out bg-slate-50 border-t border-gray-100 ${estimasiExpandedCat === category.id ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                                            <div className="p-5 flex flex-col gap-3">
+                                                {category.items.map(item => {
+                                                    const isSelected = !!estimasiSelectedItems[item.id];
+                                                    return (
+                                                        <div 
+                                                            key={item.id} 
+                                                            onClick={(e) => toggleEstimasiItem(item.id, e)}
+                                                            className={`flex items-center justify-between p-4 rounded-xl cursor-pointer border transition-all ${isSelected ? 'bg-white border-black shadow-md' : 'bg-white border-transparent shadow-sm hover:border-gray-300'}`}
+                                                        >
+                                                            <div className="flex items-center gap-3">
+                                                                <div className={`w-6 h-6 rounded-full flex items-center justify-center border transition-colors ${isSelected ? 'bg-black border-black text-white' : 'border-gray-300 text-transparent'}`}>
+                                                                    <CheckCircle2 size={16} strokeWidth={3} />
+                                                                </div>
+                                                                <span className={`font-semibold ${isSelected ? 'text-black' : 'text-slate-600'}`}>{item.name}</span>
+                                                            </div>
+                                                            <span className="text-slate-400 font-medium text-sm">{formatRupiah(item.price)}</span>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </Reveal>
+
+                        <Reveal delay={200} direction="right" className="bg-[#F5F5F7] rounded-[2rem] p-6 md:p-8 border border-gray-200/50">
+                            <div className="flex justify-between items-end mb-8">
+                                <h3 className="text-xl font-bold flex items-center gap-3"><CalendarClock className="text-slate-400"/> Tenggat Waktu (Deadline)</h3>
+                                <div className="bg-black text-white px-4 py-2 rounded-xl font-black text-lg shadow-md">{estimasiDeadline} Hari</div>
+                            </div>
+                            
+                            <div className="relative px-2">
+                                <input 
+                                    type="range" 
+                                    min="1" 
+                                    max="14" 
+                                    value={estimasiDeadline} 
+                                    onChange={(e) => setEstimasiDeadline(parseInt(e.target.value))}
+                                    className="w-full h-3 bg-gray-300 rounded-lg appearance-none cursor-pointer outline-none mb-6"
+                                />
+                                <div className="flex justify-between text-xs font-bold text-slate-400 px-1">
+                                    <span className="flex flex-col items-center gap-1"><span>1 Hari</span><span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded">Urgent (2x)</span></span>
+                                    <span className="flex flex-col items-center gap-1 mt-4">7 Hari</span>
+                                    <span className="flex flex-col items-center gap-1 mt-4">14 Hari</span>
+                                </div>
+                            </div>
+                        </Reveal>
+
+                    </div>
+
+                    {/* Right Column: Sticky Summary */}
+                    <Reveal delay={300} direction="left" className="w-full lg:w-1/3 sticky top-32">
+                        <div className="bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
+                            <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-500 rounded-full mix-blend-screen filter blur-[40px] opacity-20 pointer-events-none"></div>
+                            
+                            <h3 className="text-xl font-black mb-6 flex items-center gap-2"><Calculator className="text-green-400"/> Summary Estimasi</h3>
+                            
+                            <div className="space-y-4 mb-8 min-h-[100px]">
+                                {Object.keys(estimasiSelectedItems).filter(id => estimasiSelectedItems[id]).length === 0 ? (
+                                    <p className="text-slate-500 text-sm italic">Belum ada layanan yang dipilih.</p>
+                                ) : (
+                                    pricingCategories.flatMap(c => c.items).filter(item => estimasiSelectedItems[item.id]).map(item => (
+                                        <div key={item.id} className="flex justify-between items-start text-sm">
+                                            <span className="text-slate-300 pr-4">{item.name}</span>
+                                            <span className="font-semibold">{formatRupiah(item.price)}</span>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+
+                            <div className="border-t border-slate-700 pt-6 mb-8">
+                                <div className="flex justify-between items-center mb-2 text-slate-400 text-sm">
+                                    <span>Subtotal</span>
+                                    <span>{formatRupiah(calculateEstimasiTotal / (estimasiDeadline <= 1 ? 2.0 : estimasiDeadline === 2 ? 1.8 : estimasiDeadline === 3 ? 1.5 : estimasiDeadline === 4 ? 1.3 : estimasiDeadline <= 6 ? 1.1 : 1.0))}</span>
+                                </div>
+                                <div className="flex justify-between items-center mb-6 text-slate-400 text-sm">
+                                    <span>Multiplier Waktu ({estimasiDeadline} hr)</span>
+                                    <span className={estimasiDeadline < 7 ? "text-orange-400" : ""}>x {estimasiDeadline <= 1 ? "2.0" : estimasiDeadline === 2 ? "1.8" : estimasiDeadline === 3 ? "1.5" : estimasiDeadline === 4 ? "1.3" : estimasiDeadline <= 6 ? "1.1" : "1.0"}</span>
+                                </div>
+                                
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-xs text-slate-500 uppercase tracking-widest font-bold">Total Estimasi Biaya</span>
+                                    <span className="text-3xl md:text-4xl font-black text-green-400 break-all">{formatRupiah(calculateEstimasiTotal)}</span>
+                                </div>
+                            </div>
+
+                            <div className="bg-slate-800/50 rounded-xl p-4 text-xs text-slate-400 leading-relaxed border border-slate-700/50">
+                                <strong className="text-slate-300 block mb-1">Catatan Penting:</strong>
+                                Angka ini hanya <em>estimasi</em> untuk memberikan gambaran budget. Angka aktual tergantung nanti seberapa rumit dan spesifik pekerjaannya setelah kita berdiskusi lebih lanjut.
+                            </div>
+                        </div>
+                    </Reveal>
+                </div>
+            </div>
+
+            {/* --- MULAI PROYEK VIEW --- */}
+            <div className={currentPage === 'mulai-proyek' ? 'block pt-40 pb-24 px-6 max-w-4xl mx-auto min-h-screen' : 'hidden'}>
+                <Reveal direction="up" className="text-center mb-10">
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Mulai Proyek Baru</h1>
+                    <p className="text-slate-500 font-medium max-w-2xl mx-auto text-lg">Ceritakan visi Anda. Formulir progresif ini dirancang untuk menggali kebutuhan dan ekspektasi Anda agar hasil akhir bisa melampaui standar.</p>
+                </Reveal>
+
+                {/* Progress Indicator */}
+                <Reveal delay={150} direction="up" className="mb-12">
+                    <div className="flex justify-between items-center relative max-w-2xl mx-auto">
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 -z-10 rounded-full"></div>
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-black -z-10 rounded-full transition-all duration-500" style={{ width: `${((mulaiProyekStep - 1) / 4) * 100}%` }}></div>
+                        
+                        {[1, 2, 3, 4, 5].map((step) => (
+                            <div key={step} className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-sm md:text-base border-4 transition-colors duration-300 ${mulaiProyekStep >= step ? 'bg-black text-white border-black' : 'bg-white text-slate-400 border-gray-200'}`}>
+                                {step}
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex justify-between max-w-2xl mx-auto mt-4 px-1">
+                        <span className={`text-xs font-bold ${mulaiProyekStep >= 1 ? 'text-black' : 'text-slate-400'}`}>Identitas</span>
+                        <span className={`text-xs font-bold ${mulaiProyekStep >= 2 ? 'text-black' : 'text-slate-400'} -translate-x-1/2`}>Layanan</span>
+                        <span className={`text-xs font-bold ${mulaiProyekStep >= 3 ? 'text-black' : 'text-slate-400'} -translate-x-1/2`}>Brief</span>
+                        <span className={`text-xs font-bold ${mulaiProyekStep >= 4 ? 'text-black' : 'text-slate-400'} -translate-x-1/2`}>Budget</span>
+                        <span className={`text-xs font-bold ${mulaiProyekStep >= 5 ? 'text-black' : 'text-slate-400'}`}>Kirim</span>
+                    </div>
+                </Reveal>
+
+                {/* Step 1: Identitas */}
+                <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 1 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
+                    <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
+                        <h2 className="text-2xl font-bold mb-8">Informasi Dasar</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">Nama Lengkap</label>
+                                <div className="relative">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><User size={20}/></div>
+                                    <input type="text" name="nama" value={mulaiProyekForm.nama} onChange={handleMulaiProyekChange} placeholder="John Doe" className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">Nama Brand / Perusahaan</label>
+                                <div className="relative">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Briefcase size={20}/></div>
+                                    <input type="text" name="brand" value={mulaiProyekForm.brand} onChange={handleMulaiProyekChange} placeholder="PT Sukses Makmur" className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">Nomor WhatsApp</label>
+                                <div className="relative">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Phone size={20}/></div>
+                                    <input type="tel" name="whatsapp" value={mulaiProyekForm.whatsapp} onChange={handleMulaiProyekChange} placeholder="081234567890" className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-end mt-10">
+                            <button onClick={nextMulaiProyekStep} disabled={!mulaiProyekForm.nama} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">Lanjut ke Layanan <ArrowRight size={18}/></button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Step 2: Layanan */}
+                <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 2 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
+                    <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
+                        <h2 className="text-2xl font-bold mb-2">Kebutuhan Proyek</h2>
+                        <p className="text-slate-500 mb-8">Pilih satu atau beberapa layanan yang Anda butuhkan.</p>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {[
+                                { id: 'Desain Branding', icon: PenTool, color: 'text-blue-500', bg: 'bg-blue-100' },
+                                { id: 'Website / Landing Page', icon: Monitor, color: 'text-purple-500', bg: 'bg-purple-100' },
+                                { id: 'Gambar 3D / Konstruksi', icon: HardHat, color: 'text-orange-500', bg: 'bg-orange-100' },
+                                { id: 'Social Media Management', icon: Smartphone, color: 'text-pink-500', bg: 'bg-pink-100' },
+                                { id: 'Company Profile / Buku', icon: Layout, color: 'text-green-500', bg: 'bg-green-100' },
+                                { id: 'Lainnya', icon: Box, color: 'text-slate-500', bg: 'bg-slate-200' }
+                            ].map((layanan) => {
+                                const isSelected = mulaiProyekForm.layanan.includes(layanan.id);
+                                return (
+                                    <div 
+                                        key={layanan.id} 
+                                        onClick={() => toggleLayananProyek(layanan.id)}
+                                        className={`cursor-pointer border-2 rounded-2xl p-6 flex items-center gap-4 transition-all duration-300 ${isSelected ? 'border-black bg-white shadow-lg' : 'border-transparent bg-white hover:border-gray-300 shadow-sm'}`}
+                                    >
+                                        <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${layanan.bg} ${layanan.color}`}>
+                                            <layanan.icon size={20} />
+                                        </div>
+                                        <span className={`font-bold ${isSelected ? 'text-black' : 'text-slate-700'}`}>{layanan.id}</span>
+                                        {isSelected && <CheckCircle2 className="ml-auto text-black" size={20}/>}
+                                    </div>
+                                )
+                            })}
+                        </div>
+
+                        <div className="flex justify-between mt-10">
+                            <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-white text-black border border-gray-200 font-bold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2"><ChevronLeft size={18}/> Kembali</button>
+                            <button onClick={nextMulaiProyekStep} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors flex items-center gap-2">Lanjut Briefing <ArrowRight size={18}/></button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Step 3: Brief */}
+                <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 3 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
+                    <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
+                        <h2 className="text-2xl font-bold mb-2">Brief Singkat</h2>
+                        <p className="text-slate-500 mb-8">Bantu saya memahami bisnis Anda agar hasil visual selaras dengan visi Anda.</p>
+                        
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">Ceritakan tentang bisnis/produk Anda</label>
+                                <textarea name="deskripsi" value={mulaiProyekForm.deskripsi} onChange={handleMulaiProyekChange} placeholder="Bisnis ini bergerak di bidang F&B dengan fokus ke makanan sehat..." rows="4" className="w-full px-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white resize-none"></textarea>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">Siapa target pasar utama Anda?</label>
+                                <textarea name="targetPasar" value={mulaiProyekForm.targetPasar} onChange={handleMulaiProyekChange} placeholder="Gen Z, usia 18-25 tahun, menyukai gaya hidup modern..." rows="2" className="w-full px-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white resize-none"></textarea>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">Referensi Gaya Visual (Link URL atau deskripsi)</label>
+                                <input type="text" name="referensi" value={mulaiProyekForm.referensi} onChange={handleMulaiProyekChange} placeholder="Suka gaya minimalis elegan seperti brand Apple atau link Pinterest..." className="w-full px-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between mt-10">
+                            <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-white text-black border border-gray-200 font-bold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2"><ChevronLeft size={18}/> Kembali</button>
+                            <button onClick={nextMulaiProyekStep} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors flex items-center gap-2">Lanjut Budget <ArrowRight size={18}/></button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Step 4: Budget & Timeline */}
+                <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 4 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
+                    <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
+                        <h2 className="text-2xl font-bold mb-2">Timeline & Budget</h2>
+                        <p className="text-slate-500 mb-8">Mari selaraskan ekspektasi waktu dan investasi proyek.</p>
+                        
+                        <div className="space-y-10">
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-4">Estimasi Budget Tersedia</label>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                                    {['< Rp 2 Juta', 'Rp 2 - 5 Juta', 'Rp 5 - 10 Juta', '> Rp 10 Juta'].map(bud => (
+                                        <div 
+                                            key={bud} 
+                                            onClick={() => setMulaiProyekForm(prev => ({ ...prev, budget: bud }))}
+                                            className={`cursor-pointer border-2 rounded-xl p-4 text-center transition-all ${mulaiProyekForm.budget === bud ? 'border-black bg-black text-white font-bold shadow-md' : 'border-gray-200 bg-white text-slate-600 font-medium hover:border-gray-300'}`}
+                                        >
+                                            {bud}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-4">Target Timeline</label>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    {['Santai (> 14 Hari)', 'Normal (7 - 14 Hari)', 'Urgent (< 7 Hari)'].map(time => (
+                                        <div 
+                                            key={time} 
+                                            onClick={() => setMulaiProyekForm(prev => ({ ...prev, timeline: time }))}
+                                            className={`cursor-pointer border-2 rounded-xl p-4 text-center transition-all ${mulaiProyekForm.timeline === time ? 'border-black bg-black text-white font-bold shadow-md' : 'border-gray-200 bg-white text-slate-600 font-medium hover:border-gray-300'}`}
+                                        >
+                                            {time}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between mt-12">
+                            <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-white text-black border border-gray-200 font-bold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2"><ChevronLeft size={18}/> Kembali</button>
+                            <button onClick={nextMulaiProyekStep} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors flex items-center gap-2">Review Form <ArrowRight size={18}/></button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Step 5: Review & Submit */}
+                <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 5 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
+                    <div className="bg-slate-900 text-white rounded-[2rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                        <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-500 rounded-full mix-blend-screen filter blur-[80px] opacity-20 pointer-events-none"></div>
+                        
+                        <div className="flex flex-col items-center text-center mb-10 relative z-10">
+                            <div className="w-20 h-20 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mb-6">
+                                <Send size={32} />
+                            </div>
+                            <h2 className="text-3xl font-black mb-4">Siap Mengirim Brief?</h2>
+                            <p className="text-slate-400 max-w-lg">Semua informasi Anda telah direkap. Klik tombol di bawah untuk mengirim form ini langsung ke WhatsApp saya agar kita bisa segera berdiskusi.</p>
+                        </div>
+
+                        <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 mb-10 relative z-10">
+                            <h4 className="text-lg font-bold mb-4 text-white border-b border-slate-700 pb-2">Summary</h4>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div><span className="text-slate-500 block">Nama / Brand</span><strong className="text-slate-200">{mulaiProyekForm.nama || '-'} / {mulaiProyekForm.brand || '-'}</strong></div>
+                                <div><span className="text-slate-500 block">Layanan</span><strong className="text-slate-200">{mulaiProyekForm.layanan.length > 0 ? mulaiProyekForm.layanan.join(', ') : '-'}</strong></div>
+                                <div><span className="text-slate-500 block">Budget</span><strong className="text-slate-200">{mulaiProyekForm.budget || '-'}</strong></div>
+                                <div><span className="text-slate-500 block">Timeline</span><strong className="text-slate-200">{mulaiProyekForm.timeline || '-'}</strong></div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
+                            <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-transparent border border-slate-600 text-slate-300 font-bold rounded-full hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"><ChevronLeft size={18}/> Edit Kembali</button>
+                            <button onClick={sendMulaiProyekWa} className="px-8 py-4 bg-green-500 text-white font-black rounded-full hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(34,197,94,0.4)] flex items-center justify-center gap-2">Kirim via WhatsApp <Send size={18}/></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* --- SHARED FOOTER --- */}
             <footer className="bg-slate-900 text-white pt-20 pb-10 px-6">
-              <Reveal direction="up" className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-16 mb-16"><div className="max-w-sm"><h3 className="text-2xl font-bold mb-6 text-white">Mari berkolaborasi and diskusikan potensi Anda.</h3><button className="w-full flex items-center justify-center gap-2 bg-[#128C7E] hover:bg-[#25D366] text-white py-4 px-6 rounded-full text-sm font-bold transition-colors shadow-lg shadow-green-900/30">Hubungi via WhatsApp</button><p className="text-xs text-slate-400 mt-4 opacity-80">Respon cepat untuk setiap ide brilian Anda.</p></div><div className="flex gap-16"><div><h4 className="font-bold mb-4 text-white">Solusi</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" className="hover:text-green-400 transition-colors">Desain Branding</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Website Professional</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Gambar 3D</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Konsultasi Digital</a></li></ul></div><div><h4 className="font-bold mb-4 text-white">Profil</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); }} className="hover:text-green-400 transition-colors">Tentang Fajar</a></li><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('portfolio'); }} className="hover:text-green-400 transition-colors">Portofolio</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Estimasi Biaya</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Hubungi</a></li></ul></div></div></Reveal>
+              <Reveal direction="up" className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-16 mb-16"><div className="max-w-sm"><h3 className="text-2xl font-bold mb-6 text-white">Mari berkolaborasi and diskusikan potensi Anda.</h3><button className="w-full flex items-center justify-center gap-2 bg-[#128C7E] hover:bg-[#25D366] text-white py-4 px-6 rounded-full text-sm font-bold transition-colors shadow-lg shadow-green-900/30">Hubungi via WhatsApp</button><p className="text-xs text-slate-400 mt-4 opacity-80">Respon cepat untuk setiap ide brilian Anda.</p></div><div className="flex gap-16"><div><h4 className="font-bold mb-4 text-white">Solusi</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" className="hover:text-green-400 transition-colors">Desain Branding</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Website Professional</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Gambar 3D</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Konsultasi Digital</a></li></ul></div><div><h4 className="font-bold mb-4 text-white">Profil</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); }} className="hover:text-green-400 transition-colors">Tentang Fajar</a></li><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('portfolio'); }} className="hover:text-green-400 transition-colors">Portofolio</a></li><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('estimasi'); }} className="hover:text-green-400 transition-colors">Estimasi Biaya</a></li><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('why-fajar'); }} className="hover:text-green-400 transition-colors">Kenapa ke Fajar?</a></li></ul></div></div></Reveal>
               <Reveal delay={200} direction="up" className="max-w-6xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium"><p>© 2026 Fajar Jayadi. Dedicated to Value-Driven Excellence.</p><div className="flex gap-4"><a href="#" className="hover:text-white transition-colors">Instagram</a><a href="#" className="hover:text-white transition-colors">LinkedIn</a><a href="#" className="hover:text-white transition-colors">Behance</a></div></Reveal>
             </footer>
           </div>
