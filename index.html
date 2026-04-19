@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Meta Tags -->
-    <title>Fajar Jayadi | Desain Grafis, Website & Sketchup 3D</title>
-    <meta name="description" content="Layanan profesional jasa desain grafis, logo, spanduk, banner, pembuatan website, aplikasi, company profile, branding UMKM, jasa 3D sketchup, hingga desain konstruksi dan gambar teknik.">
-    <meta name="keywords" content="jasa desain grafis, jasa desain logo, jasa desain spanduk, jasa desain banner, jasa website, jasa aplikasi, jasa company profile, jasa branding, jasa desain umkm, jasa 3d, jasa desain bangunan, jasa desain sketchup, jasa desain gambar teknik, jasa desain layout, jasa desain konstruksi, fajar jayadi">
+    <title>Fajar Jayadi | Solusi Desain Branding, Website & Gambar 3D</title>
+    <meta name="description" content="Solusi profesional untuk desain branding, identitas visual, pembuatan website modern, sistem aplikasi, hingga gambar 3D SketchUp dan perencanaan teknik yang presisi.">
+    <meta name="keywords" content="desain branding, logo brand, website professional, aplikasi web, company profile, branding UMKM, gambar 3d, desain bangunan, desain sketchup, gambar teknik, desain layout, perencanaan konstruksi, fajar jayadi">
     <meta name="author" content="Fajar Jayadi">
     <meta name="robots" content="index, follow">
     
@@ -17,55 +17,9 @@
     <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://efjayadi.github.io/">
-    <meta property="og:title" content="Jasa Desain Grafis, Website & Sketchup 3D | Fajar Jayadi">
-    <meta property="og:description" content="Satu spesialis untuk semua kebutuhan digital Anda. Melayani desain logo, website, hingga render bangunan 3D presisi.">
+    <meta property="og:title" content="Solusi Kreatif Desain Branding, Web & Gambar 3D | Fajar Jayadi">
+    <meta property="og:description" content="Membantu bisnis Anda tampil lebih profesional. Dari identitas brand hingga gambar 3D presisi.">
     
-    <!-- JSON-LD Structured Data untuk Google (Local Business / Professional Service) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "name": "Fajar Jayadi Studio",
-      "image": "https://efjayadi.github.io/me-default-netral.png",
-      "description": "Penyedia jasa desain grafis, jasa desain logo, pembuatan website, aplikasi, hingga jasa 3D bangunan dan gambar teknik konstruksi.",
-      "url": "https://efjayadi.github.io",
-      "telephone": "+6283192054797",
-      "priceRange": "$$",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Cikarang",
-        "addressCountry": "ID"
-      },
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Layanan Digital dan Konstruksi",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Jasa Desain Grafis & Branding"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Jasa Website & Aplikasi"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Jasa Desain Konstruksi & 3D Sketchup"
-            }
-          }
-        ]
-      }
-    }
-    </script>
-
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -79,29 +33,21 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@900&display=swap');
 
-        /* Block html/body overflow-hidden dihapus sepenuhnya agar scroll fisika bawaan browser tetap mulus! */
         body { 
           font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
-          -webkit-user-select: none; /* Safari */
-          -ms-user-select: none; /* IE 10 and IE 11 */
-          user-select: none; /* Standard syntax */
+          -webkit-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
         }
         
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Responsive Root Font Size untuk Auto-Zoom UI di Layar Besar */
         html { font-size: 16px; }
-        @media (min-width: 1024px) { html { font-size: 18px; } } /* Auto-Zoom ~112% di Laptop */
-        @media (min-width: 1280px) { html { font-size: 20px; } } /* Auto-Zoom ~125% di Monitor Sedang */
-        @media (min-width: 1536px) { html { font-size: 21px; } } /* Auto-Zoom ~133% di Monitor Besar / Ultrawide */
+        @media (min-width: 1024px) { html { font-size: 18px; } }
+        @media (min-width: 1280px) { html { font-size: 20px; } }
+        @media (min-width: 1536px) { html { font-size: 21px; } }
         
-        /* Animasi mengambang untuk Badges */
         @keyframes float-1 {
           0%, 100% { transform: translateY(0) rotate(-10deg); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
           50% { transform: translateY(-15px) rotate(-10deg); box-shadow: 0 25px 25px rgba(0,0,0,0.15); }
@@ -113,25 +59,18 @@
         .animate-float-1 { animation: float-1 4s ease-in-out infinite; }
         .animate-float-2 { animation: float-2 3.5s ease-in-out infinite; }
 
-        /* Animasi wave outline untuk icon Play diperbaiki */
         @keyframes ripple-out {
           0% { transform: scale(1); opacity: 0.8; }
           100% { transform: scale(2.8); opacity: 0; border-width: 1px; }
         }
-        .group:hover .ripple-element {
-          animation: ripple-out 1.2s infinite ease-out;
-        }
+        .group:hover .ripple-element { animation: ripple-out 1.2s infinite ease-out; }
 
-        /* Animasi ripple konstan untuk ikon trigger hover */
         @keyframes pulse-ripple {
           0% { transform: scale(0.9); opacity: 0.6; }
           100% { transform: scale(1.6); opacity: 0; }
         }
-        .animate-pulse-ripple {
-          animation: pulse-ripple 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .animate-pulse-ripple { animation: pulse-ripple 2s infinite cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* Animasi teks berubah hijau memantul */
         @keyframes bounce-green {
           0% { transform: translateY(0); color: #9ca3af; } 
           30% { transform: translateY(-15px) scale(1.1); color: #22c55e; } 
@@ -139,81 +78,36 @@
           70% { transform: translateY(-3px) scale(1); color: #22c55e; }
           100% { transform: translateY(0); color: #22c55e; } 
         }
-        .animate-bounce-color {
-          animation: bounce-green 0.7s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
-        }
+        .animate-bounce-color { animation: bounce-green 0.7s cubic-bezier(0.28, 0.84, 0.42, 1) forwards; }
 
-        /* Animasi roket terbang keluar layar */
+        /* Rocket trajectory: pointing to 2 o'clock position (top-right) */
         @keyframes fly-away {
           0% { transform: translate(0, 0) scale(1); opacity: 1; }
           15% { transform: translate(-5px, 5px) rotate(-10deg) scale(0.9); opacity: 1; } 
-          100% { transform: translate(150vw, -150vh) rotate(45deg) scale(3); opacity: 0; } 
+          100% { transform: translate(200vw, -120vh) rotate(35deg) scale(4); opacity: 0; } 
         }
-        .animate-rocket-fly {
-          animation: fly-away 2.5s ease-in forwards;
-        }
+        .animate-rocket-fly { animation: fly-away 5s ease-in 1s forwards; }
 
-        /* Latar Belakang Pola Lingkaran */
         .bg-circle-pattern {
-          background: repeating-radial-gradient(
-            circle at center,
-            #ffffff 0px,
-            #eef1f5 60px
-          );
+          background: repeating-radial-gradient(circle at center, #ffffff 0px, #eef1f5 60px);
         }
 
-        /* Testimonial Dynamic Hovering Flip Transition */
-        .testi-container {
-          perspective: 2000px; 
-          transform-style: preserve-3d;
-        }
+        .testi-container { perspective: 2000px; transform-style: preserve-3d; }
         .testi-card {
-          /* Transisi diperhalus (ease-out curve) untuk pendaratan melayang yang empuk */
           transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease;
           backface-visibility: hidden;
           width: 100%;
         }
-        .testi-active {
-          transform: translateX(0) translateZ(0) rotateY(0deg) scale(1);
-          opacity: 1;
-          pointer-events: auto;
-          position: relative; /* Menahan ruang parent container */
-          z-index: 10;
-        }
-        .testi-prev {
-          /* Ditarik sedikit ke kiri (-8%) dan ke depan (40px) agar efek melayangnya terasa */
-          transform: translateX(-8%) translateZ(40px) rotateY(60deg) scale(0.95); 
-          opacity: 0;
-          pointer-events: none;
-          position: absolute;
-          top: 0; left: 0;
-          z-index: 0;
-        }
-        .testi-next {
-          /* Ditarik sedikit ke kanan (8%) dan ke depan (40px) agar efek melayangnya terasa */
-          transform: translateX(8%) translateZ(40px) rotateY(-60deg) scale(0.95); 
-          opacity: 0;
-          pointer-events: none;
-          position: absolute;
-          top: 0; left: 0;
-          z-index: 0;
-        }
-        .testi-hidden {
-          transform: rotateY(0deg) scale(0.8);
-          opacity: 0;
-          pointer-events: none;
-          position: absolute;
-          top: 0; left: 0;
-          z-index: -1;
-        }
+        .testi-active { transform: translateX(0) translateZ(0) rotateY(0deg) scale(1); opacity: 1; pointer-events: auto; position: relative; z-index: 10; }
+        .testi-prev { transform: translateX(-8%) translateZ(40px) rotateY(60deg) scale(0.95); opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; z-index: 0; }
+        .testi-next { transform: translateX(8%) translateZ(40px) rotateY(-60deg) scale(0.95); opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; z-index: 0; }
+        .testi-hidden { transform: rotateY(0deg) scale(0.8); opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; z-index: -1; }
 
-        /* Efek fade-out transparan pada bagian bawah gambar avatar - Diperkecil menjadi 5% */
         .mask-fade-bottom {
           -webkit-mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
           mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
         }
 
-        /* Nonow Text Effect */
         .nonow-text {
           position: fixed;
           pointer-events: none;
@@ -221,7 +115,6 @@
           font-weight: 900;
           font-size: 2rem;
           color: #ff4757;
-          /* Cute rounded stroke and shadow */
           text-shadow: 3px 3px 0 #fff, -3px -3px 0 #fff, 3px -3px 0 #fff, -3px 3px 0 #fff, 0 8px 15px rgba(0,0,0,0.2);
           z-index: 999999;
           animation: nonowAnim 1s ease-in-out forwards;
@@ -229,79 +122,42 @@
         }
 
         @keyframes nonowAnim {
-          0% { 
-            opacity: 0; 
-            transform: translate(-50%, 0px) rotate(var(--rot)) scale(0.5); 
-          }
-          25% { 
-            opacity: 1; 
-            transform: translate(calc(-50% - 15px), -20px) rotate(calc(var(--rot) - 8deg)) scale(1.1); 
-          }
-          50% { 
-            transform: translate(calc(-50% + 15px), -40px) rotate(calc(var(--rot) + 8deg)) scale(1); 
-          }
-          75% { 
-            opacity: 1; 
-            transform: translate(calc(-50% - 10px), -60px) rotate(calc(var(--rot) - 4deg)) scale(1); 
-          }
-          100% { 
-            opacity: 0; 
-            transform: translate(-50%, -80px) rotate(var(--rot)) scale(0.9); 
-          }
+          0% { opacity: 0; transform: translate(-50%, 0px) rotate(var(--rot)) scale(0.5); }
+          25% { opacity: 1; transform: translate(calc(-50% - 15px), -20px) rotate(calc(var(--rot) - 8deg)) scale(1.1); }
+          50% { transform: translate(calc(-50% + 15px), -40px) rotate(calc(var(--rot) + 8deg)) scale(1); }
+          75% { opacity: 1; transform: translate(calc(-50% - 10px), -60px) rotate(calc(var(--rot) - 4deg)) scale(1); }
+          100% { opacity: 0; transform: translate(-50%, -80px) rotate(var(--rot)) scale(0.9); }
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
-    <!-- Anti-Inspect, Anti-Right-Click, Anti-Copy Script -->
     <script>
-        // Disable Right Click & Show "nonow.."
         document.addEventListener('contextmenu', event => {
             event.preventDefault();
-            
             const el = document.createElement('div');
             el.textContent = 'nonow..';
             el.className = 'nonow-text';
-            
-            // Random rotation between -25 and +25 degrees
             const rot = Math.random() * 50 - 25;
             el.style.setProperty('--rot', `${rot}deg`);
-            
             el.style.left = `${event.clientX}px`;
             el.style.top = `${event.clientY}px`;
-            
             document.body.appendChild(el);
-            
-            // Remove after 1 second
             setTimeout(() => el.remove(), 1000);
         });
 
-        // Disable Keyboard Shortcuts for Inspect Element, Console, View Source
         document.addEventListener('keydown', function(e) {
-            // Disable F12
-            if (e.key === 'F12' || e.keyCode === 123) {
-                e.preventDefault();
-            }
-            // Disable Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C (Windows/Linux)
-            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
-                e.preventDefault();
-            }
-            // Disable Ctrl+U (Windows/Linux View Source)
-            if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
-                e.preventDefault();
-            }
-            // Disable Cmd+Option+I, Cmd+Option+J, Cmd+Option+U (Mac)
-            if (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'U' || e.key === 'u')) {
-                e.preventDefault();
-            }
+            if (e.key === 'F12' || e.keyCode === 123) e.preventDefault();
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) e.preventDefault();
+            if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) e.preventDefault();
+            if (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'U' || e.key === 'u')) e.preventDefault();
         });
     </script>
 
     <script type="text/babel">
       const { useState, useEffect, useRef } = React;
 
-      // --- ICON COMPONENTS (Menggantikan lucide-react agar berjalan di single HTML) ---
       const ArrowRight = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>;
       const Play = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>;
       const PenTool = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>;
@@ -315,110 +171,62 @@
       const Star = ({ size = 24, fill = "none", className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>;
       const ChevronRight = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="9 18 15 12 9 6"></polyline></svg>;
       const ChevronLeft = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="15 18 9 12 15 6"></polyline></svg>;
-      const MenuIcon = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>;
-      const XIcon = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
-      // -------------------------------------------------------------------------
 
-      // Hook kustom untuk memicu animasi hanya saat elemen terlihat di layar (scroll)
       const useScrollTrigger = (options = {}) => {
         const ref = useRef(null);
         const [triggered, setTriggered] = useState(false);
-
         useEffect(() => {
           const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) {
-              setTriggered(true);
-              observer.disconnect(); // Hanya memicu animasi 1x
-            }
+            if (entry.isIntersecting) { setTriggered(true); observer.disconnect(); }
           }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px", ...options });
-          
           if (ref.current) observer.observe(ref.current);
           return () => observer.disconnect();
         }, [options]);
-        
         return [ref, triggered];
       };
 
-      // Komponen Reveal Otomatis untuk Transisi Halus
       const Reveal = ({ children, delay = 0, direction = 'up', className = "" }) => {
         const [ref, triggered] = useScrollTrigger();
-
-        let transformClass = "translate-y-12"; // up
+        let transformClass = "translate-y-12"; 
         if (direction === 'down') transformClass = "-translate-y-12";
         if (direction === 'left') transformClass = "translate-x-12";
         if (direction === 'right') transformClass = "-translate-x-12";
         if (direction === 'none') transformClass = "scale-95"; 
-
         return (
-          <div
-            ref={ref}
-            className={`transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] ${className} ${
-              triggered ? "opacity-100 translate-y-0 translate-x-0 scale-100" : `opacity-0 ${transformClass}`
-            }`}
-            style={{ transitionDelay: `${delay}ms` }}
-          >
-            {children}
-          </div>
+          <div ref={ref} className={`transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] ${className} ${triggered ? "opacity-100 translate-y-0 translate-x-0 scale-100" : `opacity-0 ${transformClass}`}`} style={{ transitionDelay: `${delay}ms` }}>{children}</div>
         );
       };
 
-      // Komponen untuk Efek Hover Magnetik (Sticky Elastic)
       const MagneticButton = ({ children, onMouseEnter, onMouseLeave, className }) => {
         const ref = useRef(null);
         const [position, setPosition] = useState({ x: 0, y: 0 });
         const [isHovered, setIsHovered] = useState(false);
-
         const handleMouseMove = (e) => {
           if (!ref.current) return;
           const rect = ref.current.getBoundingClientRect();
-          const x = (e.clientX - rect.left - rect.width / 2) * 0.3; // Kekuatan tarikan magnet
+          const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
           const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
           setPosition({ x, y });
         };
-
-        const handleMouseLeave = (e) => {
-          setIsHovered(false);
-          setPosition({ x: 0, y: 0 });
-          if (onMouseLeave) onMouseLeave(e);
-        };
-
-        const handleMouseEnter = (e) => {
-          setIsHovered(true);
-          if (onMouseEnter) onMouseEnter(e);
-        };
-
+        const handleMouseLeave = (e) => { setIsHovered(false); setPosition({ x: 0, y: 0 }); if (onMouseLeave) onMouseLeave(e); };
+        const handleMouseEnter = (e) => { setIsHovered(true); if (onMouseEnter) onMouseEnter(e); };
         return (
-          <div
-            ref={ref}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            onMouseEnter={handleMouseEnter}
-            className={className}
-            style={{
-              transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${isHovered ? 1.1 : 1})`,
-              transition: isHovered ? 'transform 0.1s ease-out, box-shadow 0.3s ease' : 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease',
-              willChange: 'transform'
-            }}
-          >
-            {children}
-          </div>
+          <div ref={ref} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} className={className} style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${isHovered ? 1.1 : 1})`, transition: isHovered ? 'transform 0.1s ease-out, box-shadow 0.3s ease' : 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease', willChange: 'transform' }}>{children}</div>
         );
       };
 
-      // Komponen helper untuk menangani gambar yang belum ada agar tidak merusak layout
       const DynamicImage = ({ src, alt, className, isActive = true, objectFit = 'object-contain', minimalFallback = false }) => {
         const [hasError, setHasError] = useState(false);
         const [isLoaded, setIsLoaded] = useState(false);
-
+        const imgRef = useRef(null);
         useEffect(() => {
-          setHasError(false);
-          setIsLoaded(false);
+          setHasError(false); setIsLoaded(false);
+          if (imgRef.current && imgRef.current.complete) { setIsLoaded(true); }
         }, [src]);
-
+        const handleLoad = () => setIsLoaded(true);
+        const handleError = () => setHasError(true);
         if (hasError || !src) {
-          if (minimalFallback) {
-             return <div className={`flex items-center justify-center font-black text-slate-300 tracking-tighter whitespace-nowrap ${className}`}>LOGO {alt.replace('Client Logo ', '')}</div>;
-          }
+          if (minimalFallback) { return <div className={`flex items-center justify-center font-black text-slate-300 tracking-tighter whitespace-nowrap ${className}`}>KARYA {alt.replace('Portfolio ', '')}</div>; }
           return (
             <div className={`flex flex-col items-center justify-center bg-gray-100 border border-gray-200 border-dashed text-gray-400 p-4 text-center ${className} transition-opacity ease-in-out ${isActive ? 'opacity-100 duration-300' : 'opacity-0 duration-1000 delay-150'}`}>
               <div className="w-10 h-10 bg-gray-200 rounded-full mb-2 animate-pulse"></div>
@@ -426,637 +234,286 @@
             </div>
           );
         }
-
         return (
-          <img 
-            src={src} 
-            alt={alt}
-            onLoad={() => setIsLoaded(true)}
-            onError={() => setHasError(true)}
-            className={`${className} ${objectFit} transition-opacity ease-in-out ${isLoaded && isActive ? 'opacity-100 duration-300' : 'opacity-0 duration-1000 delay-150'}`}
-          />
+          <img ref={imgRef} src={src} alt={alt} onLoad={handleLoad} onError={handleError} className={`${className} ${objectFit} transition-opacity ease-in-out ${isLoaded && isActive ? 'opacity-100 duration-300' : 'opacity-0 duration-1000 delay-150'}`} />
         );
       };
 
       function App() {
         const [isLoaded, setIsLoaded] = useState(false);
         useEffect(() => setIsLoaded(true), []);
-
         const [isMenuOpen, setIsMenuOpen] = useState(false);
         const [activeCategory, setActiveCategory] = useState('default');
-
-        // State & Refs untuk Animated Moving Dot di Header
         const headerWrapperRef = useRef(null);
         const logoTargetRef = useRef(null);
         const [dotStyle, setDotStyle] = useState({ x: 0, y: 0, opacity: 0 });
-
         const updateDot = (element) => {
           if (!element || !headerWrapperRef.current) return;
           const targetRect = element.getBoundingClientRect();
           const headerRect = headerWrapperRef.current.getBoundingClientRect();
-          setDotStyle({
-            x: targetRect.left - headerRect.left - 2,
-            y: targetRect.top - headerRect.top + 5,
-            opacity: 1
-          });
+          setDotStyle({ x: targetRect.left - headerRect.left - 2, y: targetRect.top - headerRect.top + 5, opacity: 1 });
         };
-
         useEffect(() => {
-          const initDot = () => {
-            if (logoTargetRef.current) updateDot(logoTargetRef.current);
-          };
+          const initDot = () => { if (logoTargetRef.current) updateDot(logoTargetRef.current); };
           initDot();
-          const t1 = setTimeout(initDot, 100); // Penundaan pendek agar font ter-render
+          const t1 = setTimeout(initDot, 100); 
           const t2 = setTimeout(initDot, 500); 
           window.addEventListener('resize', initDot);
-          return () => {
-            clearTimeout(t1);
-            clearTimeout(t2);
-            window.removeEventListener('resize', initDot);
-          };
+          return () => { clearTimeout(t1); clearTimeout(t2); window.removeEventListener('resize', initDot); };
         }, [isLoaded]);
 
-        // State untuk memicu animasi saat di-scroll
         const [wordsRef, wordsTriggered] = useScrollTrigger({ threshold: 0.8 });
         const [rocketRef, rocketTriggered] = useScrollTrigger({ threshold: 0.5 });
         const bouncyWords = ["mulus,", "presisi,", "dan", "profesional."];
-
-        // State & Ref untuk Directional Expand Bento Grid
         const bentoSectionRef = useRef(null);
         const [expandedService, setExpandedService] = useState(null);
         const [activeServiceContent, setActiveServiceContent] = useState(null);
         const [isClosing, setIsClosing] = useState(false);
-        
         const [isTransitioning, setIsTransitioning] = useState(false);
         const initialClipRef = useRef('inset(0px 0px 0px 0px round 2rem)');
         const [clipPathStyle, setClipPathStyle] = useState('inset(0px 0px 0px 0px round 2rem)');
 
-        // --- DATA TESTIMONIAL & STATE NAVIGASI FLIP KUSTOM ---
-        const testimonials = [
-          { name: "Budi Santoso", role: "CEO, TechNusa", text: "Hasil desain dan website dari Fajar terasa sangat profesional. Komunikasinya mudah dan pengerjaannya sangat cepat. Salah satu freelancer terbaik yang pernah saya sewa." },
-          { name: "Siti Aminah", role: "Owner, Kopi Senja", text: "Branding UMKM saya jadi naik level! Dari logo sampai kemasan, semuanya dieksekusi dengan presisi dan estetika tinggi. Penjualan meningkat tajam." },
-          { name: "Andi Wijaya", role: "Direktur, PT Bangun Karya", text: "Layout gudang dan render 3D-nya sangat akurat. Membantu tim konstruksi kami memvisualisasikan proyek tanpa miskomunikasi. Sangat direkomendasikan!" },
-          { name: "Rina Melati", role: "Founder, BeautyGlow", text: "Aplikasi POS custom yang dibuatkan Fajar benar-benar mempercepat operasional kasir kami. Bebas bug dan UI-nya sangat ramah pengguna." }
-        ];
+        // Map real portfolio assets to Bento Categories
+        const portfolioData = {
+          desain: [
+            'assets/img/portfolio/Logo/pmg.png', 'assets/img/portfolio/Logo/discountjunction.png',
+            'assets/img/portfolio/Logo/mieayamcabeuleg.png', 'assets/img/portfolio/Logo/jembar.png',
+            'assets/img/portfolio/Logo/cobek89.png', 'assets/img/portfolio/Logo/ayamdjagoan.png',
+            'assets/img/portfolio/Flyer/cobekflyer.png', 'assets/img/portfolio/Packaging/ppf-si.png'
+          ],
+          website: [
+            'assets/img/portfolio/website/website-tja.png'
+          ],
+          konstruksi: [
+            'assets/img/portfolio/foodstal/foodstal-ras1.png', 'assets/img/portfolio/foodstal/foodstal-ras2.png',
+            'assets/img/portfolio/foodstal/cwsu-btg.png', 'assets/img/portfolio/foodstal/cwsu-bt.png',
+            'assets/img/portfolio/foodstal/foodstal-akrilik.png', 'assets/img/portfolio/foodstal/foodstal-mejastainless.png'
+          ],
+          layout: [
+            'assets/img/portfolio/Xbanner/xbanner-ras.png', 'assets/img/portfolio/Xbanner/xbanner-soto.png',
+            'assets/img/portfolio/Xbanner/cwxb-bt.png', 'assets/img/portfolio/Banner/banner-cobek89.png',
+            'assets/img/portfolio/Banner/cwb-lh.png', 'assets/img/portfolio/Banner/ppb-scs.png'
+          ],
+          aplikasi: [
+            'assets/img/portfolio/Feed/feed-buahhati.png', 'assets/img/portfolio/Feed/feed-hipno.png',
+            'assets/img/portfolio/Feed/MP1.png', 'assets/img/portfolio/Feed/feed-madina.png',
+            'assets/img/portfolio/Feed/feed-theta.png'
+          ],
+          company_profile: [
+            'assets/img/portfolio/Book/book-aw.png', 'assets/img/portfolio/Book/book-idjji.png',
+            'assets/img/portfolio/Book/book-psj.png', 'assets/img/portfolio/Book/book-tja.png'
+          ]
+        };
 
         const [testiIdx, setTestiIdx] = useState(0);
         const [slideDir, setSlideDir] = useState('next');
-
-        const nextTesti = () => {
-          setSlideDir('next');
-          setTestiIdx((prev) => (prev + 1) % testimonials.length);
-        };
-        const prevTesti = () => {
-          setSlideDir('prev');
-          setTestiIdx((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-        };
-
+        const nextTesti = () => { setSlideDir('next'); setTestiIdx((prev) => (prev + 1) % testimonials.length); };
+        const prevTesti = () => { setSlideDir('prev'); setTestiIdx((prev) => (prev - 1 + testimonials.length) % testimonials.length); };
         const getTestiState = (idx) => {
           if (idx === testiIdx) return 'active';
           if (idx === (testiIdx - 1 + testimonials.length) % testimonials.length) return 'prev';
           if (idx === (testiIdx + 1) % testimonials.length) return 'next';
           return 'hidden';
         };
-
         const getTestiClass = (state) => {
           if (state === 'active') return 'testi-active';
           if (state === 'prev') return 'testi-prev';
           if (state === 'next') return 'testi-next';
           return 'testi-hidden';
         };
-
-        // Penentuan dinamis untuk titik asal engsel (hinge) dan jeda waktu (time gap)
         const getTestiStyle = (state) => {
           let transformOrigin = 'center';
-          let transitionDelay = '0s'; // Default: tanpa jeda untuk kartu yang sedang keluar
-
-          if (state === 'next') {
-            // Posisi menunggu di kanan. Engsel dikunci di KANAN agar saat keluar ia mengayun ke arah layar
-            transformOrigin = 'right center'; 
-          } else if (state === 'prev') {
-            // Posisi menunggu di kiri. Engsel dikunci di KIRI agar saat keluar ia mengayun ke arah layar
-            transformOrigin = 'left center';
-          } else if (state === 'active') {
-            // Untuk kartu yang akan MASUK, engsel tetap dijaga di pinggir 
-            // agar ia mengayun dari luar dan mendarat sempurna tanpa jumping.
-            transformOrigin = slideDir === 'next' ? 'right center' : 'left center'; 
-            transitionDelay = '0.25s'; // Jeda 0.25 detik
-          }
+          let transitionDelay = '0s'; 
+          if (state === 'next') transformOrigin = 'right center';
+          else if (state === 'prev') transformOrigin = 'left center';
+          else if (state === 'active') { transformOrigin = slideDir === 'next' ? 'right center' : 'left center'; transitionDelay = '0.25s'; }
           return { transformOrigin, transitionDelay };
         };
-        // ------------------------------------------
 
-        // Data Dinamis untuk Modal Portofolio
-        const portfolioData = {
-          desain: { title: "Jasa Desain Grafis & Branding", desc: "Kumpulan karya identitas visual, logo, and material promosi yang dirancang untuk memperkuat karakter brand di mata audiens.", color: "bg-blue-500", text: "text-blue-500", bg: "bg-blue-50" },
-          website: { title: "Jasa Website", desc: "Koleksi landing page dan website profesional yang telah dioptimalkan untuk kecepatan, konversi, dan SEO.", color: "bg-green-500", text: "text-green-500", bg: "bg-green-50" },
-          konstruksi: { title: "Jasa 3D Bangunan", desc: "Galeri render arsitektur fotorealistik dan visualisasi 3D eksterior maupun interior untuk proyek klien.", color: "bg-orange-500", text: "text-orange-500", bg: "bg-orange-50" },
-          layout: { title: "Desain Konstruksi & Layout", desc: "Kumpulan gambar teknik presisi dan perencanaan tata letak ruangan atau gudang yang sangat fungsional.", color: "bg-slate-700", text: "text-slate-700", bg: "bg-slate-100" },
-          aplikasi: { title: "Jasa Aplikasi", desc: "Showcase sistem informasi, custom dashboard, dan aplikasi web yang sukses mempermudah operasional klien.", color: "bg-blue-600", text: "text-blue-600", bg: "bg-blue-50" },
-          company_profile: { title: "Jasa Company Profile", desc: "Desain profil perusahaan yang elegan, baik dalam format digital (PDF interaktif) maupun siap cetak.", color: "bg-purple-500", text: "text-purple-500", bg: "bg-purple-50" }
-        };
+        const testimonials = [
+          { name: "Budi Santoso", role: "CEO, TechNusa", text: "Karya desain branding and website dari Fajar membuat brand kami terlihat sangat eksklusif and modern." },
+          { name: "Siti Aminah", role: "Owner, Kopi Senja", text: "Identitas brand saya naik level! Dari filosofi logo sampai kemasan, semuanya dieksekusi dengan presisi and estetika tinggi." },
+          { name: "Andi Wijaya", role: "Direktur, PT Bangun Karya", text: "Gambar 3D and teknisnya sangat akurat. Sangat membantu tim konstruksi kami melihat detail proyek tanpa miskomunikasi." },
+          { name: "Rina Melati", role: "Founder, BeautyGlow", text: "Website professional yang dibuatkan Fajar benar-benar mempercepat operasional kasir and manajemen stok kami." }
+        ];
 
         const openService = (e, serviceId) => {
           const card = e.currentTarget;
           const container = bentoSectionRef.current;
           if(!container) return;
-
           const cardRect = card.getBoundingClientRect();
           const containerRect = container.getBoundingClientRect();
-
           const top = cardRect.top - containerRect.top;
           const left = cardRect.left - containerRect.left;
           const right = containerRect.right - cardRect.right;
           const bottom = containerRect.bottom - cardRect.bottom;
-
           const startClip = `inset(${top}px ${right}px ${bottom}px ${left}px round 2rem)`;
-
           initialClipRef.current = startClip;
           setClipPathStyle(startClip);
           setActiveServiceContent(serviceId);
           setExpandedService(serviceId);
           setIsClosing(false);
           setIsTransitioning(false); 
-
-          setTimeout(() => {
-            setIsTransitioning(true);
-            setClipPathStyle('inset(0px 0px 0px 0px round 2rem)');
-          }, 30);
+          setTimeout(() => { setIsTransitioning(true); setClipPathStyle('inset(0px 0px 0px 0px round 2rem)'); }, 30);
         };
 
         const closeService = (e) => {
           if(e) e.stopPropagation();
           setIsClosing(true);
           setClipPathStyle(initialClipRef.current); 
-
-          setTimeout(() => {
-            setExpandedService(null);
-            setIsTransitioning(false);
-          }, 700);
-
-          setTimeout(() => {
-            setActiveServiceContent(null);
-          }, 750); 
+          setTimeout(() => { setIsTransitioning(false); }, 700);
+          setTimeout(() => { setExpandedService(null); setIsClosing(false); }, 1200);
+          setTimeout(() => { setActiveServiceContent(null); }, 750); 
         };
 
         useEffect(() => {
-          const handleClickOutside = (e) => {
-            if (expandedService && bentoSectionRef.current && !bentoSectionRef.current.contains(e.target)) {
-              closeService();
-            }
-          };
+          const handleClickOutside = (e) => { if (expandedService && bentoSectionRef.current && !bentoSectionRef.current.contains(e.target)) closeService(); };
           document.addEventListener('mousedown', handleClickOutside);
           return () => document.removeEventListener('mousedown', handleClickOutside);
         }, [expandedService]);
 
-        // State dan Ref untuk Auto-Scroll Carousel
         const carouselRef = useRef(null);
         const [isDragging, setIsDragging] = useState(false);
         const [startX, setStartX] = useState(0);
         const [scrollLeft, setScrollLeft] = useState(0);
-
-        const handleMouseDown = (e) => {
-          setIsDragging(true);
-          setStartX(e.pageX - carouselRef.current.offsetLeft);
-          setScrollLeft(carouselRef.current.scrollLeft);
-        };
+        const handleMouseDown = (e) => { setIsDragging(true); setStartX(e.pageX - carouselRef.current.offsetLeft); setScrollLeft(carouselRef.current.scrollLeft); };
         const handleMouseLeave = () => setIsDragging(false);
         const handleMouseUp = () => setIsDragging(false);
-        const handleMouseMove = (e) => {
-          if (!isDragging) return;
-          e.preventDefault();
-          const x = e.pageX - carouselRef.current.offsetLeft;
-          const walk = (x - startX) * 2; 
-          carouselRef.current.scrollLeft = scrollLeft - walk;
-        };
+        const handleMouseMove = (e) => { if (!isDragging) return; e.preventDefault(); const x = e.pageX - carouselRef.current.offsetLeft; const walk = (x - startX) * 2; carouselRef.current.scrollLeft = scrollLeft - walk; };
 
-        // --- Logika Infinite Auto-Scroll Klien ---
         useEffect(() => {
           let animationId;
           const container = carouselRef.current;
-          
           const scroll = () => {
             if (container && !isDragging) {
-              container.scrollLeft += 1; // Kecepatan scroll perlahan
-              
-              // Infinite Loop: Jika sudah scroll sejauh 1 set penuh, reset ke awal tanpa disadari
-              if (container.scrollLeft >= container.scrollWidth / 3) {
-                container.scrollLeft -= container.scrollWidth / 3;
-              }
+              container.scrollLeft += 1; 
+              if (container.scrollLeft >= container.scrollWidth / 3) container.scrollLeft -= container.scrollWidth / 3;
             }
             animationId = requestAnimationFrame(scroll);
           };
-          
-          // Beri jeda sejenak agar lebar DOM terhitung akurat
-          const timeoutId = setTimeout(() => {
-            animationId = requestAnimationFrame(scroll);
-          }, 500);
-
-          return () => {
-            clearTimeout(timeoutId);
-            cancelAnimationFrame(animationId);
-          };
+          const timeoutId = setTimeout(() => { animationId = requestAnimationFrame(scroll); }, 500);
+          return () => { clearTimeout(timeoutId); cancelAnimationFrame(animationId); };
         }, [isDragging]);
 
-        // Data array logo yang digandakan (x3) agar cukup untuk looping tak terbatas
         const baseClientLogos = [1, 2, 3, 4, 5, 6, 7, 8];
         const displayLogos = [...baseClientLogos, ...baseClientLogos, ...baseClientLogos];
-
         const avatars = {
-          default: { img: 'me-default-netral.png', bgImg: 'bg-netral.png', label: 'Netral' },
-          desain: { img: 'me-desain-grafis.png', bgImg: 'bg-desain.png', label: 'Desain Grafis' },
-          website: { img: 'me-website.png', bgImg: 'bg-website.png', label: 'Website Dev' },
-          konstruksi: { img: 'me-konstruksi.png', bgImg: 'bg-konstruksi.png', label: 'Konstruksi 3D' }
+          default: { img: 'me-default-netral.png', bgImg: 'bg-netral.png', label: 'Eksplorasi' },
+          desain: { img: 'me-desain-grafis.png', bgImg: 'bg-desain.png', label: 'Desain Branding' },
+          website: { img: 'me-website.png', bgImg: 'bg-website.png', label: 'Website Professional' },
+          konstruksi: { img: 'me-konstruksi.png', bgImg: 'bg-konstruksi.png', label: 'Gambar 3D' }
+        };
+
+        const getTileContentClass = (id) => {
+          const base = "transition-opacity w-full h-full";
+          if (expandedService !== id) return `${base} opacity-100`;
+          return isClosing ? `${base} opacity-100 duration-500 delay-700` : `${base} opacity-0 duration-300`;
         };
 
         return (
           <div className="w-full min-h-[100dvh] overflow-x-clip bg-white text-slate-900 selection:bg-black selection:text-white">
-            
-            {/* 1. NAVBAR (Notch Style dengan Dropdown) */}
             <header className={`fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl z-50 transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-12'}`}>
               <div ref={headerWrapperRef} className={`bg-white/80 backdrop-blur-xl border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 overflow-hidden rounded-[2rem] relative`}>
-                
-                {/* Dynamic Moving Dot */}
-                <span
-                  className="absolute top-0 left-0 bg-green-500 rounded-full pointer-events-none z-50 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] w-[5px] h-[5px]"
-                  style={{
-                    transform: `translate(${dotStyle.x}px, ${dotStyle.y}px)`,
-                    opacity: dotStyle.opacity
-                  }}
-                ></span>
-
-                {/* Top Bar (Clickable di Mobile) */}
-                <div 
-                  className="px-2 py-2 flex justify-between items-center cursor-pointer md:cursor-default"
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                >
-                  <div 
-                    className="pl-4 md:pl-6 flex items-center"
-                    onMouseEnter={() => updateDot(logoTargetRef.current)}
-                  >
-                    <span className="font-bold text-base md:text-lg tracking-tight flex items-center">
-                      Fajar Jayadi
-                      {/* Target tersembunyi sebagai acuan koordinat */}
-                      <span ref={logoTargetRef} className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span>
-                    </span>
+                <span className="absolute top-0 left-0 bg-green-500 rounded-full pointer-events-none z-50 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] w-[5px] h-[5px]" style={{ transform: `translate(${dotStyle.x}px, ${dotStyle.y}px)`, opacity: dotStyle.opacity }}></span>
+                <div className="px-2 py-2 flex justify-between items-center cursor-pointer md:cursor-default" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                  <div className="pl-4 md:pl-6 flex items-center" onMouseEnter={() => updateDot(logoTargetRef.current)}>
+                    <span className="font-bold text-base md:text-lg tracking-tight flex items-center">Fajar Jayadi<span ref={logoTargetRef} className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></span>
                   </div>
-                  
-                  <nav 
-                    className="hidden md:flex gap-8 text-sm font-medium text-slate-500 items-center translate-y-[1px]"
-                    onMouseLeave={() => updateDot(logoTargetRef.current)}
-                  >
-                    <a 
-                      href="#" 
-                      className="hover:text-black transition-colors flex items-center"
-                      onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}
-                    >
-                      Portofolio<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span>
-                    </a>
-                    <a 
-                      href="#" 
-                      className="hover:text-black transition-colors flex items-center"
-                      onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}
-                    >
-                      Harga<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span>
-                    </a>
-                    <a 
-                      href="#" 
-                      className="hover:text-black transition-colors flex items-center"
-                      onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}
-                    >
-                      Kenapa harus ke Fajar?<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span>
-                    </a>
+                  <nav className="hidden md:flex gap-8 text-sm font-medium text-slate-500 items-center translate-y-[1px]" onMouseLeave={() => updateDot(logoTargetRef.current)}>
+                    <a href="#" className="hover:text-black transition-colors flex items-center" onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Portofolio<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
+                    <a href="#" className="hover:text-black transition-colors flex items-center" onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Estimasi<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
+                    <a href="#" className="hover:text-black transition-colors flex items-center" onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Kenapa mending ke Fajar?<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
                   </nav>
-
                   <div className="pr-1 flex items-center">
-                    <button 
-                      className="px-4 py-2 md:px-6 md:py-2.5 text-xs md:text-sm font-bold bg-green-400 hover:bg-green-500 text-white rounded-full transition-colors"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      Mulai Proyek
-                    </button>
+                    <button className="px-4 py-2 md:px-6 md:py-2.5 text-xs md:text-sm font-bold bg-green-400 hover:bg-green-500 text-white rounded-full transition-colors" onClick={(e) => e.stopPropagation()}>Mulai Proyek</button>
                   </div>
                 </div>
-
-                {/* Mobile Dropdown Menu */}
                 <div className={`md:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-[300px] opacity-100 pb-4' : 'max-h-0 opacity-0'}`}>
                   <nav className="flex flex-col items-center gap-4 pt-4 text-sm font-medium text-slate-500 border-t border-gray-100 mx-4">
-                    <a href="#" className="hover:text-black transition-colors">Portofolio</a>
-                    <a href="#" className="hover:text-black transition-colors">Harga</a>
-                    <a href="#" className="hover:text-black transition-colors">Kenapa harus ke Fajar?</a>
+                    <a href="#" className="hover:text-black transition-colors">Portofolio</a><a href="#" className="hover:text-black transition-colors">Estimasi</a><a href="#" className="hover:text-black transition-colors">Kenapa mending ke Fajar?</a>
                   </nav>
                 </div>
-
               </div>
             </header>
 
-            {/* 2. HERO SECTION (Big Typography) */}
             <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
-              
-              {/* Animasi Per Kata pada H1 & Penempatan Badges */}
               <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
-                {["Jasa", "Desain", "Grafis."].map((word, i) => (
+                {["Solusi", "Desain", "Branding."].map((word, i) => (
                   <Reveal key={`w1-${i}`} delay={100 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
-                    <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">
-                      {word}
-                    </span>
-                      
-                    {/* Badge Cepat & Responsif (DESKTOP ONLY): di sebelah kiri kata "Jasa" */}
-                    {word === "Jasa" && (
-                      <div className={`hidden md:block absolute top-1/2 -translate-y-1/2 right-full mr-6 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
-                        <div className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
-                          ⚡ Cepat & Responsif
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Badge Estetik (MOBILE ONLY): di sebelah kanan kata "Grafis." */}
-                    {word === "Grafis." && (
-                      <div className={`md:hidden absolute top-1/2 -translate-y-1/2 left-full ml-1 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
-                        <div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-[10px] font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">
-                          ✨ Estetik
-                        </div>
-                      </div>
-                    )}
+                    <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
+                    {word === "Solusi" && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 right-full mr-6 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">⚡ Presisi & Cepat</div></div>)}
+                    {word === "Branding." && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 left-full ml-1 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-[10px] font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">✨ Bernilai Tinggi</div></div>)}
                   </Reveal>
                 ))}
                 <br />
                 <span className="text-gray-400">
-                  {["Pembuatan", "Website."].map((word, i) => (
+                  {["Website", "Professional."].map((word, i) => (
                     <Reveal key={`w2-${i}`} delay={550 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
-                      <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">
-                        {word}
-                      </span>
-                        
-                      {/* Badge Cepat & Responsif (MOBILE ONLY): di sebelah kiri kata "Website." */}
-                      {word === "Website." && (
-                        <div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[32px] -mt-[6px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                      <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
+                      {word === "Professional." && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[32px] -mt-[6px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
                           <div className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-[10px] font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
-                            ⚡ Cepat & Responsif
+                            ⚡ Modern & Clean
                           </div>
-                        </div>
-                      )}
-
-                      {/* Badge Estetik (DESKTOP ONLY): di sebelah kanan kata "Website." */}
-                      {word === "Website." && (
-                        <div className={`hidden md:block absolute top-1/2 -translate-y-1/2 left-full ml-6 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                        </div>)}
+                      {word === "Professional." && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 left-full ml-6 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
                           <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">
                             ✨ Estetik
                           </div>
-                        </div>
-                      )}
+                        </div>)}
                     </Reveal>
                   ))}
                 </span>
                 <br />
-                {["& SketchUp", "3D."].map((word, i) => (
-                  <Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4">
-                    <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
-                  </Reveal>
-                ))}
+                {["& Gambar", "3D."].map((word, i) => (<Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4"><span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span></Reveal>))}
               </h1>
-              
-              <Reveal delay={1100} direction="up">
-                <p className="text-base md:text-lg text-slate-500 max-w-2xl font-medium mb-6 md:mb-8">
-                  Satu spesialis untuk semua kebutuhan bisnis Anda. Mulai dari <strong>jasa desain logo, banner, dan spanduk</strong>, hingga <strong>jasa website, aplikasi,</strong> dan <strong>jasa desain sketchup bangunan</strong> siap eksekusi.
-                </p>
-              </Reveal>
-
+              <Reveal delay={1100} direction="up"><p className="text-base md:text-lg text-slate-500 max-w-2xl font-medium mb-6 md:mb-8">Membantu bisnis Anda tampil lebih kredibel and professional. Mulai dari <strong>identitas visual branding eksklusif</strong>, hingga <strong>pembuatan website professional</strong> and <strong>gambar 3D presisi</strong> yang siap dieksekusi.</p></Reveal>
               <Reveal delay={1300} direction="up" className="flex flex-row justify-center gap-2 md:gap-4 w-full">
-                <button className="group px-4 py-3 md:px-8 md:py-4 bg-black text-white text-xs md:text-base font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-800 transition-colors w-auto">
-                  Lihat Portofolio <ArrowRight size={16} className="group-hover:translate-x-1 md:group-hover:translate-x-2 transition-transform duration-300 w-4 h-4 md:w-[18px] md:h-[18px]" />
-                </button>
-                <button className="group px-4 py-3 md:px-8 md:py-4 bg-white text-black text-xs md:text-base border border-gray-200 font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-50 transition-colors w-auto">
-                  <div className="relative flex items-center justify-center w-4 h-4 md:w-5 md:h-5">
-                    <div className="absolute inset-0 border-2 border-black rounded-full opacity-0 ripple-element"></div>
-                    <Play size={14} className="text-black relative z-10 w-3 h-3 md:w-[14px] md:h-[14px]" />
-                  </div>
-                  Cara Kerja
-                </button>
+                <button className="group px-4 py-3 md:px-8 md:py-4 bg-black text-white text-xs md:text-base font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-800 transition-colors w-auto">Lihat Portofolio <ArrowRight size={16} className="group-hover:translate-x-1 md:group-hover:translate-x-2 transition-transform duration-300 w-4 h-4 md:w-[18px] md:h-[18px]" /></button>
+                <button className="group px-4 py-3 md:px-8 md:py-4 bg-white text-black text-xs md:text-base border border-gray-200 font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-50 transition-colors w-auto"><div className="relative flex items-center justify-center w-4 h-4 md:w-5 md:h-5"><div className="absolute inset-0 border-2 border-black rounded-full opacity-0 ripple-element"></div><Play size={14} className="text-black relative z-10 w-3 h-3 md:w-[14px] md:h-[14px]" /></div>Proses Kerja</button>
               </Reveal>
             </section>
 
-            {/* 3. INTERACTIVE AVATAR SECTION */}
             <section className="pt-20 pb-4 px-6 max-w-6xl mx-auto flex flex-col items-center relative">
-              
-              {/* Latar Belakang Pola Lingkaran dibungkus overflow-hidden agar tidak tumpah dan memicu lag trackpad */}
-              <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 rounded-3xl">
-                <div 
-                  className="absolute top-[6rem] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] bg-circle-pattern rounded-full"
-                  style={{ maskImage: 'radial-gradient(circle, black 20%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}
-                ></div>
-              </div>
-
-              <Reveal delay={100} direction="up">
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div>
-                  <span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span>
-                </div>
-              </Reveal>
-              
-              {/* Animasi Bouncy Words On Scroll */}
-              <Reveal delay={200} direction="up">
-                <p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">
-                  Satu partner multi-talenta untuk merealisasikan ide Anda secara
-                  <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">
-                    {bouncyWords.map((word, i) => (
-                      <span 
-                        key={i} 
-                        className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`}
-                        style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}
-                      >
-                        {word}
-                      </span>
-                    ))}
-                  </span>
-                  Mengeksekusi setiap detail dengan cermat, memastikan proyek Anda bebas dari kesalahan amatir dan memberikan hasil yang bisa diandalkan.
-                </p>
-              </Reveal>
-
-              {/* Interactive Hover Area */}
+              <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 rounded-3xl"><div className="absolute top-[6rem] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] bg-circle-pattern rounded-full" style={{ maskImage: 'radial-gradient(circle, black 20%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}></div></div>
+              <Reveal delay={100} direction="up"><div className="flex items-center gap-2 mb-6"><div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div><span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span></div></Reveal>
+              <Reveal delay={200} direction="up"><p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">Membantu merealisasikan ide bisnis Anda secara <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">{bouncyWords.map((word, i) => (<span key={i} className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`} style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}>{word}</span>))}</span> Mengeksekusi setiap detail dengan cermat agar visi Anda terwujud tanpa celah and memberikan hasil yang bisa diandalkan.</p></Reveal>
               <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[24rem] md:h-[28rem] flex justify-center items-end group mx-auto mt-6 md:mt-10">
-                
-                {/* Center Image */}
-                <div className="relative z-10 w-full flex justify-center h-full items-end pb-0">
-                  
-                  {/* Layer Background 3:1 */}
-                  <div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 transition-all duration-700 border border-gray-100 bg-slate-50">
-                    {Object.keys(avatars).map((key) => (
-                      <DynamicImage 
-                        key={`bg-${key}`}
-                        src={avatars[key].bgImg} 
-                        alt={`Background ${avatars[key].label}`} 
-                        isActive={activeCategory === key}
-                        objectFit="object-cover"
-                        className="absolute inset-0 w-full h-full"
-                      />
-                    ))}
-                  </div>
-
-                  {/* Layer Avatar Images */}
-                  {Object.keys(avatars).map((key) => (
-                    <DynamicImage 
-                      key={`me-${key}`}
-                      src={avatars[key].img} 
-                      alt={`Fajar Jayadi - ${avatars[key].label}`} 
-                      isActive={activeCategory === key}
-                      className="absolute bottom-0 h-[85%] md:h-[95%] w-auto z-10 mask-fade-bottom"
-                    />
-                  ))}
-                </div>
-
-                {/* Floating Hover Triggers */}
-                <Reveal delay={400} direction="left" className="absolute top-1/4 left-4 md:left-24 z-20">
-                  <MagneticButton 
-                    onMouseEnter={() => setActiveCategory('desain')}
-                    onMouseLeave={() => setActiveCategory('default')}
-                    className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:shadow-2xl hover:shadow-blue-900/20 border border-gray-100 flex items-center gap-3"
-                  >
-                    <div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10">
-                      <div className={`absolute inset-0 bg-blue-400 rounded-full transition-opacity duration-300 ${activeCategory === 'desain' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
-                      <div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><PenTool size={16} className="md:w-5 md:h-5" /></div>
-                    </div>
-                    <span className="font-bold text-xs md:text-sm hidden md:block">Desain Grafis</span>
-                  </MagneticButton>
-                </Reveal>
-
-                <Reveal delay={500} direction="right" className="absolute top-1/3 right-4 md:right-24 z-20">
-                  <MagneticButton 
-                    onMouseEnter={() => setActiveCategory('website')}
-                    onMouseLeave={() => setActiveCategory('default')}
-                    className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:shadow-2xl hover:shadow-purple-900/20 border border-gray-100 flex items-center gap-3"
-                  >
-                    <div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10">
-                      <div className={`absolute inset-0 bg-purple-400 rounded-full transition-opacity duration-300 ${activeCategory === 'website' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
-                      <div className="w-full h-full bg-purple-100 text-purple-500 rounded-full flex items-center justify-center relative z-10"><Monitor size={16} className="md:w-5 md:h-5" /></div>
-                    </div>
-                    <span className="font-bold text-xs md:text-sm hidden md:block">Website</span>
-                  </MagneticButton>
-                </Reveal>
-
-                <Reveal delay={600} direction="up" className="absolute bottom-1/4 left-10 md:left-32 z-20">
-                  <MagneticButton 
-                    onMouseEnter={() => setActiveCategory('konstruksi')}
-                    onMouseLeave={() => setActiveCategory('default')}
-                    className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:shadow-2xl hover:shadow-orange-900/20 border border-gray-100 flex items-center gap-3"
-                  >
-                    <div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10">
-                      <div className={`absolute inset-0 bg-orange-400 rounded-full transition-opacity duration-300 ${activeCategory === 'konstruksi' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div>
-                      <div className="w-full h-full bg-orange-100 text-orange-500 rounded-full flex items-center justify-center relative z-10"><HardHat size={16} className="md:w-5 md:h-5" /></div>
-                    </div>
-                    <span className="font-bold text-xs md:text-sm hidden md:block">Konstruksi 3D</span>
-                  </MagneticButton>
-                </Reveal>
-
+                <div className="relative z-10 w-full flex justify-center h-full items-end pb-0"><div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 transition-all duration-700 border border-gray-100 bg-slate-50">{Object.keys(avatars).map((key) => (<DynamicImage key={`bg-${key}`} src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="absolute inset-0 w-full h-full" />))}</div>{Object.keys(avatars).map((key) => (<DynamicImage key={`me-${key}`} src={avatars[key].img} alt={`Fajar Jayadi - ${avatars[key].label}`} isActive={activeCategory === key} className="absolute bottom-0 h-[85%] md:h-[95%] w-auto z-10 mask-fade-bottom" />))}</div>
+                <Reveal delay={400} direction="left" className="absolute top-1/4 left-4 md:left-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('desain')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:shadow-2xl hover:shadow-blue-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-blue-400 rounded-full transition-opacity duration-300 ${activeCategory === 'desain' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><PenTool size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Desain Branding</span></MagneticButton></Reveal>
+                <Reveal delay={500} direction="right" className="absolute top-1/3 right-4 md:right-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('website')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:shadow-2xl hover:shadow-purple-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-purple-400 rounded-full transition-opacity duration-300 ${activeCategory === 'website' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-purple-100 text-purple-500 rounded-full flex items-center justify-center relative z-10"><Monitor size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Website Professional</span></MagneticButton></Reveal>
+                <Reveal delay={600} direction="up" className="absolute bottom-1/4 left-10 md:left-32 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('konstruksi')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:shadow-2xl hover:shadow-orange-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-orange-400 rounded-full transition-opacity duration-300 ${activeCategory === 'konstruksi' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-orange-100 text-orange-500 rounded-full flex items-center justify-center relative z-10"><HardHat size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Gambar 3D</span></MagneticButton></Reveal>
               </Reveal>
             </section>
 
-            {/* 4. BENTO GRID SECTION ("Everything You Need...") */}
-            <section className="pt-10 pb-24 px-6 bg-white overflow-hidden relative">
-              
-              <div className="max-w-6xl mx-auto">
-                <Reveal direction="up" className="text-center mb-16">
-                  <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
-                    Layanan Lengkap <br/>untuk Bisnis Anda 
-                    <span ref={rocketRef} className={`inline-block ml-3 origin-bottom-left ${rocketTriggered ? 'animate-rocket-fly pointer-events-none' : ''}`}>
-                      🚀
-                    </span>
-                  </h2>
-                  <p className="text-slate-500 font-medium">Semua keahlian yang dibutuhkan untuk melesatkan brand Anda, tersedia di sini.</p>
-                </Reveal>
-              </div>
-
+            <section className="pt-10 pb-24 px-6 bg-white relative">
+              <div className="max-w-6xl mx-auto"><Reveal direction="up" className="text-center mb-16"><h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">Solusi Menyeluruh <br/>untuk Bisnis Anda <span ref={rocketRef} className={`inline-block ml-3 origin-bottom-left relative z-[100] ${rocketTriggered ? 'animate-rocket-fly pointer-events-none' : ''}`}>🚀</span></h2><p className="text-slate-500 font-medium">Semua keahlian yang dibutuhkan untuk melesatkan brand Anda, tersedia di sini.</p></Reveal></div>
               <div ref={bentoSectionRef} className="max-w-6xl mx-auto grid grid-cols-1 grid-rows-1 relative">
-                
                 <div className="col-start-1 col-end-1 row-start-1 row-end-1 w-full">
                   <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[15rem]">
                     
-                    {/* Card 1: Desain Grafis */}
-                    <div onClick={(e) => openService(e, 'desain')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer">
-                      <div className={`transition-opacity duration-300 w-full h-full ${expandedService === 'desain' && !isClosing ? 'opacity-0' : 'opacity-100'}`}>
-                        <h3 className="text-xl font-bold mb-1">Jasa Desain Grafis & Branding</h3>
-                        <p className="text-slate-500 text-sm">Spesialis jasa desain logo, jasa desain spanduk, jasa desain banner, hingga jasa branding lengkap untuk kebutuhan korporat maupun jasa desain UMKM.</p>
-                        <div className="absolute right-0 bottom-0 w-64 h-48 bg-gradient-to-tl from-blue-200 to-transparent rounded-tl-full opacity-50 translate-x-10 translate-y-10 group-hover:scale-110 transition-transform duration-500"></div>
-                        <PenTool className="absolute bottom-8 right-12 text-blue-500 w-24 h-24 opacity-20 group-hover:opacity-40 transition-opacity" />
-                      </div>
-                    </div>
-
-                    {/* Card 2: Website Landing Page */}
-                    <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer">
-                      <div className={`transition-opacity duration-300 w-full h-full ${expandedService === 'website' && !isClosing ? 'opacity-0' : 'opacity-100'}`}>
-                        <h3 className="text-xl font-bold mb-1 text-white">Jasa Website</h3>
-                        <p className="text-slate-400 text-sm">Landing page responsif & profesional untuk konversi.</p>
-                        <Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" />
-                      </div>
-                    </div>
-
-                    {/* Card 3: 3D Render */}
-                    <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer">
-                      <div className={`transition-opacity duration-300 w-full h-full ${expandedService === 'konstruksi' && !isClosing ? 'opacity-0' : 'opacity-100'}`}>
-                        <h3 className="text-xl font-bold mb-1">Jasa 3D Bangunan</h3>
-                        <p className="text-slate-500 text-sm">Jasa desain sketchup dan render 3D fotorealistik arsitektur.</p>
-                        <Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" />
-                      </div>
-                    </div>
-
-                    {/* Card 4: Gambar Teknik */}
-                    <div onClick={(e) => openService(e, 'layout')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer">
-                      <div className={`transition-opacity duration-300 w-full h-full flex flex-col justify-center ${expandedService === 'layout' && !isClosing ? 'opacity-0' : 'opacity-100'}`}>
-                        <h3 className="text-xl font-bold mb-1">Jasa Desain Konstruksi & Layout</h3>
-                        <p className="text-slate-500 text-sm">Penyedia jasa desain gambar teknik dan jasa desain layout pabrik/gudang/ruangan yang presisi dan siap dibangun.</p>
-                        <div className="mt-6 flex gap-2 items-end h-16">
-                          {[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (
-                            <div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Card 5: Aplikasi Web */}
-                    <div onClick={(e) => openService(e, 'aplikasi')} className="md:row-span-2 lg:col-span-1 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer">
-                      <div className={`transition-opacity duration-300 w-full h-full ${expandedService === 'aplikasi' && !isClosing ? 'opacity-0' : 'opacity-100'}`}>
-                        <h3 className="text-xl font-bold mb-1">Jasa Aplikasi</h3>
-                        <p className="text-slate-500 text-sm">Pembuatan custom dashboard, POS, dan sistem web.</p>
-                        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500">
-                          <div className="w-full h-4 bg-blue-200 rounded-full"></div>
-                          <div className="w-full flex-grow bg-blue-50 rounded-lg"></div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Card 6: Company Profile */}
-                    <div onClick={(e) => openService(e, 'company_profile')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer">
-                      <div className={`transition-opacity duration-300 w-full h-full ${expandedService === 'company_profile' && !isClosing ? 'opacity-0' : 'opacity-100'}`}>
-                        <h3 className="text-xl font-bold mb-1">Jasa Company Profile</h3>
-                        <p className="text-slate-500 text-sm">Katalog digital & PDF elegan untuk meyakinkan klien Anda.</p>
-                        <Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" />
-                      </div>
-                    </div>
-
+                    <div onClick={(e) => openService(e, 'desain')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('desain')}><h3 className="text-xl font-bold mb-1">Identitas & Branding Visual</h3><p className="text-slate-500 text-sm">Logo, flyer, and packaging premium untuk memperkuat karakter brand di mata pasar.</p><div className="absolute right-0 bottom-0 w-64 h-48 bg-gradient-to-tl from-blue-200 to-transparent rounded-tl-full opacity-50 translate-x-10 translate-y-10 group-hover:scale-110 transition-transform duration-500"></div><PenTool className="absolute bottom-8 right-12 text-blue-500 w-24 h-24 opacity-20 group-hover:opacity-40 transition-opacity" /></div></div>
+                    
+                    <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer"><div className={getTileContentClass('website')}><h3 className="text-xl font-bold mb-1 text-white">Website Professional</h3><p className="text-slate-400 text-sm">Landing page yang dioptimalkan untuk performa, SEO, and konversi maksimal.</p><Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" /></div></div>
+                    
+                    <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('konstruksi')}><h3 className="text-xl font-bold mb-1">Gambar 3D & Visualisasi</h3><p className="text-slate-500 text-sm">Desain food stall and modeling arsitektur 3D yang nyata and presisi.</p><Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" /></div></div>
+                    
+                    <div onClick={(e) => openService(e, 'layout')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('layout')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
+                    
+                    <div onClick={(e) => openService(e, 'aplikasi')} className="md:row-span-2 lg:col-span-1 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('aplikasi')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
+                    
+                    <div onClick={(e) => openService(e, 'company_profile')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('company_profile')}><h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3><p className="text-slate-500 text-sm">Profil perusahaan, book design, and media cetak elegan.</p><Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" /></div></div>
                   </div>
                 </div>
 
-                {/* LAYER 2: EXPANDED PORTFOLIO MODAL */}
-                <div
-                    onClick={closeService}
-                    className={`col-start-1 col-end-1 row-start-1 row-end-1 z-[100] ${activeServiceContent === 'website' ? 'bg-slate-900' : 'bg-[#F5F5F7]'} rounded-[2rem] w-full cursor-pointer`}
-                    style={{
-                      clipPath: expandedService ? clipPathStyle : initialClipRef.current,
-                      pointerEvents: expandedService && !isClosing ? 'auto' : 'none',
-                      visibility: activeServiceContent ? 'visible' : 'hidden',
-                      transition: isTransitioning ? 'clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1)' : 'none'
-                    }}
-                >
+                <div onClick={closeService} className={`col-start-1 col-end-1 row-start-1 row-end-1 z-40 ${activeServiceContent === 'website' ? 'bg-slate-900' : 'bg-[#F5F5F7]'} rounded-[2rem] w-full cursor-pointer overflow-hidden`} style={{ clipPath: expandedService ? clipPathStyle : initialClipRef.current, pointerEvents: expandedService && !isClosing ? 'auto' : 'none', visibility: activeServiceContent ? 'visible' : 'hidden', transition: isTransitioning ? 'clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1)' : 'none' }}>
                     {activeServiceContent && (
-                        <div className="relative pb-16 pt-8 px-6 h-full">
-                            <div onClick={(e) => e.stopPropagation()} className={`max-w-5xl mx-auto cursor-default w-full transition-all ${expandedService && !isClosing ? 'duration-[600ms] ease-out opacity-100 translate-y-0 delay-300' : 'duration-300 ease-in opacity-0 translate-y-4'}`}>
+                        <div className="relative pb-16 pt-8 px-6 h-full overflow-y-auto hide-scrollbar">
+                            <div onClick={(e) => e.stopPropagation()} className="max-w-5xl mx-auto cursor-default w-full">
                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                  {[1, 2, 3, 4, 5, 6].map(item => (
-                                     <div key={item} className={`aspect-square rounded-3xl overflow-hidden relative cursor-pointer group border ${activeServiceContent === 'website' ? 'bg-slate-800 border-slate-700' : 'bg-slate-100 border-gray-200/50'}`}>
-                                        <div className="absolute inset-0 flex items-center justify-center text-slate-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 z-20 backdrop-blur-sm text-white">
-                                            Lihat Detail Proyek {item}
-                                        </div>
-                                        <DynamicImage src={`portfolio-${activeServiceContent}-${item}.png`} alt={`Portfolio ${item}`} className="w-full h-full object-cover relative z-10" />
+                                  {portfolioData[activeServiceContent]?.map((path, itemIdx) => (
+                                     <div key={itemIdx} className={`aspect-square rounded-3xl overflow-hidden relative cursor-pointer group border transition-all duration-700 ${expandedService && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} ${activeServiceContent === 'website' ? 'bg-slate-800 border-slate-700' : 'bg-slate-100 border-gray-200/50'}`} style={{ transitionDelay: expandedService && !isClosing ? `${400 + (itemIdx * 80)}ms` : '0ms' }}>
+                                        <div className="absolute inset-0 flex items-center justify-center text-slate-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 z-20 backdrop-blur-sm text-white">Detail Proyek</div>
+                                        <DynamicImage src={path} alt={`Portfolio ${itemIdx}`} minimalFallback={true} className="w-full h-full object-cover relative z-10" />
                                      </div>
                                   ))}
                                </div>
@@ -1064,190 +521,42 @@
                         </div>
                     )}
                 </div>
-
               </div>
             </section>
- {/* 6. MY CLIENTS (AUTO-SCROLL LOGO CAROUSEL) */}
-            <section className="py-20 bg-white border-y border-gray-100 overflow-hidden">
-              <Reveal direction="up" className="max-w-6xl mx-auto px-6 mb-12 text-center pointer-events-none">
-                <h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight text-slate-900">Klien Saya</h2>
-                <p className="text-slate-500 font-medium">Berbagai bisnis yang telah mempercayakan identitas dan sistem visualnya.</p>
-              </Reveal>
-              
-              <Reveal delay={200} direction="none" className="w-full relative">
-                {/* Gradient blur di sisi kiri dan kanan untuk menyamarkan perputaran */}
-                <div className="absolute top-0 left-0 w-16 md:w-32 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
-                <div className="absolute top-0 right-0 w-16 md:w-32 h-full bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
-                <div 
-                  ref={carouselRef}
-                  onMouseDown={handleMouseDown}
-                  onMouseLeave={handleMouseLeave}
-                  onMouseUp={handleMouseUp}
-                  onMouseMove={handleMouseMove}
-                  className={`flex items-center gap-16 md:gap-24 px-10 overflow-x-auto py-4 select-none hide-scrollbar ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
-                >
-                  {displayLogos.map((item, index) => (
-                    <div key={`client-${item}-${index}`} className="flex-shrink-0 transition-transform duration-500 hover:scale-110">
-                      {/* Gambar PNG logo murni tanpa background/shadow. Grayscale & Opacity akan hilang saat di-hover */}
-                      <DynamicImage 
-                        src={`client-logo-${item}.png`} 
-                        alt={`Client Logo ${item}`} 
-                        minimalFallback={true}
-                        className="h-8 md:h-12 text-2xl w-auto object-contain grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 pointer-events-none" 
-                      />
-                    </div>
-                  ))}
-                </div>
+            <section className="py-20 bg-white border-y border-gray-100 overflow-hidden">
+              <Reveal direction="up" className="max-w-6xl mx-auto px-6 mb-12 text-center pointer-events-none"><h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight text-slate-900">Klien Saya</h2><p className="text-slate-500 font-medium">Berbagai entitas bisnis yang telah mempercayakan identitas visual mereka.</p></Reveal>
+              <Reveal delay={200} direction="none" className="w-full relative">
+                <div className="absolute top-0 left-0 w-16 md:w-32 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div><div className="absolute top-0 right-0 w-16 md:w-32 h-full bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+                <div ref={carouselRef} onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} className={`flex items-center gap-16 md:gap-24 px-10 overflow-x-auto py-4 select-none hide-scrollbar ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}>{displayLogos.map((item, index) => (<div key={`client-${item}-${index}`} className="flex-shrink-0 transition-transform duration-500 hover:scale-110"><DynamicImage src={`client-logo-${item}.png`} alt={`Client Logo ${item}`} minimalFallback={true} className="h-8 md:h-12 text-2xl w-auto object-contain grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 pointer-events-none" /></div>))}</div>
               </Reveal>
             </section>
-            {/* 5. TESTIMONIAL SECTION WITH FLIP 3D */}
+
             <section className="py-24 px-6 max-w-4xl mx-auto">
               <Reveal direction="up">
                 <div className="w-full relative testi-container min-h-[350px] md:min-h-[300px]">
                   {testimonials.map((t, idx) => {
                     const state = getTestiState(idx);
-                    return (
-                      <div 
-                        key={idx} 
-                        className={`testi-card bg-gray-50 rounded-[2.5rem] p-8 md:p-16 border border-gray-100 flex flex-col md:flex-row gap-6 md:gap-10 items-center shadow-sm ${getTestiClass(state)}`}
-                        style={getTestiStyle(state)}
-                      >
-                        <div className="flex-1 text-center md:text-left">
-                          <div className="flex gap-1 text-orange-400 mb-6 justify-center md:justify-start">
-                            <Star fill="currentColor" size={20} />
-                            <Star fill="currentColor" size={20} />
-                            <Star fill="currentColor" size={20} />
-                            <Star fill="currentColor" size={20} />
-                            <Star fill="currentColor" size={20} />
-                          </div>
-                          <h3 className="text-xl md:text-2xl font-bold leading-tight mb-8 text-slate-800">
-                            "{t.text}"
-                          </h3>
-                          <div className="flex items-center gap-4 justify-center md:justify-start mt-auto">
-                            <div className="w-12 h-12 bg-slate-300 text-slate-700 rounded-full flex items-center justify-center font-black text-lg shrink-0">
-                              {t.name.charAt(0)}
-                            </div>
-                            <div className="text-left">
-                              <p className="font-bold text-sm text-slate-900">{t.name}</p>
-                              <p className="text-slate-500 text-xs">{t.role}</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Desktop Controls */}
-                        <div className="hidden md:flex gap-3 shrink-0 z-20 self-end md:self-auto mb-2 md:mb-0">
-                           <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
-                           <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
-                        </div>
-
-                        {/* Mobile Controls */}
-                        <div className="flex md:hidden gap-4 mt-4 z-20 w-full justify-center">
-                           <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
-                           <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
-                        </div>
-                      </div>
-                    );
+                    return (<div key={idx} className={`testi-card bg-gray-50 rounded-[2.5rem] p-8 md:p-16 border border-gray-100 flex flex-col md:flex-row gap-6 md:gap-10 items-center shadow-sm ${getTestiClass(state)}`} style={getTestiStyle(state)}><div className="flex-1 text-center md:text-left"><div className="flex gap-1 text-orange-400 mb-6 justify-center md:justify-start"><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /></div><h3 className="text-xl md:text-2xl font-bold leading-tight mb-8 text-slate-800">"{t.text}"</h3><div className="flex items-center gap-4 justify-center md:justify-start mt-auto"><div className="w-12 h-12 bg-slate-300 text-slate-700 rounded-full flex items-center justify-center font-black text-lg shrink-0">{t.name.charAt(0)}</div><div className="text-left"><p className="font-bold text-sm text-slate-900">{t.name}</p><p className="text-slate-500 text-xs">{t.role}</p></div></div></div><div className="hidden md:flex gap-3 shrink-0 z-20 self-end md:self-auto mb-2 md:mb-0"><button onClick={prevTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button><button onClick={nextTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button></div><div className="flex md:hidden gap-4 mt-4 z-20 w-full justify-center"><button onClick={prevTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button><button onClick={nextTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button></div></div>);
                   })}
                 </div>
               </Reveal>
             </section>
 
-            
-
-            {/* 7. BOTTOM CTA SECTION */}
             <section className="py-24 px-6 max-w-6xl mx-auto border-b border-gray-100">
               <div className="flex flex-col md:flex-row gap-16 items-center">
-                <Reveal direction="right" className="flex-1">
-                  <h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">
-                    Berhenti Bingung.<br/>Mulai Berkarya.
-                  </h2>
-                  <p className="text-slate-500 font-medium mb-10 max-w-md">
-                    Serahkan urusan visual dan teknis kepada saya. Dapatkan hasil maksimal untuk bisnis Anda hari ini.
-                  </p>
-                  <div className="flex gap-4">
-                    <button className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">
-                      Hubungi Sekarang
-                    </button>
-                    <button className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">
-                      Lihat Harga
-                    </button>
-                  </div>
-                </Reveal>
-
-                {/* Right side Feature List */}
-                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-                  {[
-                    { icon: PenTool, text: 'Desain Logo', color: 'text-blue-500', bg: 'bg-blue-100' },
-                    { icon: Monitor, text: 'Website Cepat', color: 'text-purple-500', bg: 'bg-purple-100' },
-                    { icon: Box, text: 'Render 3D', color: 'text-orange-500', bg: 'bg-orange-100' },
-                    { icon: Zap, text: 'Performa Tinggi', color: 'text-yellow-500', bg: 'bg-yellow-100' },
-                    { icon: Layout, text: 'UI/UX Responsif', color: 'text-pink-500', bg: 'bg-pink-100' },
-                    { icon: CheckCircle2, text: 'Tepat Waktu', color: 'text-green-500', bg: 'bg-green-100' },
-                  ].map((feat, i) => (
-                    <Reveal key={i} delay={i * 100} direction="left">
-                      <div className="flex items-center gap-4 p-2">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${feat.bg} ${feat.color}`}>
-                          <feat.icon size={18} />
-                        </div>
-                        <span className="font-bold text-slate-800">{feat.text}</span>
-                      </div>
-                    </Reveal>
-                  ))}
-                </div>
+                <Reveal direction="right" className="flex-1"><h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">Wujudkan Visi.<br/>Mulai Hari Ini.</h2><p className="text-slate-500 font-medium mb-10 max-w-md">Serahkan tantangan visual and teknis Anda kepada partner yang tepat. Dapatkan hasil maksimal untuk perkembangan bisnis Anda.</p><div className="flex gap-4"><button className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">Konsultasi Sekarang</button><button className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">Detail Estimasi</button></div></Reveal>
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">{[{ icon: PenTool, text: 'Identitas Visual', color: 'text-blue-500', bg: 'bg-blue-100' },{ icon: Monitor, text: 'Web Professional', color: 'text-purple-500', bg: 'bg-purple-100' },{ icon: Box, text: 'Gambar 3D Realis', color: 'text-orange-500', bg: 'bg-orange-100' },{ icon: Zap, text: 'Eksekusi Tangkas', color: 'text-yellow-500', bg: 'bg-yellow-100' },{ icon: Layout, text: 'User Experience', color: 'text-pink-500', bg: 'bg-pink-100' },{ icon: CheckCircle2, text: 'Komitmen Kualitas', color: 'text-green-500', bg: 'bg-green-100' }].map((feat, i) => (<Reveal key={i} delay={i * 100} direction="left"><div className="flex items-center gap-4 p-2"><div className={`w-10 h-10 rounded-full flex items-center justify-center ${feat.bg} ${feat.color}`}><feat.icon size={18} /></div><span className="font-bold text-slate-800">{feat.text}</span></div></Reveal>))}</div>
               </div>
             </section>
 
-            {/* 8. FOOTER */}
             <footer className="bg-slate-900 text-white pt-20 pb-10 px-6">
-              <Reveal direction="up" className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-16 mb-16">
-                <div className="max-w-sm">
-                  <h3 className="text-2xl font-bold mb-6 text-white">Mari terhubung dan diskusikan ide Anda.</h3>
-                  
-                  <button className="w-full flex items-center justify-center gap-2 bg-[#128C7E] hover:bg-[#25D366] text-white py-4 px-6 rounded-full text-sm font-bold transition-colors shadow-lg shadow-green-900/30">
-                    Hubungi via WhatsApp
-                  </button>
-                  
-                  <p className="text-xs text-slate-400 mt-4 opacity-80">Balasan super cepat dalam 1x24 jam kerja.</p>
-                </div>
-
-                <div className="flex gap-16">
-                  <div>
-                    <h4 className="font-bold mb-4 text-white">Layanan</h4>
-                    <ul className="space-y-3 text-sm text-slate-400">
-                      <li><a href="#" className="hover:text-green-400 transition-colors">Desain Grafis</a></li>
-                      <li><a href="#" className="hover:text-green-400 transition-colors">Pembuatan Website</a></li>
-                      <li><a href="#" className="hover:text-green-400 transition-colors">Konstruksi & 3D</a></li>
-                      <li><a href="#" className="hover:text-green-400 transition-colors">Konsultasi IT</a></li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-bold mb-4 text-white">Fajar</h4>
-                    <ul className="space-y-3 text-sm text-slate-400">
-                      <li><a href="#" className="hover:text-green-400 transition-colors">Tentang Saya</a></li>
-                      <li><a href="#" className="hover:text-green-400 transition-colors">Portofolio</a></li>
-                      <li><a href="#" className="hover:text-green-400 transition-colors">Harga</a></li>
-                      <li><a href="#" className="hover:text-green-400 transition-colors">Kontak</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </Reveal>
-              
-              <Reveal delay={200} direction="up" className="max-w-6xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium">
-                <p>© 2026 Fajar Jayadi. All rights reserved.</p>
-                <div className="flex gap-4">
-                  <a href="#" className="hover:text-white transition-colors">Instagram</a>
-                  <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
-                  <a href="#" className="hover:text-white transition-colors">Behance</a>
-                </div>
-              </Reveal>
+              <Reveal direction="up" className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-16 mb-16"><div className="max-w-sm"><h3 className="text-2xl font-bold mb-6 text-white">Mari berkolaborasi and diskusikan potensi Anda.</h3><button className="w-full flex items-center justify-center gap-2 bg-[#128C7E] hover:bg-[#25D366] text-white py-4 px-6 rounded-full text-sm font-bold transition-colors shadow-lg shadow-green-900/30">Hubungi via WhatsApp</button><p className="text-xs text-slate-400 mt-4 opacity-80">Respon cepat untuk setiap ide brilian Anda.</p></div><div className="flex gap-16"><div><h4 className="font-bold mb-4 text-white">Solusi</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" className="hover:text-green-400 transition-colors">Desain Branding</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Website Professional</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Gambar 3D</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Konsultasi Digital</a></li></ul></div><div><h4 className="font-bold mb-4 text-white">Profil</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" className="hover:text-green-400 transition-colors">Tentang Fajar</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Portofolio</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Estimasi Biaya</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Hubungi</a></li></ul></div></div></Reveal>
+              <Reveal delay={200} direction="up" className="max-w-6xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium"><p>© 2026 Fajar Jayadi. Dedicated to Value-Driven Excellence.</p><div className="flex gap-4"><a href="#" className="hover:text-white transition-colors">Instagram</a><a href="#" className="hover:text-white transition-colors">LinkedIn</a><a href="#" className="hover:text-white transition-colors">Behance</a></div></Reveal>
             </footer>
-
           </div>
         );
       }
-
-      // Render App
       const root = ReactDOM.createRoot(document.getElementById('root'));
       root.render(<App />);
     </script>
