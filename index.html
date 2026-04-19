@@ -80,7 +80,6 @@
         }
         .animate-bounce-color { animation: bounce-green 0.7s cubic-bezier(0.28, 0.84, 0.42, 1) forwards; }
 
-        /* Rocket trajectory: pointing to 2 o'clock position (top-right) */
         @keyframes fly-away {
           0% { transform: translate(0, 0) scale(1); opacity: 1; }
           15% { transform: translate(-3px, 3px) rotate(-5deg) scale(0.9); opacity: 1; } 
@@ -129,7 +128,6 @@
           100% { opacity: 0; transform: translate(-50%, -80px) rotate(var(--rot)) scale(0.9); }
         }
 
-        /* Enhanced 3D Text Effect - Blue Volume, Black Face */
         .hover-3d-text {
           transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
           display: inline-block;
@@ -523,14 +521,20 @@
             </section>
 
             <section className="pt-20 pb-4 px-6 max-w-6xl mx-auto flex flex-col items-center relative">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 rounded-3xl"><div className="absolute top-[6rem] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] bg-circle-pattern rounded-full" style={{ maskImage: 'radial-gradient(circle, black 20%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}></div></div>
+              <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 rounded-3xl"><div className="absolute top-[6rem] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] h-[800px] md:h-[1200px] bg-circle-pattern rounded-full" style={{ maskImage: 'radial-gradient(circle, black 20%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}></div></div>
               <Reveal delay={100} direction="up"><div className="flex items-center gap-2 mb-6"><div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div><span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span></div></Reveal>
               <Reveal delay={200} direction="up"><p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">Membantu merealisasikan ide bisnis Anda secara <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">{bouncyWords.map((word, i) => (<span key={i} className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`} style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}>{word}</span>))}</span> Mengeksekusi setiap detail dengan cermat agar visi Anda terwujud tanpa celah and memberikan hasil yang bisa diandalkan.</p></Reveal>
               <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[24rem] md:h-[28rem] flex justify-center items-end group mx-auto mt-6 md:mt-10">
                 <div className="relative z-10 w-full flex justify-center h-full items-end pb-0">
+                  {/* Background container filling width */}
                   <div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 transition-all duration-700 border border-gray-100 bg-slate-50">
-                    {Object.keys(avatars).map((key) => (<DynamicImage key={`bg-${key}`} src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="absolute inset-0 w-full h-full" />))}
+                    {Object.keys(avatars).map((key) => (
+                      <div key={`bg-wrapper-${key}`} className={`absolute inset-0 transition-opacity duration-700 ${activeCategory === key ? 'opacity-100' : 'opacity-0'}`}>
+                         <DynamicImage src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="w-full h-full" />
+                      </div>
+                    ))}
                   </div>
+                  {/* Centering all avatar PNGs properly */}
                   <div className="absolute bottom-0 left-0 w-full h-full pointer-events-none">
                     {Object.keys(avatars).map((key) => (
                       <div 
@@ -597,7 +601,7 @@
             </section>
 
             <section className="py-20 bg-white border-y border-gray-100 overflow-hidden">
-              <Reveal direction="up" className="max-w-6xl mx-auto px-6 mb-12 text-center pointer-events-none"><h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight text-slate-900">Klien Saya</h2><p className="text-slate-500 font-medium">Berbagai entitas bisnis yang telah mempercayakan identitas visual mereka.</p></Reveal>
+              <Reveal direction="up" className="max-w-6xl mx-auto px-6 mb-12 text-center pointer-events-none"><h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight text-slate-900">Client Fajar</h2><p className="text-slate-500 font-medium">Berbagai entitas bisnis yang telah mempercayakan identitas visual mereka.</p></Reveal>
               <Reveal delay={200} direction="none" className="w-full relative">
                 <div className="absolute top-0 left-0 w-16 md:w-32 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div><div className="absolute top-0 right-0 w-16 md:w-32 h-full bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
                 <div ref={carouselRef} onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} className={`flex items-center gap-16 md:gap-24 px-10 overflow-x-auto py-4 select-none hide-scrollbar ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}>{displayLogos.map((item, index) => (<div key={`client-${item}-${index}`} className="flex-shrink-0 transition-transform duration-500 hover:scale-110"><DynamicImage src={`client-logo-${item}.png`} alt={`Client Logo ${item}`} minimalFallback={true} className="h-8 md:h-12 text-2xl w-auto object-contain grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 pointer-events-none" /></div>))}</div>
@@ -610,7 +614,6 @@
                   {testimonials.map((t, idx) => {
                     const state = getTestiState(idx);
                     return (<div key={idx} className={`testi-card bg-gray-50 rounded-[2.5rem] p-8 md:p-16 border border-gray-100 flex flex-col md:flex-row gap-6 md:gap-10 items-center shadow-sm ${getTestiClass(state)}`} style={getTestiStyle(state)}><div className="flex-1 text-center md:text-left"><div className="flex gap-1 text-orange-400 mb-6 justify-center md:justify-start"><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /></div><h3 className="text-xl md:text-2xl font-bold leading-tight mb-8 text-slate-800">"{t.text}"</h3><div className="flex items-center gap-4 justify-center md:justify-start mt-auto"><div className="w-12 h-12 bg-slate-300 text-slate-700 rounded-full flex items-center justify-center font-black text-lg shrink-0">{t.name.charAt(0)}</div><div className="text-left"><p className="font-bold text-sm text-slate-900">{t.name}</p><p className="text-slate-500 text-xs">{t.role}</p></div></div></div><div className="hidden md:flex gap-3 shrink-0 z-20 self-end md:self-auto mb-2 md:mb-0">
-                           {/* Swapped Logic: Left button is Next, Right button is Prev */}
                            <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
                            <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
                         </div><div className="flex md:hidden gap-4 mt-4 z-20 w-full justify-center">
