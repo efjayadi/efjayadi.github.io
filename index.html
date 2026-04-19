@@ -207,10 +207,10 @@
           z-index: -1;
         }
 
-        /* Efek fade-out transparan pada bagian bawah gambar avatar */
+        /* Efek fade-out transparan pada bagian bawah gambar avatar - Diperkecil menjadi 5% */
         .mask-fade-bottom {
-          -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
-          mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+          -webkit-mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
+          mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
         }
 
         /* Nonow Text Effect */
@@ -445,6 +445,37 @@
         const [isMenuOpen, setIsMenuOpen] = useState(false);
         const [activeCategory, setActiveCategory] = useState('default');
 
+        // State & Refs untuk Animated Moving Dot di Header
+        const headerWrapperRef = useRef(null);
+        const logoTargetRef = useRef(null);
+        const [dotStyle, setDotStyle] = useState({ x: 0, y: 0, opacity: 0 });
+
+        const updateDot = (element) => {
+          if (!element || !headerWrapperRef.current) return;
+          const targetRect = element.getBoundingClientRect();
+          const headerRect = headerWrapperRef.current.getBoundingClientRect();
+          setDotStyle({
+            x: targetRect.left - headerRect.left - 2,
+            y: targetRect.top - headerRect.top + 5,
+            opacity: 1
+          });
+        };
+
+        useEffect(() => {
+          const initDot = () => {
+            if (logoTargetRef.current) updateDot(logoTargetRef.current);
+          };
+          initDot();
+          const t1 = setTimeout(initDot, 100); // Penundaan pendek agar font ter-render
+          const t2 = setTimeout(initDot, 500); 
+          window.addEventListener('resize', initDot);
+          return () => {
+            clearTimeout(t1);
+            clearTimeout(t2);
+            window.removeEventListener('resize', initDot);
+          };
+        }, [isLoaded]);
+
         // State untuk memicu animasi saat di-scroll
         const [wordsRef, wordsTriggered] = useScrollTrigger({ threshold: 0.8 });
         const [rocketRef, rocketTriggered] = useScrollTrigger({ threshold: 0.5 });
@@ -517,7 +548,7 @@
 
         // Data Dinamis untuk Modal Portofolio
         const portfolioData = {
-          desain: { title: "Jasa Desain Grafis & Branding", desc: "Kumpulan karya identitas visual, logo, dan material promosi yang dirancang untuk memperkuat karakter brand di mata audiens.", color: "bg-blue-500", text: "text-blue-500", bg: "bg-blue-50" },
+          desain: { title: "Jasa Desain Grafis & Branding", desc: "Kumpulan karya identitas visual, logo, and material promosi yang dirancang untuk memperkuat karakter brand di mata audiens.", color: "bg-blue-500", text: "text-blue-500", bg: "bg-blue-50" },
           website: { title: "Jasa Website", desc: "Koleksi landing page dan website profesional yang telah dioptimalkan untuk kecepatan, konversi, dan SEO.", color: "bg-green-500", text: "text-green-500", bg: "bg-green-50" },
           konstruksi: { title: "Jasa 3D Bangunan", desc: "Galeri render arsitektur fotorealistik dan visualisasi 3D eksterior maupun interior untuk proyek klien.", color: "bg-orange-500", text: "text-orange-500", bg: "bg-orange-50" },
           layout: { title: "Desain Konstruksi & Layout", desc: "Kumpulan gambar teknik presisi dan perencanaan tata letak ruangan atau gudang yang sangat fungsional.", color: "bg-slate-700", text: "text-slate-700", bg: "bg-slate-100" },
@@ -643,21 +674,58 @@
             
             {/* 1. NAVBAR (Notch Style dengan Dropdown) */}
             <header className={`fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl z-50 transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-12'}`}>
-              <div className={`bg-white/80 backdrop-blur-xl border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 overflow-hidden rounded-[2rem]`}>
+              <div ref={headerWrapperRef} className={`bg-white/80 backdrop-blur-xl border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 overflow-hidden rounded-[2rem] relative`}>
                 
+                {/* Dynamic Moving Dot */}
+                <span
+                  className="absolute top-0 left-0 bg-green-500 rounded-full pointer-events-none z-50 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] w-[5px] h-[5px]"
+                  style={{
+                    transform: `translate(${dotStyle.x}px, ${dotStyle.y}px)`,
+                    opacity: dotStyle.opacity
+                  }}
+                ></span>
+
                 {/* Top Bar (Clickable di Mobile) */}
                 <div 
                   className="px-2 py-2 flex justify-between items-center cursor-pointer md:cursor-default"
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
                 >
-                  <div className="pl-4 md:pl-6 flex items-center">
-                    <span className="font-bold text-base md:text-lg tracking-tight">Fajar Jayadi<span className="text-green-500 font-black text-xl leading-none">.</span></span>
+                  <div 
+                    className="pl-4 md:pl-6 flex items-center"
+                    onMouseEnter={() => updateDot(logoTargetRef.current)}
+                  >
+                    <span className="font-bold text-base md:text-lg tracking-tight flex items-center">
+                      Fajar Jayadi
+                      {/* Target tersembunyi sebagai acuan koordinat */}
+                      <span ref={logoTargetRef} className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span>
+                    </span>
                   </div>
                   
-                  <nav className="hidden md:flex gap-8 text-sm font-medium text-slate-500">
-                    <a href="#" className="hover:text-black transition-colors">Portofolio</a>
-                    <a href="#" className="hover:text-black transition-colors">Harga</a>
-                    <a href="#" className="hover:text-black transition-colors">Kenapa harus ke Fajar?</a>
+                  <nav 
+                    className="hidden md:flex gap-8 text-sm font-medium text-slate-500 items-center translate-y-[1px]"
+                    onMouseLeave={() => updateDot(logoTargetRef.current)}
+                  >
+                    <a 
+                      href="#" 
+                      className="hover:text-black transition-colors flex items-center"
+                      onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}
+                    >
+                      Portofolio<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span>
+                    </a>
+                    <a 
+                      href="#" 
+                      className="hover:text-black transition-colors flex items-center"
+                      onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}
+                    >
+                      Harga<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span>
+                    </a>
+                    <a 
+                      href="#" 
+                      className="hover:text-black transition-colors flex items-center"
+                      onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}
+                    >
+                      Kenapa harus ke Fajar?<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span>
+                    </a>
                   </nav>
 
                   <div className="pr-1 flex items-center">
