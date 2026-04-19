@@ -83,7 +83,7 @@
         /* Rocket trajectory: pointing to 2 o'clock position (top-right) */
         @keyframes fly-away {
           0% { transform: translate(0, 0) scale(1); opacity: 1; }
-          15% { transform: translate(-5px, 5px) rotate(-10deg) scale(0.9); opacity: 1; } 
+          15% { transform: translate(-3px, 3px) rotate(-5deg) scale(0.9); opacity: 1; } 
           100% { transform: translate(200vw, -120vh) rotate(35deg) scale(4); opacity: 0; } 
         }
         .animate-rocket-fly { animation: fly-away 5s ease-in 1s forwards; }
@@ -127,6 +127,28 @@
           50% { transform: translate(calc(-50% + 15px), -40px) rotate(calc(var(--rot) + 8deg)) scale(1); }
           75% { opacity: 1; transform: translate(calc(-50% - 10px), -60px) rotate(calc(var(--rot) - 4deg)) scale(1); }
           100% { opacity: 0; transform: translate(-50%, -80px) rotate(var(--rot)) scale(0.9); }
+        }
+
+        /* Enhanced 3D Text Effect - Blue Volume, Black Face */
+        .hover-3d-text {
+          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          display: inline-block;
+          transform-style: preserve-3d;
+          perspective: 1000px;
+        }
+        .hover-3d-text:hover {
+          transform: translate(6px, -6px) rotateX(15deg) rotateY(15deg);
+          text-shadow: 
+            -1px 1px 0px #3b82f6,
+            -2px 2px 0px #3b82f6,
+            -3px 3px 0px #3b82f6,
+            -4px 4px 0px #2563eb,
+            -5px 5px 0px #2563eb,
+            -6px 6px 0px #2563eb,
+            -7px 7px 0px #1d4ed8,
+            -8px 8px 0px #1d4ed8,
+            -12px 12px 20px rgba(0,0,0,0.15);
+          color: #000000;
         }
     </style>
 </head>
@@ -219,14 +241,17 @@
         const [hasError, setHasError] = useState(false);
         const [isLoaded, setIsLoaded] = useState(false);
         const imgRef = useRef(null);
+
         useEffect(() => {
           setHasError(false); setIsLoaded(false);
           if (imgRef.current && imgRef.current.complete) { setIsLoaded(true); }
         }, [src]);
+
         const handleLoad = () => setIsLoaded(true);
         const handleError = () => setHasError(true);
+
         if (hasError || !src) {
-          if (minimalFallback) { return <div className={`flex items-center justify-center font-black text-slate-300 tracking-tighter whitespace-nowrap ${className}`}>KARYA {alt.replace('Portfolio ', '')}</div>; }
+          if (minimalFallback) { return <div className={`flex items-center justify-center font-black text-slate-300 bg-slate-50 tracking-tighter whitespace-nowrap ${className}`}>KARYA {alt.replace('Portfolio ', '')}</div>; }
           return (
             <div className={`flex flex-col items-center justify-center bg-gray-100 border border-gray-200 border-dashed text-gray-400 p-4 text-center ${className} transition-opacity ease-in-out ${isActive ? 'opacity-100 duration-300' : 'opacity-0 duration-1000 delay-150'}`}>
               <div className="w-10 h-10 bg-gray-200 rounded-full mb-2 animate-pulse"></div>
@@ -234,8 +259,23 @@
             </div>
           );
         }
+
         return (
-          <img ref={imgRef} src={src} alt={alt} onLoad={handleLoad} onError={handleError} className={`${className} ${objectFit} transition-opacity ease-in-out ${isLoaded && isActive ? 'opacity-100 duration-300' : 'opacity-0 duration-1000 delay-150'}`} />
+          <div className={`relative overflow-hidden ${className}`}>
+             {!isLoaded && !minimalFallback && (
+               <div className="absolute inset-0 bg-slate-50 animate-pulse flex items-center justify-center z-0">
+                  <div className="w-6 h-6 bg-slate-100 rounded-full opacity-50"></div>
+               </div>
+             )}
+             <img 
+               ref={imgRef} 
+               src={src} 
+               alt={alt} 
+               onLoad={handleLoad} 
+               onError={handleError} 
+               className={`max-w-full max-h-full ${objectFit} transition-opacity duration-300 ${isLoaded && isActive ? 'opacity-100' : 'opacity-0'} relative z-10`} 
+             />
+          </div>
         );
       };
 
@@ -273,7 +313,6 @@
         const initialClipRef = useRef('inset(0px 0px 0px 0px round 2rem)');
         const [clipPathStyle, setClipPathStyle] = useState('inset(0px 0px 0px 0px round 2rem)');
 
-        // Map real portfolio assets to Bento Categories
         const portfolioData = {
           desain: [
             'assets/img/portfolio/Logo/pmg.png', 'assets/img/portfolio/Logo/discountjunction.png',
@@ -332,7 +371,7 @@
 
         const testimonials = [
           { name: "Budi Santoso", role: "CEO, TechNusa", text: "Karya desain branding and website dari Fajar membuat brand kami terlihat sangat eksklusif and modern." },
-          { name: "Siti Aminah", role: "Owner, Kopi Senja", text: "Identitas brand saya naik level! Dari filosofi logo sampai kemasan, semuanya dieksekusi dengan presisi and estetika tinggi." },
+          { name: "Siti Aminah", role: "Owner, Kopi Senja", text: "Identitas brand saya naik level! Dari filosofi logo sampai kemasan, semuanya dieksekusi with presisi and estetika tinggi." },
           { name: "Andi Wijaya", role: "Direktur, PT Bangun Karya", text: "Gambar 3D and teknisnya sangat akurat. Sangat membantu tim konstruksi kami melihat detail proyek tanpa miskomunikasi." },
           { name: "Rina Melati", role: "Founder, BeautyGlow", text: "Website professional yang dibuatkan Fajar benar-benar mempercepat operasional kasir and manajemen stok kami." }
         ];
@@ -438,24 +477,24 @@
 
             <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
               <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
-                {["Solusi", "Desain", "Branding."].map((word, i) => (
+                {["Jasa", "Desain", "Grafis,"].map((word, i) => (
                   <Reveal key={`w1-${i}`} delay={100 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
                     <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
-                    {word === "Solusi" && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 right-full mr-6 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">⚡ Presisi & Cepat</div></div>)}
-                    {word === "Branding." && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 left-full ml-1 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-[10px] font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">✨ Bernilai Tinggi</div></div>)}
+                    {word === "Jasa" && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 right-full mr-6 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">⚡ Presisi & Cepat</div></div>)}
+                    {word === "Grafis," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 left-full ml-1 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-[10px] font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">✨ Bernilai Tinggi</div></div>)}
                   </Reveal>
                 ))}
                 <br />
                 <span className="text-gray-400">
-                  {["Website", "Professional."].map((word, i) => (
+                  {["Website", "Professional,"].map((word, i) => (
                     <Reveal key={`w2-${i}`} delay={550 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
                       <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
-                      {word === "Professional." && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[32px] -mt-[6px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                      {word === "Professional," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[32px] -mt-[6px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
                           <div className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-[10px] font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
                             ⚡ Modern & Clean
                           </div>
                         </div>)}
-                      {word === "Professional." && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 left-full ml-6 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                      {word === "Professional," && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 left-full ml-6 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
                           <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">
                             ✨ Estetik
                           </div>
@@ -464,7 +503,17 @@
                   ))}
                 </span>
                 <br />
-                {["& Gambar", "3D."].map((word, i) => (<Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4"><span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span></Reveal>))}
+                {["&", "Gambar", "3D."].map((word, i) => {
+                    const is3D = word === "3D.";
+                    const isAmpersand = word === "&";
+                    return (
+                      <Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className={`inline-block ${isAmpersand ? 'mr-2 md:mr-4' : 'mr-2 md:mr-4'}`}>
+                        <span className={`inline-block cursor-default ${is3D ? 'hover-3d-text' : 'hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100'}`}>
+                          {word}
+                        </span>
+                      </Reveal>
+                    );
+                })}
               </h1>
               <Reveal delay={1100} direction="up"><p className="text-base md:text-lg text-slate-500 max-w-2xl font-medium mb-6 md:mb-8">Membantu bisnis Anda tampil lebih kredibel and professional. Mulai dari <strong>identitas visual branding eksklusif</strong>, hingga <strong>pembuatan website professional</strong> and <strong>gambar 3D presisi</strong> yang siap dieksekusi.</p></Reveal>
               <Reveal delay={1300} direction="up" className="flex flex-row justify-center gap-2 md:gap-4 w-full">
@@ -478,10 +527,29 @@
               <Reveal delay={100} direction="up"><div className="flex items-center gap-2 mb-6"><div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div><span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span></div></Reveal>
               <Reveal delay={200} direction="up"><p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">Membantu merealisasikan ide bisnis Anda secara <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">{bouncyWords.map((word, i) => (<span key={i} className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`} style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}>{word}</span>))}</span> Mengeksekusi setiap detail dengan cermat agar visi Anda terwujud tanpa celah and memberikan hasil yang bisa diandalkan.</p></Reveal>
               <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[24rem] md:h-[28rem] flex justify-center items-end group mx-auto mt-6 md:mt-10">
-                <div className="relative z-10 w-full flex justify-center h-full items-end pb-0"><div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 transition-all duration-700 border border-gray-100 bg-slate-50">{Object.keys(avatars).map((key) => (<DynamicImage key={`bg-${key}`} src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="absolute inset-0 w-full h-full" />))}</div>{Object.keys(avatars).map((key) => (<DynamicImage key={`me-${key}`} src={avatars[key].img} alt={`Fajar Jayadi - ${avatars[key].label}`} isActive={activeCategory === key} className="absolute bottom-0 h-[85%] md:h-[95%] w-auto z-10 mask-fade-bottom" />))}</div>
+                <div className="relative z-10 w-full flex justify-center h-full items-end pb-0">
+                  <div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 transition-all duration-700 border border-gray-100 bg-slate-50">
+                    {Object.keys(avatars).map((key) => (<DynamicImage key={`bg-${key}`} src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="absolute inset-0 w-full h-full" />))}
+                  </div>
+                  <div className="absolute bottom-0 left-0 w-full h-full pointer-events-none">
+                    {Object.keys(avatars).map((key) => (
+                      <div 
+                        key={`me-container-${key}`} 
+                        className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full flex justify-center items-end transition-opacity duration-700 ${activeCategory === key ? 'opacity-100' : 'opacity-0'}`}
+                      >
+                        <DynamicImage 
+                          src={avatars[key].img} 
+                          alt={`Fajar Jayadi - ${avatars[key].label}`} 
+                          isActive={activeCategory === key} 
+                          className="h-[85%] md:h-[95%] w-auto mask-fade-bottom" 
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 <Reveal delay={400} direction="left" className="absolute top-1/4 left-4 md:left-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('desain')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:shadow-2xl hover:shadow-blue-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-blue-400 rounded-full transition-opacity duration-300 ${activeCategory === 'desain' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><PenTool size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Desain Branding</span></MagneticButton></Reveal>
                 <Reveal delay={500} direction="right" className="absolute top-1/3 right-4 md:right-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('website')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:shadow-2xl hover:shadow-purple-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-purple-400 rounded-full transition-opacity duration-300 ${activeCategory === 'website' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-purple-100 text-purple-500 rounded-full flex items-center justify-center relative z-10"><Monitor size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Website Professional</span></MagneticButton></Reveal>
-                <Reveal delay={600} direction="up" className="absolute bottom-1/4 left-10 md:left-32 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('konstruksi')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:shadow-2xl hover:shadow-orange-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-orange-400 rounded-full transition-opacity duration-300 ${activeCategory === 'konstruksi' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-orange-100 text-orange-500 rounded-full flex items-center justify-center relative z-10"><HardHat size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Gambar 3D</span></MagneticButton></Reveal>
+                <Reveal delay={600} direction="up" className="absolute bottom-1/4 left-10 md:left-32 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('konstruksi')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:shadow-2xl hover:shadow-orange-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-orange-400 rounded-full transition-opacity duration-300 ${activeCategory === 'konstruksi' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><HardHat size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Gambar 3D</span></MagneticButton></Reveal>
               </Reveal>
             </section>
 
@@ -490,18 +558,15 @@
               <div ref={bentoSectionRef} className="max-w-6xl mx-auto grid grid-cols-1 grid-rows-1 relative">
                 <div className="col-start-1 col-end-1 row-start-1 row-end-1 w-full">
                   <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[15rem]">
-                    
+                    {/* Row 1 */}
                     <div onClick={(e) => openService(e, 'desain')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('desain')}><h3 className="text-xl font-bold mb-1">Identitas & Branding Visual</h3><p className="text-slate-500 text-sm">Logo, flyer, and packaging premium untuk memperkuat karakter brand di mata pasar.</p><div className="absolute right-0 bottom-0 w-64 h-48 bg-gradient-to-tl from-blue-200 to-transparent rounded-tl-full opacity-50 translate-x-10 translate-y-10 group-hover:scale-110 transition-transform duration-500"></div><PenTool className="absolute bottom-8 right-12 text-blue-500 w-24 h-24 opacity-20 group-hover:opacity-40 transition-opacity" /></div></div>
-                    
                     <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer"><div className={getTileContentClass('website')}><h3 className="text-xl font-bold mb-1 text-white">Website Professional</h3><p className="text-slate-400 text-sm">Landing page yang dioptimalkan untuk performa, SEO, and konversi maksimal.</p><Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" /></div></div>
-                    
                     <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('konstruksi')}><h3 className="text-xl font-bold mb-1">Gambar 3D & Visualisasi</h3><p className="text-slate-500 text-sm">Desain food stall and modeling arsitektur 3D yang nyata and presisi.</p><Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" /></div></div>
                     
-                    <div onClick={(e) => openService(e, 'layout')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('layout')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
-                    
-                    <div onClick={(e) => openService(e, 'aplikasi')} className="md:row-span-2 lg:col-span-1 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('aplikasi')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
-                    
+                    {/* Row 2 */}
                     <div onClick={(e) => openService(e, 'company_profile')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('company_profile')}><h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3><p className="text-slate-500 text-sm">Profil perusahaan, book design, and media cetak elegan.</p><Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" /></div></div>
+                    <div onClick={(e) => openService(e, 'aplikasi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('aplikasi')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
+                    <div onClick={(e) => openService(e, 'layout')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('layout')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
                   </div>
                 </div>
 
@@ -511,9 +576,16 @@
                             <div onClick={(e) => e.stopPropagation()} className="max-w-5xl mx-auto cursor-default w-full">
                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                   {portfolioData[activeServiceContent]?.map((path, itemIdx) => (
-                                     <div key={itemIdx} className={`aspect-square rounded-3xl overflow-hidden relative cursor-pointer group border transition-all duration-700 ${expandedService && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} ${activeServiceContent === 'website' ? 'bg-slate-800 border-slate-700' : 'bg-slate-100 border-gray-200/50'}`} style={{ transitionDelay: expandedService && !isClosing ? `${400 + (itemIdx * 80)}ms` : '0ms' }}>
-                                        <div className="absolute inset-0 flex items-center justify-center text-slate-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 z-20 backdrop-blur-sm text-white">Detail Proyek</div>
-                                        <DynamicImage src={path} alt={`Portfolio ${itemIdx}`} minimalFallback={true} className="w-full h-full object-cover relative z-10" />
+                                     <div 
+                                        key={itemIdx} 
+                                        className={`aspect-square rounded-3xl overflow-hidden relative cursor-pointer group border ${activeServiceContent === 'website' ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200/50'}`}
+                                      >
+                                        <div 
+                                          className={`w-full h-full transition-all duration-300 ease-out hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center ${expandedService && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+                                          style={{ transitionDelay: (expandedService && !isClosing && !isTransitioning) ? `${400 + (itemIdx * 80)}ms` : '0ms' }}
+                                        >
+                                          <DynamicImage src={path} alt={`Portfolio ${itemIdx}`} minimalFallback={true} className="w-full h-full object-cover" />
+                                        </div>
                                      </div>
                                   ))}
                                </div>
@@ -537,7 +609,14 @@
                 <div className="w-full relative testi-container min-h-[350px] md:min-h-[300px]">
                   {testimonials.map((t, idx) => {
                     const state = getTestiState(idx);
-                    return (<div key={idx} className={`testi-card bg-gray-50 rounded-[2.5rem] p-8 md:p-16 border border-gray-100 flex flex-col md:flex-row gap-6 md:gap-10 items-center shadow-sm ${getTestiClass(state)}`} style={getTestiStyle(state)}><div className="flex-1 text-center md:text-left"><div className="flex gap-1 text-orange-400 mb-6 justify-center md:justify-start"><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /></div><h3 className="text-xl md:text-2xl font-bold leading-tight mb-8 text-slate-800">"{t.text}"</h3><div className="flex items-center gap-4 justify-center md:justify-start mt-auto"><div className="w-12 h-12 bg-slate-300 text-slate-700 rounded-full flex items-center justify-center font-black text-lg shrink-0">{t.name.charAt(0)}</div><div className="text-left"><p className="font-bold text-sm text-slate-900">{t.name}</p><p className="text-slate-500 text-xs">{t.role}</p></div></div></div><div className="hidden md:flex gap-3 shrink-0 z-20 self-end md:self-auto mb-2 md:mb-0"><button onClick={prevTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button><button onClick={nextTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button></div><div className="flex md:hidden gap-4 mt-4 z-20 w-full justify-center"><button onClick={prevTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button><button onClick={nextTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button></div></div>);
+                    return (<div key={idx} className={`testi-card bg-gray-50 rounded-[2.5rem] p-8 md:p-16 border border-gray-100 flex flex-col md:flex-row gap-6 md:gap-10 items-center shadow-sm ${getTestiClass(state)}`} style={getTestiStyle(state)}><div className="flex-1 text-center md:text-left"><div className="flex gap-1 text-orange-400 mb-6 justify-center md:justify-start"><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /></div><h3 className="text-xl md:text-2xl font-bold leading-tight mb-8 text-slate-800">"{t.text}"</h3><div className="flex items-center gap-4 justify-center md:justify-start mt-auto"><div className="w-12 h-12 bg-slate-300 text-slate-700 rounded-full flex items-center justify-center font-black text-lg shrink-0">{t.name.charAt(0)}</div><div className="text-left"><p className="font-bold text-sm text-slate-900">{t.name}</p><p className="text-slate-500 text-xs">{t.role}</p></div></div></div><div className="hidden md:flex gap-3 shrink-0 z-20 self-end md:self-auto mb-2 md:mb-0">
+                           {/* Swapped Logic: Left button is Next, Right button is Prev */}
+                           <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
+                           <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
+                        </div><div className="flex md:hidden gap-4 mt-4 z-20 w-full justify-center">
+                           <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
+                           <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
+                        </div></div>);
                   })}
                 </div>
               </Reveal>
