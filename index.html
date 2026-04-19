@@ -177,7 +177,7 @@
     </script>
 
     <script type="text/babel">
-      const { useState, useEffect, useRef } = React;
+      const { useState, useEffect, useRef, useMemo } = React;
 
       const ArrowRight = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>;
       const Play = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>;
@@ -236,7 +236,7 @@
         );
       };
 
-      const DynamicImage = ({ src, alt, className, isActive = true, objectFit = 'object-contain', minimalFallback = false }) => {
+      const DynamicImage = ({ src, alt, className, isActive = true, objectFit = 'object-cover', minimalFallback = false }) => {
         const [hasError, setHasError] = useState(false);
         const [isLoaded, setIsLoaded] = useState(false);
         const imgRef = useRef(null);
@@ -266,7 +266,6 @@
                   <div className="w-6 h-6 bg-slate-100 rounded-full opacity-50"></div>
                </div>
              )}
-             {/* Updated to strictly use w-full h-full so object-cover spans correctly within the over-sized container */}
              <img 
                ref={imgRef} 
                src={src} 
@@ -280,6 +279,13 @@
       };
 
       function App() {
+        // --- Navigation State ---
+        const [currentPage, setCurrentPage] = useState('home');
+        
+        useEffect(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, [currentPage]);
+
         const [isLoaded, setIsLoaded] = useState(false);
         useEffect(() => setIsLoaded(true), []);
         const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -365,22 +371,40 @@
           ]
         };
 
+        // --- Portfolio Page Logic ---
+        const [portfolioFilter, setPortfolioFilter] = useState('all');
+        const filterOptions = [
+            { id: 'all', label: 'Semua Karya' },
+            { id: 'desain', label: 'Desain Branding' },
+            { id: 'website', label: 'Website' },
+            { id: 'konstruksi', label: 'Gambar 3D' },
+            { id: 'company_profile', label: 'Media Cetak' },
+            { id: 'aplikasi', label: 'Digital' },
+            { id: 'layout', label: 'Layout' }
+        ];
+        
+        const allPortfolioItems = useMemo(() => {
+            return Object.entries(portfolioData).flatMap(([category, items]) => 
+                items.map(src => ({ category, src }))
+            );
+        }, [portfolioData]);
+
+        const filteredPortfolio = useMemo(() => {
+            if (portfolioFilter === 'all') return allPortfolioItems;
+            return allPortfolioItems.filter(item => item.category === portfolioFilter);
+        }, [portfolioFilter, allPortfolioItems]);
+
         // --- Background Preloading Logic ---
         useEffect(() => {
           if (!isLoaded) return;
-
-          // Defer preloading until main page is fully interactive
           const preloadTimer = setTimeout(() => {
-            const allImages = Object.values(portfolioData).flat();
-            allImages.forEach(src => {
+            allPortfolioItems.forEach(item => {
               const img = new Image();
-              img.src = src;
+              img.src = item.src;
             });
-          }, 2500); // Wait 2.5s for initial animations to finish
-
+          }, 2500); 
           return () => clearTimeout(preloadTimer);
-        }, [isLoaded]);
-        // ------------------------------------
+        }, [isLoaded, allPortfolioItems]);
 
         const [testiIdx, setTestiIdx] = useState(0);
         const [slideDir, setSlideDir] = useState('next');
@@ -489,15 +513,17 @@
 
         return (
           <div className="w-full min-h-[100dvh] overflow-x-clip bg-white text-slate-900 selection:bg-black selection:text-white">
+            
+            {/* --- SHARED HEADER --- */}
             <header className={`fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl z-50 transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-12'}`}>
               <div ref={headerWrapperRef} className={`bg-white/80 backdrop-blur-xl border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 overflow-hidden rounded-[2rem] relative`}>
                 <span className="absolute top-0 left-0 bg-green-500 rounded-full pointer-events-none z-50 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] w-[5px] h-[5px]" style={{ transform: `translate(${dotStyle.x}px, ${dotStyle.y}px)`, opacity: dotStyle.opacity }}></span>
                 <div className="px-2 py-2 flex justify-between items-center cursor-pointer md:cursor-default" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                  <div className="pl-4 md:pl-6 flex items-center" onMouseEnter={() => updateDot(logoTargetRef.current)}>
-                    <span className="font-bold text-base md:text-lg tracking-tight flex items-center">Fajar Jayadi<span ref={logoTargetRef} className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></span>
+                  <div className="pl-4 md:pl-6 flex items-center cursor-pointer" onMouseEnter={() => updateDot(logoTargetRef.current)} onClick={(e) => { e.stopPropagation(); setCurrentPage('home'); setIsMenuOpen(false); }}>
+                    <span className="font-bold text-base md:text-lg tracking-tight flex items-center hover:text-slate-600 transition-colors">Fajar Jayadi<span ref={logoTargetRef} className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></span>
                   </div>
                   <nav className="hidden md:flex gap-8 text-sm font-medium text-slate-500 items-center translate-y-[1px]" onMouseLeave={() => updateDot(logoTargetRef.current)}>
-                    <a href="#" className="hover:text-black transition-colors flex items-center" onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Portofolio<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
+                    <a href="#" className={`hover:text-black transition-colors flex items-center ${currentPage === 'portfolio' ? 'text-black font-bold' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('portfolio'); }} onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Portofolio<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
                     <a href="#" className="hover:text-black transition-colors flex items-center" onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Estimasi<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
                     <a href="#" className="hover:text-black transition-colors flex items-center" onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Kenapa mending ke Fajar?<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
                   </nav>
@@ -507,181 +533,229 @@
                 </div>
                 <div className={`md:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-[300px] opacity-100 pb-4' : 'max-h-0 opacity-0'}`}>
                   <nav className="flex flex-col items-center gap-4 pt-4 text-sm font-medium text-slate-500 border-t border-gray-100 mx-4">
-                    <a href="#" className="hover:text-black transition-colors">Portofolio</a><a href="#" className="hover:text-black transition-colors">Estimasi</a><a href="#" className="hover:text-black transition-colors">Kenapa mending ke Fajar?</a>
+                    <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('portfolio'); setIsMenuOpen(false); }} className={`hover:text-black transition-colors ${currentPage === 'portfolio' ? 'text-black font-bold' : ''}`}>Portofolio</a>
+                    <a href="#" className="hover:text-black transition-colors">Estimasi</a>
+                    <a href="#" className="hover:text-black transition-colors">Kenapa mending ke Fajar?</a>
                   </nav>
                 </div>
               </div>
             </header>
 
-            <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
-              <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
-                {["Jasa", "Desain", "Grafis,"].map((word, i) => (
-                  <Reveal key={`w1-${i}`} delay={100 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
-                    <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
-                    {word === "Jasa" && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 right-full mr-6 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">⚡ Presisi & Cepat</div></div>)}
-                    {word === "Grafis," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 left-full ml-1 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-[10px] font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">✨ Bernilai Tinggi</div></div>)}
-                  </Reveal>
-                ))}
-                <br />
-                <span className="text-gray-400">
-                  {["Website", "Professional,"].map((word, i) => (
-                    <Reveal key={`w2-${i}`} delay={550 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
-                      <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
-                      {word === "Professional," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[32px] -mt-[6px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
-                          <div className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-[10px] font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
-                            ⚡ Modern & Clean
-                          </div>
-                        </div>)}
-                      {word === "Professional," && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 left-full ml-6 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
-                          <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">
-                            ✨ Estetik
-                          </div>
-                        </div>)}
-                    </Reveal>
-                  ))}
-                </span>
-                <br />
-                {["&", "Gambar", "3D."].map((word, i) => {
-                    const is3D = word === "3D.";
-                    return (
-                      <Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4">
-                        <span className={`inline-block cursor-default ${is3D ? 'hover-3d-text' : 'hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100'}`}>
-                          {word}
-                        </span>
+            {/* --- HOMEPAGE VIEW (Hidden when not active, preserving state and refs) --- */}
+            <div className={currentPage === 'home' ? 'block' : 'hidden'}>
+                <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
+                  <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
+                    {["Jasa", "Desain", "Grafis,"].map((word, i) => (
+                      <Reveal key={`w1-${i}`} delay={100 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
+                        <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
+                        {word === "Jasa" && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 right-full mr-6 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">⚡ Presisi & Cepat</div></div>)}
+                        {word === "Grafis," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 left-full ml-1 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-[10px] font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">✨ Bernilai Tinggi</div></div>)}
                       </Reveal>
-                    );
-                })}
-              </h1>
-              <Reveal delay={1100} direction="up"><p className="text-base md:text-lg text-slate-500 max-w-2xl font-medium mb-6 md:mb-8">Membantu bisnis Anda tampil lebih kredibel and professional. Mulai dari <strong>identitas visual branding eksklusif</strong>, hingga <strong>pembuatan website professional</strong> and <strong>gambar 3D presisi</strong> yang siap dieksekusi.</p></Reveal>
-              <Reveal delay={1300} direction="up" className="flex flex-row justify-center gap-2 md:gap-4 w-full">
-                <button className="group px-4 py-3 md:px-8 md:py-4 bg-black text-white text-xs md:text-base font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-800 transition-colors w-auto">Lihat Portofolio <ArrowRight size={16} className="group-hover:translate-x-1 md:group-hover:translate-x-2 transition-transform duration-300 w-4 h-4 md:w-[18px] md:h-[18px]" /></button>
-                <button className="group px-4 py-3 md:px-8 md:py-4 bg-white text-black text-xs md:text-base border border-gray-200 font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-50 transition-colors w-auto"><div className="relative flex items-center justify-center w-4 h-4 md:w-5 md:h-5"><div className="absolute inset-0 border-2 border-black rounded-full opacity-0 ripple-element"></div><Play size={14} className="text-black relative z-10 w-3 h-3 md:w-[14px] md:h-[14px]" /></div>Proses Kerja</button>
-              </Reveal>
-            </section>
-
-            <section className="pt-20 pb-4 px-6 max-w-6xl mx-auto flex flex-col items-center relative">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 rounded-3xl"><div className="absolute top-[6rem] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] h-[800px] md:h-[1200px] bg-circle-pattern rounded-full" style={{ maskImage: 'radial-gradient(circle, black 20%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}></div></div>
-              <Reveal delay={100} direction="up"><div className="flex items-center gap-2 mb-6"><div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div><span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span></div></Reveal>
-              <Reveal delay={200} direction="up"><p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">Membantu merealisasikan ide bisnis Anda secara <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">{bouncyWords.map((word, i) => (<span key={i} className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`} style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}>{word}</span>))}</span> Mengeksekusi setiap detail dengan cermat agar visi Anda terwujud tanpa celah and memberikan hasil yang bisa diandalkan.</p></Reveal>
-              <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[24rem] md:h-[28rem] flex justify-center items-end group mx-auto mt-6 md:mt-10">
-                {/* Avatar Section specific wrapper for the repel mouse effect.
-                  Moving the mouse over this div computes an offset that pushes the background in the opposite direction.
-                */}
-                <div ref={avatarRef} onMouseMove={handleAvatarMouseMove} onMouseLeave={handleAvatarMouseLeave} onMouseEnter={handleAvatarMouseEnter} className="relative z-10 w-full flex justify-center h-full items-end pb-0">
-                  <div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 border border-gray-100 bg-slate-50">
-                    {Object.keys(avatars).map((key) => (
-                      <div 
-                        key={`bg-wrapper-${key}`} 
-                        className={`absolute -top-[15%] -left-[15%] -bottom-[15%] -right-[15%] transition-opacity duration-700 ${activeCategory === key ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                        style={{
-                          transform: `translate3d(${bgOffset.x}px, ${bgOffset.y}px, 0)`,
-                          transition: isAvatarHovered ? 'transform 0.1s ease-out, opacity 0.7s' : 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.7s',
-                          willChange: 'transform'
-                        }}
-                      >
-                         <DynamicImage src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="w-full h-full" />
-                      </div>
                     ))}
-                  </div>
-                  <div className="absolute bottom-0 left-0 w-full h-full pointer-events-none">
-                    {Object.keys(avatars).map((key) => (
-                      <div 
-                        key={`me-container-${key}`} 
-                        className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full flex justify-center items-end transition-opacity duration-700 ${activeCategory === key ? 'opacity-100' : 'opacity-0'}`}
-                      >
-                        <DynamicImage 
-                          src={avatars[key].img} 
-                          alt={`Fajar Jayadi - ${avatars[key].label}`} 
-                          isActive={activeCategory === key} 
-                          className="h-[85%] md:h-[95%] w-auto mask-fade-bottom" 
-                        />
+                    <br />
+                    <span className="text-gray-400">
+                      {["Website", "Professional,"].map((word, i) => (
+                        <Reveal key={`w2-${i}`} delay={550 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
+                          <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
+                          {word === "Professional," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[32px] -mt-[6px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                              <div className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-[10px] font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
+                                ⚡ Modern & Clean
+                              </div>
+                            </div>)}
+                          {word === "Professional," && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 left-full ml-6 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                              <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">
+                                ✨ Estetik
+                              </div>
+                            </div>)}
+                        </Reveal>
+                      ))}
+                    </span>
+                    <br />
+                    {["&", "Gambar", "3D."].map((word, i) => {
+                        const is3D = word === "3D.";
+                        return (
+                          <Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4">
+                            <span className={`inline-block cursor-default ${is3D ? 'hover-3d-text' : 'hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100'}`}>
+                              {word}
+                            </span>
+                          </Reveal>
+                        );
+                    })}
+                  </h1>
+                  <Reveal delay={1100} direction="up"><p className="text-base md:text-lg text-slate-500 max-w-2xl font-medium mb-6 md:mb-8">Membantu bisnis Anda tampil lebih kredibel and professional. Mulai dari <strong>identitas visual branding eksklusif</strong>, hingga <strong>pembuatan website professional</strong> and <strong>gambar 3D presisi</strong> yang siap dieksekusi.</p></Reveal>
+                  <Reveal delay={1300} direction="up" className="flex flex-row justify-center gap-2 md:gap-4 w-full">
+                    <button onClick={() => setCurrentPage('portfolio')} className="group px-4 py-3 md:px-8 md:py-4 bg-black text-white text-xs md:text-base font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-800 transition-colors w-auto">Lihat Portofolio <ArrowRight size={16} className="group-hover:translate-x-1 md:group-hover:translate-x-2 transition-transform duration-300 w-4 h-4 md:w-[18px] md:h-[18px]" /></button>
+                    <button className="group px-4 py-3 md:px-8 md:py-4 bg-white text-black text-xs md:text-base border border-gray-200 font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-50 transition-colors w-auto"><div className="relative flex items-center justify-center w-4 h-4 md:w-5 md:h-5"><div className="absolute inset-0 border-2 border-black rounded-full opacity-0 ripple-element"></div><Play size={14} className="text-black relative z-10 w-3 h-3 md:w-[14px] md:h-[14px]" /></div>Proses Kerja</button>
+                  </Reveal>
+                </section>
+
+                <section className="pt-20 pb-4 px-6 max-w-6xl mx-auto flex flex-col items-center relative">
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 rounded-3xl"><div className="absolute top-[6rem] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] h-[800px] md:h-[1200px] bg-circle-pattern rounded-full" style={{ maskImage: 'radial-gradient(circle, black 20%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}></div></div>
+                  <Reveal delay={100} direction="up"><div className="flex items-center gap-2 mb-6"><div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div><span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span></div></Reveal>
+                  <Reveal delay={200} direction="up"><p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">Membantu merealisasikan ide bisnis Anda secara <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">{bouncyWords.map((word, i) => (<span key={i} className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`} style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}>{word}</span>))}</span> Mengeksekusi setiap detail dengan cermat agar visi Anda terwujud tanpa celah and memberikan hasil yang bisa diandalkan.</p></Reveal>
+                  <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[24rem] md:h-[28rem] flex justify-center items-end group mx-auto mt-6 md:mt-10">
+                    <div ref={avatarRef} onMouseMove={handleAvatarMouseMove} onMouseLeave={handleAvatarMouseLeave} onMouseEnter={handleAvatarMouseEnter} className="relative z-10 w-full flex justify-center h-full items-end pb-0">
+                      <div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 border border-gray-100 bg-slate-50">
+                        {Object.keys(avatars).map((key) => (
+                          <div 
+                            key={`bg-wrapper-${key}`} 
+                            className={`absolute -top-[15%] -left-[15%] -bottom-[15%] -right-[15%] transition-opacity duration-700 ${activeCategory === key ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                            style={{
+                              transform: `translate3d(${bgOffset.x}px, ${bgOffset.y}px, 0)`,
+                              transition: isAvatarHovered ? 'transform 0.1s ease-out, opacity 0.7s' : 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.7s',
+                              willChange: 'transform'
+                            }}
+                          >
+                             <DynamicImage src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="w-full h-full" />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-                <Reveal delay={400} direction="left" className="absolute top-1/4 left-4 md:left-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('desain')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:shadow-2xl hover:shadow-blue-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-blue-400 rounded-full transition-opacity duration-300 ${activeCategory === 'desain' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><PenTool size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Desain Branding</span></MagneticButton></Reveal>
-                <Reveal delay={500} direction="right" className="absolute top-1/3 right-4 md:right-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('website')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:shadow-2xl hover:shadow-purple-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-purple-400 rounded-full transition-opacity duration-300 ${activeCategory === 'website' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-purple-100 text-purple-500 rounded-full flex items-center justify-center relative z-10"><Monitor size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Website Professional</span></MagneticButton></Reveal>
-                <Reveal delay={600} direction="up" className="absolute bottom-1/4 left-10 md:left-32 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('konstruksi')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:shadow-2xl hover:shadow-orange-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-orange-400 rounded-full transition-opacity duration-300 ${activeCategory === 'konstruksi' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><HardHat size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Gambar 3D</span></MagneticButton></Reveal>
-              </Reveal>
-            </section>
+                      <div className="absolute bottom-0 left-0 w-full h-full pointer-events-none">
+                        {Object.keys(avatars).map((key) => (
+                          <div 
+                            key={`me-container-${key}`} 
+                            className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full flex justify-center items-end transition-opacity duration-700 ${activeCategory === key ? 'opacity-100' : 'opacity-0'}`}
+                          >
+                            <DynamicImage 
+                              src={avatars[key].img} 
+                              alt={`Fajar Jayadi - ${avatars[key].label}`} 
+                              isActive={activeCategory === key} 
+                              className="h-[85%] md:h-[95%] w-auto mask-fade-bottom" 
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <Reveal delay={400} direction="left" className="absolute top-1/4 left-4 md:left-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('desain')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:shadow-2xl hover:shadow-blue-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-blue-400 rounded-full transition-opacity duration-300 ${activeCategory === 'desain' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><PenTool size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Desain Branding</span></MagneticButton></Reveal>
+                    <Reveal delay={500} direction="right" className="absolute top-1/3 right-4 md:right-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('website')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:shadow-2xl hover:shadow-purple-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-purple-400 rounded-full transition-opacity duration-300 ${activeCategory === 'website' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-purple-100 text-purple-500 rounded-full flex items-center justify-center relative z-10"><Monitor size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Website Professional</span></MagneticButton></Reveal>
+                    <Reveal delay={600} direction="up" className="absolute bottom-1/4 left-10 md:left-32 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('konstruksi')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:shadow-2xl hover:shadow-orange-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-orange-400 rounded-full transition-opacity duration-300 ${activeCategory === 'konstruksi' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><HardHat size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Gambar 3D</span></MagneticButton></Reveal>
+                  </Reveal>
+                </section>
 
-            <section className="pt-10 pb-24 px-6 bg-white relative">
-              <div className="max-w-6xl mx-auto"><Reveal direction="up" className="text-center mb-16"><h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">Solusi Menyeluruh <br/>untuk Bisnis Anda <span ref={rocketRef} className={`inline-block ml-3 origin-bottom-left relative z-[100] ${rocketTriggered ? 'animate-rocket-fly pointer-events-none' : ''}`}>🚀</span></h2><p className="text-slate-500 font-medium">Semua keahlian yang dibutuhkan untuk melesatkan brand Anda, tersedia di sini.</p></Reveal></div>
-              <div ref={bentoSectionRef} className="max-w-6xl mx-auto grid grid-cols-1 grid-rows-1 relative">
-                <div className="col-start-1 col-end-1 row-start-1 row-end-1 w-full">
-                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[15rem]">
-                    {/* Row 1 */}
-                    <div onClick={(e) => openService(e, 'desain')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('desain')}><h3 className="text-xl font-bold mb-1">Identitas & Branding Visual</h3><p className="text-slate-500 text-sm">Logo, flyer, and packaging premium untuk memperkuat karakter brand di mata pasar.</p><div className="absolute right-0 bottom-0 w-64 h-48 bg-gradient-to-tl from-blue-200 to-transparent rounded-tl-full opacity-50 translate-x-10 translate-y-10 group-hover:scale-110 transition-transform duration-500"></div><PenTool className="absolute bottom-8 right-12 text-blue-500 w-24 h-24 opacity-20 group-hover:opacity-40 transition-opacity" /></div></div>
-                    <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer"><div className={getTileContentClass('website')}><h3 className="text-xl font-bold mb-1 text-white">Website Professional</h3><p className="text-slate-400 text-sm">Landing page yang dioptimalkan untuk performa, SEO, and konversi maksimal.</p><Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" /></div></div>
-                    <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('konstruksi')}><h3 className="text-xl font-bold mb-1">Gambar 3D & Visualisasi</h3><p className="text-slate-500 text-sm">Desain food stall and modeling arsitektur 3D yang nyata and presisi.</p><Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" /></div></div>
-                    
-                    {/* Row 2 */}
-                    <div onClick={(e) => openService(e, 'company_profile')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('company_profile')}><h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3><p className="text-slate-500 text-sm">Profil perusahaan, book design, and media cetak elegan.</p><Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" /></div></div>
-                    <div onClick={(e) => openService(e, 'aplikasi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('aplikasi')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
-                    <div onClick={(e) => openService(e, 'layout')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('layout')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
-                  </div>
-                </div>
+                <section className="pt-10 pb-24 px-6 bg-white relative">
+                  <div className="max-w-6xl mx-auto"><Reveal direction="up" className="text-center mb-16"><h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">Solusi Menyeluruh <br/>untuk Bisnis Anda <span ref={rocketRef} className={`inline-block ml-3 origin-bottom-left relative z-[100] ${rocketTriggered ? 'animate-rocket-fly pointer-events-none' : ''}`}>🚀</span></h2><p className="text-slate-500 font-medium">Semua keahlian yang dibutuhkan untuk melesatkan brand Anda, tersedia di sini.</p></Reveal></div>
+                  <div ref={bentoSectionRef} className="max-w-6xl mx-auto grid grid-cols-1 grid-rows-1 relative">
+                    <div className="col-start-1 col-end-1 row-start-1 row-end-1 w-full">
+                      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[15rem]">
+                        <div onClick={(e) => openService(e, 'desain')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('desain')}><h3 className="text-xl font-bold mb-1">Identitas & Branding Visual</h3><p className="text-slate-500 text-sm">Logo, flyer, and packaging premium untuk memperkuat karakter brand di mata pasar.</p><div className="absolute right-0 bottom-0 w-64 h-48 bg-gradient-to-tl from-blue-200 to-transparent rounded-tl-full opacity-50 translate-x-10 translate-y-10 group-hover:scale-110 transition-transform duration-500"></div><PenTool className="absolute bottom-8 right-12 text-blue-500 w-24 h-24 opacity-20 group-hover:opacity-40 transition-opacity" /></div></div>
+                        <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer"><div className={getTileContentClass('website')}><h3 className="text-xl font-bold mb-1 text-white">Website Professional</h3><p className="text-slate-400 text-sm">Landing page yang dioptimalkan untuk performa, SEO, and konversi maksimal.</p><Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" /></div></div>
+                        <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('konstruksi')}><h3 className="text-xl font-bold mb-1">Gambar 3D & Visualisasi</h3><p className="text-slate-500 text-sm">Desain food stall and modeling arsitektur 3D yang nyata and presisi.</p><Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" /></div></div>
+                        <div onClick={(e) => openService(e, 'company_profile')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('company_profile')}><h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3><p className="text-slate-500 text-sm">Profil perusahaan, book design, and media cetak elegan.</p><Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" /></div></div>
+                        <div onClick={(e) => openService(e, 'aplikasi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('aplikasi')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
+                        <div onClick={(e) => openService(e, 'layout')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('layout')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
+                      </div>
+                    </div>
 
-                <div onClick={closeService} className={`col-start-1 col-end-1 row-start-1 row-end-1 z-40 ${activeServiceContent === 'website' ? 'bg-slate-900' : 'bg-[#F5F5F7]'} rounded-[2rem] w-full cursor-pointer overflow-hidden`} style={{ clipPath: expandedService ? clipPathStyle : initialClipRef.current, pointerEvents: expandedService && !isClosing ? 'auto' : 'none', visibility: activeServiceContent ? 'visible' : 'hidden', transition: isTransitioning ? 'clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1)' : 'none' }}>
-                    {activeServiceContent && (
-                        <div className="relative pb-16 pt-8 px-6 h-full overflow-y-auto hide-scrollbar">
-                            <div onClick={(e) => e.stopPropagation()} className="max-w-5xl mx-auto cursor-default w-full">
-                               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                  {portfolioData[activeServiceContent]?.map((path, itemIdx) => (
-                                     <div 
-                                        key={itemIdx} 
-                                        className={`aspect-square rounded-3xl overflow-hidden relative cursor-pointer group border ${activeServiceContent === 'website' ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200/50'}`}
-                                      >
-                                        <div 
-                                          className={`w-full h-full transition-all duration-300 ease-out hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center ${expandedService && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-                                          style={{ transitionDelay: (expandedService && !isClosing && !isTransitioning) ? `${400 + (itemIdx * 80)}ms` : '0ms' }}
-                                        >
-                                          <DynamicImage src={path} alt={`Portfolio ${itemIdx}`} minimalFallback={true} className="w-full h-full object-cover" />
-                                        </div>
-                                     </div>
-                                  ))}
-                               </div>
+                    <div onClick={closeService} className={`col-start-1 col-end-1 row-start-1 row-end-1 z-40 ${activeServiceContent === 'website' ? 'bg-slate-900' : 'bg-[#F5F5F7]'} rounded-[2rem] w-full cursor-pointer overflow-hidden`} style={{ clipPath: expandedService ? clipPathStyle : initialClipRef.current, pointerEvents: expandedService && !isClosing ? 'auto' : 'none', visibility: activeServiceContent ? 'visible' : 'hidden', transition: isTransitioning ? 'clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1)' : 'none' }}>
+                        {activeServiceContent && (
+                            <div className="relative pb-16 pt-8 px-6 h-full overflow-y-auto hide-scrollbar">
+                                <div onClick={(e) => e.stopPropagation()} className="max-w-5xl mx-auto cursor-default w-full">
+                                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                      {portfolioData[activeServiceContent]?.map((path, itemIdx) => (
+                                         <div 
+                                            key={itemIdx} 
+                                            className={`aspect-square rounded-3xl overflow-hidden relative cursor-pointer group border ${activeServiceContent === 'website' ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200/50'}`}
+                                          >
+                                            <div 
+                                              className={`w-full h-full transition-all duration-300 ease-out hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center ${expandedService && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+                                              style={{ transitionDelay: (expandedService && !isClosing && !isTransitioning) ? `${400 + (itemIdx * 80)}ms` : '0ms' }}
+                                            >
+                                              <DynamicImage src={path} alt={`Portfolio ${itemIdx}`} minimalFallback={true} className="w-full h-full object-cover" />
+                                            </div>
+                                         </div>
+                                      ))}
+                                   </div>
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
+                  </div>
+                </section>
+
+                <section className="py-20 bg-white border-y border-gray-100 overflow-hidden">
+                  <Reveal direction="up" className="max-w-6xl mx-auto px-6 mb-12 text-center pointer-events-none"><h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight text-slate-900">Client Fajar</h2><p className="text-slate-500 font-medium">Berbagai entitas bisnis yang telah mempercayakan identitas visual mereka.</p></Reveal>
+                  <Reveal delay={200} direction="none" className="w-full relative">
+                    <div className="absolute top-0 left-0 w-16 md:w-32 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div><div className="absolute top-0 right-0 w-16 md:w-32 h-full bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+                    <div ref={carouselRef} onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseUp={handleMouseUp} onMouseMove={handleMouseMoveCarousel} className={`flex items-center gap-16 md:gap-24 px-10 overflow-x-auto py-4 select-none hide-scrollbar ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}>{displayLogos.map((item, index) => (<div key={`client-${item}-${index}`} className="flex-shrink-0 transition-transform duration-500 hover:scale-110"><DynamicImage src={`client-logo-${item}.png`} alt={`Client Logo ${item}`} minimalFallback={true} className="h-8 md:h-12 text-2xl w-auto object-contain grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 pointer-events-none" /></div>))}</div>
+                  </Reveal>
+                </section>
+
+                <section className="py-24 px-6 max-w-4xl mx-auto">
+                  <Reveal direction="up">
+                    <div className="w-full relative testi-container min-h-[350px] md:min-h-[300px]">
+                      {testimonials.map((t, idx) => {
+                        const state = getTestiState(idx);
+                        return (<div key={idx} className={`testi-card bg-gray-50 rounded-[2.5rem] p-8 md:p-16 border border-gray-100 flex flex-col md:flex-row gap-6 md:gap-10 items-center shadow-sm ${getTestiClass(state)}`} style={getTestiStyle(state)}><div className="flex-1 text-center md:text-left"><div className="flex gap-1 text-orange-400 mb-6 justify-center md:justify-start"><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /></div><h3 className="text-xl md:text-2xl font-bold leading-tight mb-8 text-slate-800">"{t.text}"</h3><div className="flex items-center gap-4 justify-center md:justify-start mt-auto"><div className="w-12 h-12 bg-slate-300 text-slate-700 rounded-full flex items-center justify-center font-black text-lg shrink-0">{t.name.charAt(0)}</div><div className="text-left"><p className="font-bold text-sm text-slate-900">{t.name}</p><p className="text-slate-500 text-xs">{t.role}</p></div></div></div><div className="hidden md:flex gap-3 shrink-0 z-20 self-end md:self-auto mb-2 md:mb-0">
+                               <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
+                               <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
+                            </div><div className="flex md:hidden gap-4 mt-4 z-20 w-full justify-center">
+                               <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
+                               <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
+                            </div></div>);
+                      })}
+                    </div>
+                  </Reveal>
+                </section>
+
+                <section className="py-24 px-6 max-w-6xl mx-auto border-b border-gray-100">
+                  <div className="flex flex-col md:flex-row gap-16 items-center">
+                    <Reveal direction="right" className="flex-1"><h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">Wujudkan Visi.<br/>Mulai Hari Ini.</h2><p className="text-slate-500 font-medium mb-10 max-w-md">Serahkan tantangan visual and teknis Anda kepada partner yang tepat. Dapatkan hasil maksimal untuk perkembangan bisnis Anda.</p><div className="flex gap-4"><button className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">Konsultasi Sekarang</button><button className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">Detail Estimasi</button></div></Reveal>
+                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">{[{ icon: PenTool, text: 'Identitas Visual', color: 'text-blue-500', bg: 'bg-blue-100' },{ icon: Monitor, text: 'Web Professional', color: 'text-purple-500', bg: 'bg-purple-100' },{ icon: Box, text: 'Gambar 3D Realis', color: 'text-orange-500', bg: 'bg-orange-100' },{ icon: Zap, text: 'Eksekusi Tangkas', color: 'text-yellow-500', bg: 'bg-yellow-100' },{ icon: Layout, text: 'User Experience', color: 'text-pink-500', bg: 'bg-pink-100' },{ icon: CheckCircle2, text: 'Komitmen Kualitas', color: 'text-green-500', bg: 'bg-green-100' }].map((feat, i) => (<Reveal key={i} delay={i * 100} direction="left"><div className="flex items-center gap-4 p-2"><div className={`w-10 h-10 rounded-full flex items-center justify-center ${feat.bg} ${feat.color}`}><feat.icon size={18} /></div><span className="font-bold text-slate-800">{feat.text}</span></div></Reveal>))}</div>
+                  </div>
+                </section>
+            </div>
+
+            {/* --- PORTFOLIO VIEW --- */}
+            <div className={currentPage === 'portfolio' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen' : 'hidden'}>
+                <Reveal direction="up" className="text-center mb-10">
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Eksplorasi & Karya</h1>
+                    <p className="text-slate-500 font-medium max-w-2xl mx-auto">Koleksi desain kreatif, perencanaan visual, dan pengembangan digital yang pernah kami kerjakan.</p>
+                </Reveal>
+
+                <Reveal delay={150} direction="up" className="flex flex-wrap justify-center gap-2 mb-12">
+                    {filterOptions.map(f => (
+                        <button
+                            key={f.id}
+                            onClick={() => setPortfolioFilter(f.id)}
+                            className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${portfolioFilter === f.id ? 'bg-black text-white shadow-lg' : 'bg-gray-100 text-slate-600 hover:bg-gray-200'}`}
+                        >
+                            {f.label}
+                        </button>
+                    ))}
+                </Reveal>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    {filteredPortfolio.map((item, idx) => (
+                        <Reveal 
+                            key={`${item.src}-${idx}-${portfolioFilter}`} 
+                            delay={(idx % 6) * 100} 
+                            direction="up" 
+                            className="aspect-square rounded-3xl overflow-hidden bg-gray-50 border border-gray-100 group relative cursor-pointer"
+                        >
+                            <DynamicImage 
+                                src={item.src} 
+                                alt={`Karya ${item.category} ${idx}`} 
+                                className="w-full h-full group-hover:scale-105 transition-transform duration-500 ease-out" 
+                                objectFit="object-cover" 
+                                minimalFallback={true} 
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                                <span className="text-white font-bold capitalize bg-black/30 backdrop-blur-md px-4 py-1.5 rounded-full text-xs shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                                    {item.category.replace('_', ' ')}
+                                </span>
+                            </div>
+                        </Reveal>
+                    ))}
                 </div>
-              </div>
-            </section>
+                
+                {filteredPortfolio.length === 0 && (
+                    <div className="text-center py-20 text-slate-400 font-medium">Belum ada karya di kategori ini.</div>
+                )}
+            </div>
 
-            <section className="py-20 bg-white border-y border-gray-100 overflow-hidden">
-              <Reveal direction="up" className="max-w-6xl mx-auto px-6 mb-12 text-center pointer-events-none"><h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight text-slate-900">Client Fajar</h2><p className="text-slate-500 font-medium">Berbagai entitas bisnis yang telah mempercayakan identitas visual mereka.</p></Reveal>
-              <Reveal delay={200} direction="none" className="w-full relative">
-                <div className="absolute top-0 left-0 w-16 md:w-32 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div><div className="absolute top-0 right-0 w-16 md:w-32 h-full bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
-                <div ref={carouselRef} onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseUp={handleMouseUp} onMouseMove={handleMouseMoveCarousel} className={`flex items-center gap-16 md:gap-24 px-10 overflow-x-auto py-4 select-none hide-scrollbar ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}>{displayLogos.map((item, index) => (<div key={`client-${item}-${index}`} className="flex-shrink-0 transition-transform duration-500 hover:scale-110"><DynamicImage src={`client-logo-${item}.png`} alt={`Client Logo ${item}`} minimalFallback={true} className="h-8 md:h-12 text-2xl w-auto object-contain grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 pointer-events-none" /></div>))}</div>
-              </Reveal>
-            </section>
-
-            <section className="py-24 px-6 max-w-4xl mx-auto">
-              <Reveal direction="up">
-                <div className="w-full relative testi-container min-h-[350px] md:min-h-[300px]">
-                  {testimonials.map((t, idx) => {
-                    const state = getTestiState(idx);
-                    return (<div key={idx} className={`testi-card bg-gray-50 rounded-[2.5rem] p-8 md:p-16 border border-gray-100 flex flex-col md:flex-row gap-6 md:gap-10 items-center shadow-sm ${getTestiClass(state)}`} style={getTestiStyle(state)}><div className="flex-1 text-center md:text-left"><div className="flex gap-1 text-orange-400 mb-6 justify-center md:justify-start"><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /></div><h3 className="text-xl md:text-2xl font-bold leading-tight mb-8 text-slate-800">"{t.text}"</h3><div className="flex items-center gap-4 justify-center md:justify-start mt-auto"><div className="w-12 h-12 bg-slate-300 text-slate-700 rounded-full flex items-center justify-center font-black text-lg shrink-0">{t.name.charAt(0)}</div><div className="text-left"><p className="font-bold text-sm text-slate-900">{t.name}</p><p className="text-slate-500 text-xs">{t.role}</p></div></div></div><div className="hidden md:flex gap-3 shrink-0 z-20 self-end md:self-auto mb-2 md:mb-0">
-                           <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
-                           <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
-                        </div><div className="flex md:hidden gap-4 mt-4 z-20 w-full justify-center">
-                           <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
-                           <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
-                        </div></div>);
-                  })}
-                </div>
-              </Reveal>
-            </section>
-
-            <section className="py-24 px-6 max-w-6xl mx-auto border-b border-gray-100">
-              <div className="flex flex-col md:flex-row gap-16 items-center">
-                <Reveal direction="right" className="flex-1"><h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">Wujudkan Visi.<br/>Mulai Hari Ini.</h2><p className="text-slate-500 font-medium mb-10 max-w-md">Serahkan tantangan visual and teknis Anda kepada partner yang tepat. Dapatkan hasil maksimal untuk perkembangan bisnis Anda.</p><div className="flex gap-4"><button className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">Konsultasi Sekarang</button><button className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">Detail Estimasi</button></div></Reveal>
-                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">{[{ icon: PenTool, text: 'Identitas Visual', color: 'text-blue-500', bg: 'bg-blue-100' },{ icon: Monitor, text: 'Web Professional', color: 'text-purple-500', bg: 'bg-purple-100' },{ icon: Box, text: 'Gambar 3D Realis', color: 'text-orange-500', bg: 'bg-orange-100' },{ icon: Zap, text: 'Eksekusi Tangkas', color: 'text-yellow-500', bg: 'bg-yellow-100' },{ icon: Layout, text: 'User Experience', color: 'text-pink-500', bg: 'bg-pink-100' },{ icon: CheckCircle2, text: 'Komitmen Kualitas', color: 'text-green-500', bg: 'bg-green-100' }].map((feat, i) => (<Reveal key={i} delay={i * 100} direction="left"><div className="flex items-center gap-4 p-2"><div className={`w-10 h-10 rounded-full flex items-center justify-center ${feat.bg} ${feat.color}`}><feat.icon size={18} /></div><span className="font-bold text-slate-800">{feat.text}</span></div></Reveal>))}</div>
-              </div>
-            </section>
-
+            {/* --- SHARED FOOTER --- */}
             <footer className="bg-slate-900 text-white pt-20 pb-10 px-6">
-              <Reveal direction="up" className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-16 mb-16"><div className="max-w-sm"><h3 className="text-2xl font-bold mb-6 text-white">Mari berkolaborasi and diskusikan potensi Anda.</h3><button className="w-full flex items-center justify-center gap-2 bg-[#128C7E] hover:bg-[#25D366] text-white py-4 px-6 rounded-full text-sm font-bold transition-colors shadow-lg shadow-green-900/30">Hubungi via WhatsApp</button><p className="text-xs text-slate-400 mt-4 opacity-80">Respon cepat untuk setiap ide brilian Anda.</p></div><div className="flex gap-16"><div><h4 className="font-bold mb-4 text-white">Solusi</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" className="hover:text-green-400 transition-colors">Desain Branding</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Website Professional</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Gambar 3D</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Konsultasi Digital</a></li></ul></div><div><h4 className="font-bold mb-4 text-white">Profil</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" className="hover:text-green-400 transition-colors">Tentang Fajar</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Portofolio</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Estimasi Biaya</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Hubungi</a></li></ul></div></div></Reveal>
+              <Reveal direction="up" className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-16 mb-16"><div className="max-w-sm"><h3 className="text-2xl font-bold mb-6 text-white">Mari berkolaborasi and diskusikan potensi Anda.</h3><button className="w-full flex items-center justify-center gap-2 bg-[#128C7E] hover:bg-[#25D366] text-white py-4 px-6 rounded-full text-sm font-bold transition-colors shadow-lg shadow-green-900/30">Hubungi via WhatsApp</button><p className="text-xs text-slate-400 mt-4 opacity-80">Respon cepat untuk setiap ide brilian Anda.</p></div><div className="flex gap-16"><div><h4 className="font-bold mb-4 text-white">Solusi</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" className="hover:text-green-400 transition-colors">Desain Branding</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Website Professional</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Gambar 3D</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Konsultasi Digital</a></li></ul></div><div><h4 className="font-bold mb-4 text-white">Profil</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); }} className="hover:text-green-400 transition-colors">Tentang Fajar</a></li><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('portfolio'); }} className="hover:text-green-400 transition-colors">Portofolio</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Estimasi Biaya</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Hubungi</a></li></ul></div></div></Reveal>
               <Reveal delay={200} direction="up" className="max-w-6xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium"><p>© 2026 Fajar Jayadi. Dedicated to Value-Driven Excellence.</p><div className="flex gap-4"><a href="#" className="hover:text-white transition-colors">Instagram</a><a href="#" className="hover:text-white transition-colors">LinkedIn</a><a href="#" className="hover:text-white transition-colors">Behance</a></div></Reveal>
             </footer>
           </div>
