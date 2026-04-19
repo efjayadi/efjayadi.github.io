@@ -77,8 +77,15 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@900&display=swap');
+
         /* Block html/body overflow-hidden dihapus sepenuhnya agar scroll fisika bawaan browser tetap mulus! */
-        body { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        body { 
+          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+          -webkit-user-select: none; /* Safari */
+          -ms-user-select: none; /* IE 10 and IE 11 */
+          user-select: none; /* Standard syntax */
+        }
         
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
@@ -199,10 +206,97 @@
           top: 0; left: 0;
           z-index: -1;
         }
+
+        /* Efek fade-out transparan pada bagian bawah gambar avatar */
+        .mask-fade-bottom {
+          -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+          mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+        }
+
+        /* Nonow Text Effect */
+        .nonow-text {
+          position: fixed;
+          pointer-events: none;
+          font-family: 'Nunito', 'Comic Sans MS', 'Chalkboard SE', cursive;
+          font-weight: 900;
+          font-size: 2rem;
+          color: #ff4757;
+          /* Cute rounded stroke and shadow */
+          text-shadow: 3px 3px 0 #fff, -3px -3px 0 #fff, 3px -3px 0 #fff, -3px 3px 0 #fff, 0 8px 15px rgba(0,0,0,0.2);
+          z-index: 999999;
+          animation: nonowAnim 1s ease-in-out forwards;
+          transform-origin: center;
+        }
+
+        @keyframes nonowAnim {
+          0% { 
+            opacity: 0; 
+            transform: translate(-50%, 0px) rotate(var(--rot)) scale(0.5); 
+          }
+          25% { 
+            opacity: 1; 
+            transform: translate(calc(-50% - 15px), -20px) rotate(calc(var(--rot) - 8deg)) scale(1.1); 
+          }
+          50% { 
+            transform: translate(calc(-50% + 15px), -40px) rotate(calc(var(--rot) + 8deg)) scale(1); 
+          }
+          75% { 
+            opacity: 1; 
+            transform: translate(calc(-50% - 10px), -60px) rotate(calc(var(--rot) - 4deg)) scale(1); 
+          }
+          100% { 
+            opacity: 0; 
+            transform: translate(-50%, -80px) rotate(var(--rot)) scale(0.9); 
+          }
+        }
     </style>
 </head>
 <body>
     <div id="root"></div>
+
+    <!-- Anti-Inspect, Anti-Right-Click, Anti-Copy Script -->
+    <script>
+        // Disable Right Click & Show "nonow.."
+        document.addEventListener('contextmenu', event => {
+            event.preventDefault();
+            
+            const el = document.createElement('div');
+            el.textContent = 'nonow..';
+            el.className = 'nonow-text';
+            
+            // Random rotation between -25 and +25 degrees
+            const rot = Math.random() * 50 - 25;
+            el.style.setProperty('--rot', `${rot}deg`);
+            
+            el.style.left = `${event.clientX}px`;
+            el.style.top = `${event.clientY}px`;
+            
+            document.body.appendChild(el);
+            
+            // Remove after 1 second
+            setTimeout(() => el.remove(), 1000);
+        });
+
+        // Disable Keyboard Shortcuts for Inspect Element, Console, View Source
+        document.addEventListener('keydown', function(e) {
+            // Disable F12
+            if (e.key === 'F12' || e.keyCode === 123) {
+                e.preventDefault();
+            }
+            // Disable Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C (Windows/Linux)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
+                e.preventDefault();
+            }
+            // Disable Ctrl+U (Windows/Linux View Source)
+            if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
+                e.preventDefault();
+            }
+            // Disable Cmd+Option+I, Cmd+Option+J, Cmd+Option+U (Mac)
+            if (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'U' || e.key === 'u')) {
+                e.preventDefault();
+            }
+        });
+    </script>
 
     <script type="text/babel">
       const { useState, useEffect, useRef } = React;
@@ -595,8 +689,10 @@
               <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
                 {["Jasa", "Desain", "Grafis."].map((word, i) => (
                   <Reveal key={`w1-${i}`} delay={100 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
-                    {word}
-                    
+                    <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">
+                      {word}
+                    </span>
+                      
                     {/* Badge Cepat & Responsif (DESKTOP ONLY): di sebelah kiri kata "Jasa" */}
                     {word === "Jasa" && (
                       <div className={`hidden md:block absolute top-1/2 -translate-y-1/2 right-full mr-6 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
@@ -620,8 +716,10 @@
                 <span className="text-gray-400">
                   {["Pembuatan", "Website."].map((word, i) => (
                     <Reveal key={`w2-${i}`} delay={550 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
-                      {word}
-                      
+                      <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">
+                        {word}
+                      </span>
+                        
                       {/* Badge Cepat & Responsif (MOBILE ONLY): di sebelah kiri kata "Website." */}
                       {word === "Website." && (
                         <div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[32px] -mt-[6px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
@@ -644,7 +742,9 @@
                 </span>
                 <br />
                 {["& SketchUp", "3D."].map((word, i) => (
-                  <Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">{word}</Reveal>
+                  <Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4">
+                    <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
+                  </Reveal>
                 ))}
               </h1>
               
@@ -732,7 +832,7 @@
                       src={avatars[key].img} 
                       alt={`Fajar Jayadi - ${avatars[key].label}`} 
                       isActive={activeCategory === key}
-                      className="absolute bottom-0 h-[85%] md:h-[95%] w-auto z-10"
+                      className="absolute bottom-0 h-[85%] md:h-[95%] w-auto z-10 mask-fade-bottom"
                     />
                   ))}
                 </div>
@@ -886,7 +986,7 @@
                                   {[1, 2, 3, 4, 5, 6].map(item => (
                                      <div key={item} className={`aspect-square rounded-3xl overflow-hidden relative cursor-pointer group border ${activeServiceContent === 'website' ? 'bg-slate-800 border-slate-700' : 'bg-slate-100 border-gray-200/50'}`}>
                                         <div className="absolute inset-0 flex items-center justify-center text-slate-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 z-20 backdrop-blur-sm text-white">
-                                           Lihat Detail Proyek {item}
+                                            Lihat Detail Proyek {item}
                                         </div>
                                         <DynamicImage src={`portfolio-${activeServiceContent}-${item}.png`} alt={`Portfolio ${item}`} className="w-full h-full object-cover relative z-10" />
                                      </div>
@@ -985,7 +1085,7 @@
               </Reveal>
             </section>
 
-           
+            
 
             {/* 7. BOTTOM CTA SECTION */}
             <section className="py-24 px-6 max-w-6xl mx-auto border-b border-gray-100">
