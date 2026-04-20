@@ -303,7 +303,7 @@
                alt={alt} 
                onLoad={handleLoad} 
                onError={handleError} 
-               className={`w-full h-full ${objectFit} transition-opacity duration-300 ${isLoaded && isActive ? 'opacity-100' : 'opacity-0'} relative z-10`} 
+               className={`w-full h-full ${objectFit} transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'} relative z-10`} 
              />
           </div>
         );
@@ -386,27 +386,6 @@
         const [isTransitioning, setIsTransitioning] = useState(false);
         const initialClipRef = useRef('inset(0px 0px 0px 0px round 2rem)');
         const [clipPathStyle, setClipPathStyle] = useState('inset(0px 0px 0px 0px round 2rem)');
-
-        // Background Repel Effect Logic
-        const avatarRef = useRef(null);
-        const [bgOffset, setBgOffset] = useState({ x: 0, y: 0 });
-        const [isAvatarHovered, setIsAvatarHovered] = useState(false);
-
-        const handleAvatarMouseMove = (e) => {
-          if (!avatarRef.current) return;
-          const rect = avatarRef.current.getBoundingClientRect();
-          // Negative multiplier causes the background to shift AWAY from the cursor
-          const x = (e.clientX - rect.left - rect.width / 2) * -0.1;
-          const y = (e.clientY - rect.top - rect.height / 2) * -0.1;
-          setBgOffset({ x, y });
-        };
-        const handleAvatarMouseLeave = () => {
-          setIsAvatarHovered(false);
-          setBgOffset({ x: 0, y: 0 });
-        };
-        const handleAvatarMouseEnter = () => {
-          setIsAvatarHovered(true);
-        };
 
         const portfolioData = {
           desain: [
@@ -777,17 +756,12 @@
                   <Reveal delay={100} direction="up"><div className="flex items-center gap-2 mb-6"><div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div><span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span></div></Reveal>
                   <Reveal delay={200} direction="up"><p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">Membantu merealisasikan ide bisnis Anda secara <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">{bouncyWords.map((word, i) => (<span key={i} className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`} style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}>{word}</span>))}</span> Mengeksekusi setiap detail dengan cermat agar visi Anda terwujud tanpa celah and memberikan hasil yang bisa diandalkan.</p></Reveal>
                   <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[24rem] md:h-[28rem] flex justify-center items-end group mx-auto mt-6 md:mt-10">
-                    <div ref={avatarRef} onMouseMove={handleAvatarMouseMove} onMouseLeave={handleAvatarMouseLeave} onMouseEnter={handleAvatarMouseEnter} className="relative z-10 w-full flex justify-center h-full items-end pb-0">
+                    <div className="relative z-10 w-full flex justify-center h-full items-end pb-0">
                       <div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 border border-gray-100 bg-slate-50">
                         {Object.keys(avatars).map((key) => (
                           <div 
                             key={`bg-wrapper-${key}`} 
-                            className={`absolute -top-[15%] -left-[15%] -bottom-[15%] -right-[15%] transition-opacity duration-700 ${activeCategory === key ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                            style={{
-                              transform: `translate3d(${bgOffset.x}px, ${bgOffset.y}px, 0)`,
-                              transition: isAvatarHovered ? 'transform 0.1s ease-out, opacity 0.7s' : 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.7s',
-                              willChange: 'transform'
-                            }}
+                            className={`absolute inset-0 transition-opacity ${activeCategory === key ? 'opacity-100 z-10 duration-500 ease-out' : 'opacity-0 z-0 duration-700 delay-300 ease-in'}`}
                           >
                              <DynamicImage src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="w-full h-full" />
                           </div>
@@ -797,7 +771,7 @@
                         {Object.keys(avatars).map((key) => (
                           <div 
                             key={`me-container-${key}`} 
-                            className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full flex justify-center items-end transition-opacity duration-700 ${activeCategory === key ? 'opacity-100' : 'opacity-0'}`}
+                            className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full flex justify-center items-end transition-opacity ${activeCategory === key ? 'opacity-100 z-10 duration-500 ease-out' : 'opacity-0 z-0 duration-700 delay-300 ease-in'}`}
                           >
                             <DynamicImage 
                               src={avatars[key].img} 
