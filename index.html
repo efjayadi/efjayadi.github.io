@@ -365,9 +365,13 @@
       };
 
       const RevealGrid = ({ className, maskStyle, animationClass }) => {
-        const [ref, triggered] = useScrollTrigger();
+        const [triggered, setTriggered] = useState(false);
+        useEffect(() => {
+          const timer = setTimeout(() => setTriggered(true), 100);
+          return () => clearTimeout(timer);
+        }, []);
         return (
-          <div ref={ref} className={className}>
+          <div className={className}>
             <div 
               className={`w-full h-full bg-grid-pattern-main ${triggered ? animationClass : 'opacity-0'}`}
               style={maskStyle}
@@ -377,9 +381,13 @@
       };
 
       const RevealCircle = () => {
-        const [ref, triggered] = useScrollTrigger();
+        const [triggered, setTriggered] = useState(false);
+        useEffect(() => {
+          const timer = setTimeout(() => setTriggered(true), 100);
+          return () => clearTimeout(timer);
+        }, []);
         return (
-            <div ref={ref} className="absolute inset-0 pointer-events-none -z-10">
+            <div className="absolute inset-0 pointer-events-none -z-10">
                 <div 
                     className={`absolute top-[6rem] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] bg-circle-pattern rounded-full ${triggered ? 'animate-circle-spread' : 'opacity-0'}`} 
                     style={{ maskImage: 'radial-gradient(circle, black 20%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}
