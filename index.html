@@ -622,10 +622,12 @@
         const closeService = (e) => {
           if(e) e.stopPropagation();
           setIsClosing(true);
-          setClipPathStyle(initialClipRef.current); 
-          setTimeout(() => { setIsTransitioning(false); }, 700);
-          setTimeout(() => { setExpandedService(null); setIsClosing(false); }, 1200);
-          setTimeout(() => { setActiveServiceContent(null); }, 750); 
+          setTimeout(() => { 
+            setExpandedService(null); 
+            setIsClosing(false); 
+            setActiveServiceContent(null); 
+            setIsTransitioning(false);
+          }, 200); 
         };
 
         useEffect(() => {
@@ -669,7 +671,7 @@
         const getTileContentClass = (id) => {
           const base = "transition-opacity w-full h-full";
           if (expandedService !== id) return `${base} opacity-100`;
-          return isClosing ? `${base} opacity-100 duration-500 delay-700` : `${base} opacity-0 duration-300`;
+          return isClosing ? `${base} opacity-100 duration-200` : `${base} opacity-0 duration-300`;
         };
 
         return (
@@ -803,7 +805,7 @@
                       </div>
                     </div>
 
-                    <div onClick={closeService} className={`col-start-1 col-end-1 row-start-1 row-end-1 z-40 ${activeServiceContent === 'website' ? 'bg-slate-900' : 'bg-[#F5F5F7]'} rounded-[2rem] w-full cursor-pointer overflow-hidden`} style={{ clipPath: expandedService ? clipPathStyle : initialClipRef.current, pointerEvents: expandedService && !isClosing ? 'auto' : 'none', visibility: activeServiceContent ? 'visible' : 'hidden', transition: isTransitioning ? 'clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1)' : 'none' }}>
+                    <div onClick={closeService} className={`col-start-1 col-end-1 row-start-1 row-end-1 z-40 ${activeServiceContent === 'website' ? 'bg-slate-900' : 'bg-[#F5F5F7]'} rounded-[2rem] w-full cursor-pointer overflow-hidden`} style={{ clipPath: expandedService ? clipPathStyle : initialClipRef.current, pointerEvents: expandedService && !isClosing ? 'auto' : 'none', visibility: activeServiceContent ? 'visible' : 'hidden', opacity: isClosing ? 0 : 1, transition: isClosing ? 'opacity 0.2s ease-out' : (isTransitioning ? 'clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in' : 'none') }}>
                         {activeServiceContent && (
                             <div className="relative pb-16 pt-8 px-6 h-full overflow-y-auto hide-scrollbar">
                                 <div onClick={(e) => e.stopPropagation()} className="max-w-5xl mx-auto cursor-default w-full">
