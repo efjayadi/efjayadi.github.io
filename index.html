@@ -191,6 +191,41 @@
           transition: opacity 0.5s ease-out;
           opacity: 0;
         }
+
+        /* Subtle Background Grid */
+        .bg-grid-pattern-main {
+          background-image: 
+            linear-gradient(to right, rgba(15, 23, 42, 0.1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(15, 23, 42, 0.1) 1px, transparent 1px);
+          background-size: 40px 40px;
+        }
+
+        /* Grid Fade-In & Spread Animations */
+        .animate-grid-top { animation: grid-spread-top 2s cubic-bezier(0.25, 1, 0.3, 1) forwards; }
+        @keyframes grid-spread-top {
+          0% { clip-path: circle(0% at 50% 0%); opacity: 0; }
+          100% { clip-path: circle(150% at 50% 0%); opacity: 1; }
+        }
+
+        .animate-grid-center { animation: grid-spread-center 2s cubic-bezier(0.25, 1, 0.3, 1) forwards; }
+        @keyframes grid-spread-center {
+          0% { clip-path: circle(0% at 50% 50%); opacity: 0; }
+          100% { clip-path: circle(150% at 50% 50%); opacity: 1; }
+        }
+
+        .animate-grid-portfolio { animation: grid-spread-portfolio 2s cubic-bezier(0.25, 1, 0.3, 1) forwards; }
+        @keyframes grid-spread-portfolio {
+          0% { clip-path: circle(0% at 50% 40%); opacity: 0; }
+          100% { clip-path: circle(150% at 50% 40%); opacity: 1; }
+        }
+
+        @keyframes circle-spread {
+          0% { clip-path: circle(0% at 50% 50%); opacity: 0; }
+          100% { clip-path: circle(100% at 50% 50%); opacity: 1; }
+        }
+        .animate-circle-spread {
+          animation: circle-spread 2.5s cubic-bezier(0.25, 1, 0.3, 1) forwards;
+        }
     </style>
 </head>
 <body>
@@ -326,6 +361,30 @@
                className={`w-full h-full ${objectFit} transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'} relative z-10`} 
              />
           </div>
+        );
+      };
+
+      const RevealGrid = ({ className, maskStyle, animationClass }) => {
+        const [ref, triggered] = useScrollTrigger();
+        return (
+          <div ref={ref} className={className}>
+            <div 
+              className={`w-full h-full bg-grid-pattern-main ${triggered ? animationClass : 'opacity-0'}`}
+              style={maskStyle}
+            ></div>
+          </div>
+        );
+      };
+
+      const RevealCircle = () => {
+        const [ref, triggered] = useScrollTrigger();
+        return (
+            <div ref={ref} className="absolute inset-0 pointer-events-none -z-10">
+                <div 
+                    className={`absolute top-[6rem] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] bg-circle-pattern rounded-full ${triggered ? 'animate-circle-spread' : 'opacity-0'}`} 
+                    style={{ maskImage: 'radial-gradient(circle, black 20%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}
+                ></div>
+            </div>
         );
       };
 
@@ -730,8 +789,18 @@
         };
 
         return (
-          <div className="w-full min-h-[100dvh] overflow-x-clip bg-white text-slate-900 selection:bg-black selection:text-white">
+          <div className="w-full min-h-[100dvh] overflow-x-clip bg-white text-slate-900 selection:bg-black selection:text-white relative z-0">
             
+            {/* --- SUBTLE DEPTH GRID --- */}
+            <RevealGrid 
+                className="absolute top-0 left-0 w-full h-[120vh] pointer-events-none opacity-50"
+                animationClass="animate-grid-top"
+                maskStyle={{ 
+                    maskImage: 'radial-gradient(ellipse 100% 100% at 50% 0%, black 0%, transparent 80%)',
+                    WebkitMaskImage: 'radial-gradient(ellipse 100% 100% at 50% 0%, black 0%, transparent 80%)'
+                }}
+            />
+
             {/* --- RIPPLE OVERLAY --- */}
             {pageRipple.active && (
                 <div 
@@ -768,7 +837,7 @@
               </div>
             </header>
 
-            {/* --- HOMEPAGE VIEW (Hidden when not active, preserving state and refs) --- */}
+            {/* --- HOMEPAGE VIEW --- */}
             <div className={currentPage === 'home' ? 'block' : 'hidden'}>
                 <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
                   <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
@@ -817,7 +886,7 @@
                 </section>
 
                 <section className="pt-20 pb-4 px-6 max-w-6xl mx-auto flex flex-col items-center relative">
-                  <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 rounded-3xl"><div className="absolute top-[6rem] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] h-[800px] md:h-[1200px] bg-circle-pattern rounded-full" style={{ maskImage: 'radial-gradient(circle, black 20%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}></div></div>
+                  <RevealCircle />
                   <Reveal delay={100} direction="up"><div className="flex items-center gap-2 mb-6"><div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div><span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span></div></Reveal>
                   <Reveal delay={200} direction="up"><p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">Membantu merealisasikan ide bisnis Anda secara <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">{bouncyWords.map((word, i) => (<span key={i} className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`} style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}>{word}</span>))}</span> Mengeksekusi setiap detail dengan cermat agar visi Anda terwujud tanpa celah and memberikan hasil yang bisa diandalkan.</p></Reveal>
                   <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[24rem] md:h-[28rem] flex justify-center items-end group mx-auto mt-6 md:mt-10">
@@ -854,7 +923,12 @@
                   </Reveal>
                 </section>
 
-                <section className="pt-10 pb-24 px-6 bg-white relative">
+                <section className="pt-10 pb-24 px-6 relative z-0">
+                  <RevealGrid 
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-30"
+                    animationClass="animate-grid-center"
+                    maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)' }}
+                  />
                   <div className="max-w-6xl mx-auto"><Reveal direction="up" className="text-center mb-16"><h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">Solusi Menyeluruh <br/>untuk Bisnis Anda <span ref={rocketRef} className={`inline-block ml-3 origin-bottom-left relative z-[100] ${rocketTriggered ? 'animate-rocket-fly pointer-events-none' : ''}`}>🚀</span></h2><p className="text-slate-500 font-medium">Semua keahlian yang dibutuhkan untuk melesatkan brand Anda, tersedia di sini.</p></Reveal></div>
                   <div ref={bentoSectionRef} className="max-w-6xl mx-auto grid grid-cols-1 grid-rows-1 relative">
                     <div className="col-start-1 col-end-1 row-start-1 row-end-1 w-full">
@@ -894,7 +968,12 @@
                   </div>
                 </section>
 
-                <section className="py-20 bg-white border-y border-gray-100 overflow-hidden">
+                <section className="py-20 border-y border-gray-100 overflow-hidden relative z-0">
+                  <RevealGrid 
+                    className="absolute inset-0 pointer-events-none opacity-30"
+                    animationClass="animate-grid-center"
+                    maskStyle={{ maskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 0%, transparent 100%)' }}
+                  />
                   <Reveal direction="up" className="max-w-6xl mx-auto px-6 mb-12 text-center pointer-events-none"><h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight text-slate-900">Client Fajar</h2><p className="text-slate-500 font-medium">Berbagai entitas bisnis yang telah mempercayakan identitas visual mereka.</p></Reveal>
                   <Reveal delay={200} direction="none" className="w-full relative">
                     <div className="absolute top-0 left-0 w-16 md:w-32 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div><div className="absolute top-0 right-0 w-16 md:w-32 h-full bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
@@ -919,8 +998,13 @@
                   </Reveal>
                 </section>
 
-                <section className="py-24 px-6 max-w-6xl mx-auto border-b border-gray-100">
-                  <div className="flex flex-col md:flex-row gap-16 items-center">
+                <section className="py-24 px-6 border-b border-gray-100 relative z-0">
+                  <RevealGrid 
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-30"
+                    animationClass="animate-grid-center"
+                    maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)' }}
+                  />
+                  <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-16 items-center">
                     <Reveal direction="right" className="flex-1"><h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">Wujudkan Visi.<br/>Mulai Hari Ini.</h2><p className="text-slate-500 font-medium mb-10 max-w-md">Serahkan tantangan visual and teknis Anda kepada partner yang tepat. Dapatkan hasil maksimal untuk perkembangan bisnis Anda.</p><div className="flex gap-4"><button onClick={handleMulaiProyekClick} className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">Konsultasi Sekarang</button><button onClick={() => setCurrentPage('estimasi')} className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">Detail Estimasi</button></div></Reveal>
                     <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
                         {[{ icon: PenTool, text: 'Identitas Visual', color: 'text-blue-500', bg: 'bg-blue-100' },{ icon: Monitor, text: 'Web Professional', color: 'text-purple-500', bg: 'bg-purple-100' },{ icon: Box, text: 'Gambar 3D Realis', color: 'text-orange-500', bg: 'bg-orange-100' },{ icon: Zap, text: 'Eksekusi Tangkas', color: 'text-yellow-500', bg: 'bg-yellow-100' },{ icon: Layout, text: 'User Experience', color: 'text-pink-500', bg: 'bg-pink-100' },{ icon: CheckCircle2, text: 'Komitmen Kualitas', color: 'text-green-500', bg: 'bg-green-100' }].map((feat, i) => (
@@ -937,7 +1021,13 @@
             </div>
 
             {/* --- PORTFOLIO VIEW --- */}
-            <div className={currentPage === 'portfolio' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen' : 'hidden'}>
+            <div className={currentPage === 'portfolio' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen relative z-0' : 'hidden'}>
+                <RevealGrid 
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
+                    animationClass="animate-grid-portfolio"
+                    maskStyle={{ maskImage: 'radial-gradient(ellipse 60% 80% at 50% 40%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 60% 80% at 50% 40%, black 0%, transparent 100%)' }}
+                />
+                
                 <Reveal direction="up" className="text-center mb-10">
                     <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Eksplorasi & Karya</h1>
                     <p className="text-slate-500 font-medium max-w-2xl mx-auto">Koleksi desain kreatif, perencanaan visual, dan pengembangan digital yang pernah kami kerjakan.</p>
@@ -985,7 +1075,13 @@
             </div>
 
             {/* --- WHY FAJAR VIEW --- */}
-            <div className={currentPage === 'why-fajar' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen' : 'hidden'}>
+            <div className={currentPage === 'why-fajar' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen relative z-0' : 'hidden'}>
+                <RevealGrid 
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
+                    animationClass="animate-grid-center"
+                    maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)' }}
+                />
+
                 <Reveal direction="up" className="text-center mb-16">
                     <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-6 text-slate-900">Kenapa Mending ke Fajar?</h1>
                     <p className="text-slate-500 font-medium max-w-3xl mx-auto text-lg">Bukan sekadar biro jasa biasa. Saya membawa dedikasi personal, value maksimal, dan kedalaman pengetahuan untuk memastikan karya Anda berada di level tertinggi.</p>
@@ -1057,7 +1153,13 @@
             </div>
 
             {/* --- ESTIMASI VIEW --- */}
-            <div className={currentPage === 'estimasi' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen' : 'hidden'}>
+            <div className={currentPage === 'estimasi' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen relative z-0' : 'hidden'}>
+                <RevealGrid 
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
+                    animationClass="animate-grid-center"
+                    maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)' }}
+                />
+
                 <Reveal direction="up" className="text-center mb-12">
                     <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Kalkulator Estimasi</h1>
                     <p className="text-slate-500 font-medium max-w-2xl mx-auto">Sesuaikan kebutuhan project dan deadline yang Anda inginkan. Perhitungan ini transparan untuk membantu Anda mengambil keputusan terbaik.</p>
@@ -1185,7 +1287,13 @@
             </div>
 
             {/* --- MULAI PROYEK VIEW --- */}
-            <div className={currentPage === 'mulai-proyek' ? 'block pt-40 pb-24 px-6 max-w-4xl mx-auto min-h-screen' : 'hidden'}>
+            <div className={currentPage === 'mulai-proyek' ? 'block pt-40 pb-24 px-6 max-w-4xl mx-auto min-h-screen relative z-0' : 'hidden'}>
+                <RevealGrid 
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
+                    animationClass="animate-grid-center"
+                    maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)' }}
+                />
+
                 <Reveal direction="up" className="text-center mb-10">
                     <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Mulai Proyek Baru</h1>
                     <p className="text-slate-500 font-medium max-w-2xl mx-auto text-lg">Ceritakan visi Anda. Formulir progresif ini dirancang untuk menggali kebutuhan dan ekspektasi Anda agar hasil akhir bisa melampaui standar.</p>
