@@ -171,6 +171,26 @@
           border: 4px solid #fff;
           box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
+
+        /* Page Transition Ripple */
+        .page-ripple {
+          position: fixed;
+          width: 40px;
+          height: 40px;
+          background-color: #4ade80; /* match bg-green-400 */
+          border-radius: 50%;
+          transform: translate(-50%, -50%) scale(0);
+          pointer-events: none;
+          z-index: 9999999;
+          transition: transform 0.6s cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        .page-ripple.expanding {
+          transform: translate(-50%, -50%) scale(150); /* 150 * 40 = 6000px diameter */
+        }
+        .page-ripple.fading {
+          transition: opacity 0.5s ease-out;
+          opacity: 0;
+        }
     </style>
 </head>
 <body>
@@ -316,6 +336,41 @@
         useEffect(() => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, [currentPage]);
+
+        // --- Ripple Transition State & Logic ---
+        const [pageRipple, setPageRipple] = useState({ active: false, x: 0, y: 0, expanding: false, fading: false });
+
+        const handleMulaiProyekClick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+
+            setIsMenuOpen(false);
+            setPageRipple({ active: true, x, y, expanding: false, fading: false });
+
+            // Start expanding ripple
+            setTimeout(() => {
+                setPageRipple(prev => ({ ...prev, expanding: true }));
+            }, 10);
+
+            // Change page when screen is covered
+            setTimeout(() => {
+                setCurrentPage('mulai-proyek');
+            }, 600);
+
+            // Start fading out ripple
+            setTimeout(() => {
+                setPageRipple(prev => ({ ...prev, fading: true }));
+            }, 650);
+
+            // Cleanup
+            setTimeout(() => {
+                setPageRipple({ active: false, x: 0, y: 0, expanding: false, fading: false });
+            }, 1150);
+        };
 
         // --- Screenshot Protection for Portfolio ---
         useEffect(() => {
@@ -677,6 +732,14 @@
         return (
           <div className="w-full min-h-[100dvh] overflow-x-clip bg-white text-slate-900 selection:bg-black selection:text-white">
             
+            {/* --- RIPPLE OVERLAY --- */}
+            {pageRipple.active && (
+                <div 
+                    className={`page-ripple ${pageRipple.expanding ? 'expanding' : ''} ${pageRipple.fading ? 'fading' : ''}`}
+                    style={{ left: pageRipple.x, top: pageRipple.y }}
+                ></div>
+            )}
+
             {/* --- SHARED HEADER --- */}
             <header className={`fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl z-50 transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-12'}`}>
               <div ref={headerWrapperRef} className={`bg-white/80 backdrop-blur-xl border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 overflow-hidden rounded-[2rem] relative`}>
@@ -691,7 +754,7 @@
                     <a href="#" className={`hover:text-black transition-colors flex items-center py-4 px-2 -mx-2 ${currentPage === 'why-fajar' ? 'text-black font-bold' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('why-fajar'); }} onMouseEnter={(e) => updateDot(e.currentTarget.querySelector('.dot-target'))}>Kenapa mending ke Fajar?<span className="dot-target opacity-0 inline-block w-[5px] h-[5px] rounded-full ml-[2px]"></span></a>
                   </nav>
                   <div className="pr-1 flex items-center">
-                    <button onClick={(e) => { e.stopPropagation(); setCurrentPage('mulai-proyek'); }} className="px-4 py-2 md:px-6 md:py-2.5 text-xs md:text-sm font-bold bg-green-400 hover:bg-green-500 text-white rounded-full transition-colors">Mulai Proyek</button>
+                    <button onClick={handleMulaiProyekClick} className="px-4 py-2 md:px-6 md:py-2.5 text-xs md:text-sm font-bold bg-green-400 hover:bg-green-500 text-white rounded-full transition-colors">Mulai Proyek</button>
                   </div>
                 </div>
                 <div className={`md:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-[300px] opacity-100 pb-2' : 'max-h-0 opacity-0'}`}>
@@ -699,7 +762,7 @@
                     <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('portfolio'); setIsMenuOpen(false); }} className={`hover:text-black transition-colors w-full text-center py-3 ${currentPage === 'portfolio' ? 'text-black font-bold' : ''}`}>Portofolio</a>
                     <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('estimasi'); setIsMenuOpen(false); }} className={`hover:text-black transition-colors w-full text-center py-3 ${currentPage === 'estimasi' ? 'text-black font-bold' : ''}`}>Estimasi</a>
                     <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('why-fajar'); setIsMenuOpen(false); }} className={`hover:text-black transition-colors w-full text-center py-3 ${currentPage === 'why-fajar' ? 'text-black font-bold' : ''}`}>Kenapa mending ke Fajar?</a>
-                    <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('mulai-proyek'); setIsMenuOpen(false); }} className={`hover:text-black transition-colors w-full text-center py-3 ${currentPage === 'mulai-proyek' ? 'text-black font-bold' : ''}`}>Mulai Proyek</a>
+                    <a href="#" onClick={handleMulaiProyekClick} className={`hover:text-black transition-colors w-full text-center py-3 ${currentPage === 'mulai-proyek' ? 'text-black font-bold' : ''}`}>Mulai Proyek</a>
                   </nav>
                 </div>
               </div>
@@ -858,8 +921,17 @@
 
                 <section className="py-24 px-6 max-w-6xl mx-auto border-b border-gray-100">
                   <div className="flex flex-col md:flex-row gap-16 items-center">
-                    <Reveal direction="right" className="flex-1"><h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">Wujudkan Visi.<br/>Mulai Hari Ini.</h2><p className="text-slate-500 font-medium mb-10 max-w-md">Serahkan tantangan visual and teknis Anda kepada partner yang tepat. Dapatkan hasil maksimal untuk perkembangan bisnis Anda.</p><div className="flex gap-4"><button className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">Konsultasi Sekarang</button><button onClick={() => setCurrentPage('estimasi')} className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">Detail Estimasi</button></div></Reveal>
-                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">{[{ icon: PenTool, text: 'Identitas Visual', color: 'text-blue-500', bg: 'bg-blue-100' },{ icon: Monitor, text: 'Web Professional', color: 'text-purple-500', bg: 'bg-purple-100' },{ icon: Box, text: 'Gambar 3D Realis', color: 'text-orange-500', bg: 'bg-orange-100' },{ icon: Zap, text: 'Eksekusi Tangkas', color: 'text-yellow-500', bg: 'bg-yellow-100' },{ icon: Layout, text: 'User Experience', color: 'text-pink-500', bg: 'bg-pink-100' },{ icon: CheckCircle2, text: 'Komitmen Kualitas', color: 'text-green-500', bg: 'bg-green-100' }].map((feat, i) => (<Reveal key={i} delay={i * 100} direction="left"><div className="flex items-center gap-4 p-2"><div className={`w-10 h-10 rounded-full flex items-center justify-center ${feat.bg} ${feat.color}`}><feat.icon size={18} /></div><span className="font-bold text-slate-800">{feat.text}</span></div></Reveal>))}</div>
+                    <Reveal direction="right" className="flex-1"><h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">Wujudkan Visi.<br/>Mulai Hari Ini.</h2><p className="text-slate-500 font-medium mb-10 max-w-md">Serahkan tantangan visual and teknis Anda kepada partner yang tepat. Dapatkan hasil maksimal untuk perkembangan bisnis Anda.</p><div className="flex gap-4"><button onClick={handleMulaiProyekClick} className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">Konsultasi Sekarang</button><button onClick={() => setCurrentPage('estimasi')} className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">Detail Estimasi</button></div></Reveal>
+                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+                        {[{ icon: PenTool, text: 'Identitas Visual', color: 'text-blue-500', bg: 'bg-blue-100' },{ icon: Monitor, text: 'Web Professional', color: 'text-purple-500', bg: 'bg-purple-100' },{ icon: Box, text: 'Gambar 3D Realis', color: 'text-orange-500', bg: 'bg-orange-100' },{ icon: Zap, text: 'Eksekusi Tangkas', color: 'text-yellow-500', bg: 'bg-yellow-100' },{ icon: Layout, text: 'User Experience', color: 'text-pink-500', bg: 'bg-pink-100' },{ icon: CheckCircle2, text: 'Komitmen Kualitas', color: 'text-green-500', bg: 'bg-green-100' }].map((feat, i) => (
+                            <Reveal key={i} delay={i * 100} direction="left">
+                                <div className="flex items-center gap-4 p-2">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${feat.bg} ${feat.color}`}><feat.icon size={18} /></div>
+                                    <span className="font-bold text-slate-800">{feat.text}</span>
+                                </div>
+                            </Reveal>
+                        ))}
+                    </div>
                   </div>
                 </section>
             </div>
