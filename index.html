@@ -6,7 +6,7 @@
     
     <!-- SEO Meta Tags -->
     <title>Fajar Jayadi | Solusi Desain Branding, Website & Gambar 3D</title>
-    <meta name="description" content="Solusi profesional untuk desain branding, identitas visual, pembuatan website modern, sistem aplikasi, hingga gambar 3D SketchUp and perencanaan teknik yang presisi.">
+    <meta name="description" content="Solusi profesional untuk desain branding, identitas visual, pembuatan website modern, sistem aplikasi, hingga gambar 3D SketchUp dan perencanaan teknik yang presisi.">
     <meta name="keywords" content="desain branding, logo brand, website professional, aplikasi web, company profile, branding UMKM, gambar 3d, desain bangunan, desain sketchup, gambar teknik, desain layout, perencanaan konstruksi, fajar jayadi">
     <meta name="author" content="Fajar Jayadi">
     <meta name="robots" content="index, follow">
@@ -256,6 +256,129 @@
     <script type="text/babel">
       const { useState, useEffect, useRef, useMemo } = React;
 
+      // --- Portfolio Media Source Arrays ---
+      const portfolioData = {
+        desain: [
+          '/assets/img/portfolio/Logo/ayamdjagoan.png',
+          '/assets/img/portfolio/Logo/baksokusuki.png',
+          '/assets/img/portfolio/Logo/bebekkelana.png',
+          '/assets/img/portfolio/Logo/buahhati.png',
+          '/assets/img/portfolio/Logo/cobek89.png',
+          '/assets/img/portfolio/Logo/cotorempah.png',
+          '/assets/img/portfolio/Logo/discountjunction.png',
+          '/assets/img/portfolio/Logo/djogjasteak.png',
+          '/assets/img/portfolio/Logo/eq.png',
+          '/assets/img/portfolio/Logo/jembar.png',
+          '/assets/img/portfolio/Logo/madinachicken.png',
+          '/assets/img/portfolio/Logo/mieayamcabeuleg.png',
+          '/assets/img/portfolio/Logo/miecoet.png',
+          '/assets/img/portfolio/Logo/miesapi.png',
+          '/assets/img/portfolio/Logo/mugoramen.png',
+          '/assets/img/portfolio/Logo/ollakitchen.png',
+          '/assets/img/portfolio/Logo/pmg.png',
+          '/assets/img/portfolio/Logo/satelemoh.png',
+          '/assets/img/portfolio/Logo/tagawadjogja.png',
+          '/assets/img/portfolio/Logo/tgg.png',
+          '/assets/img/portfolio/Logo/tja.png',
+          '/assets/img/portfolio/Flyer/cobekflyer.png',
+          '/assets/img/portfolio/Flyer/cwm-hp.png',
+          '/assets/img/portfolio/Flyer/cwp-btas.png',
+          '/assets/img/portfolio/Flyer/cwp-btbapm.png',
+          '/assets/img/portfolio/Flyer/cwp-btbc.png',
+          '/assets/img/portfolio/Flyer/cwp-btma.png',
+          '/assets/img/portfolio/Flyer/cwp-bw.png',
+          '/assets/img/portfolio/Flyer/cwp-mcd.png',
+          '/assets/img/portfolio/Flyer/cwp-mcm.png',
+          '/assets/img/portfolio/Flyer/cwp-mcp.png',
+          '/assets/img/portfolio/Flyer/cwp-mw.png',
+          '/assets/img/portfolio/Flyer/flyer-memberras.png',
+          '/assets/img/portfolio/Flyer/flyer-menumadina.png',
+          '/assets/img/portfolio/Flyer/flyer-menusmb.png',
+          '/assets/img/portfolio/Flyer/flyer-ras.png',
+          '/assets/img/portfolio/Flyer/flyer-smb.png',
+          '/assets/img/portfolio/Flyer/flyer-soto.png',
+          '/assets/img/portfolio/Flyer/fwm-adh.png'
+        ],
+        website: [
+          '/assets/img/portfolio/Book/book-tja.png' // Fallback preview since no explicit website files exist
+        ],
+        konstruksi: [
+          '/assets/img/portfolio/foodstal/cwsu-bt.png',
+          '/assets/img/portfolio/foodstal/cwsu-btg.png',
+          '/assets/img/portfolio/foodstal/cwsu-ma.png',
+          '/assets/img/portfolio/foodstal/cwsu-smt.png',
+          '/assets/img/portfolio/foodstal/foodstal-akrilik.png',
+          '/assets/img/portfolio/foodstal/foodstal-akrilik2.png',
+          '/assets/img/portfolio/foodstal/foodstal-mejastainless.png',
+          '/assets/img/portfolio/foodstal/foodstal-pintualu.png',
+          '/assets/img/portfolio/foodstal/foodstal-ras1.png',
+          '/assets/img/portfolio/foodstal/foodstal-ras2.png',
+          '/assets/img/portfolio/foodstal/foodstal-ras3.png',
+          '/assets/img/portfolio/foodstal/foodstal-ruanglaktasi.png'
+        ],
+        layout: [
+          '/assets/img/portfolio/Banner/banner-cobek89.png',
+          '/assets/img/portfolio/Banner/banner-dkriuk.png',
+          '/assets/img/portfolio/Banner/banner-mietagawa.png',
+          '/assets/img/portfolio/Banner/banner-smb.jpg',
+          '/assets/img/portfolio/Banner/banner-smb.png',
+          '/assets/img/portfolio/Banner/banner-smb2.png',
+          '/assets/img/portfolio/Banner/cwb-lh.png',
+          '/assets/img/portfolio/Banner/cwb-ma.png',
+          '/assets/img/portfolio/Banner/cwb-maceh.png',
+          '/assets/img/portfolio/Banner/miecoet89.png',
+          '/assets/img/portfolio/Banner/ppb-scs.png'
+        ],
+        aplikasi: [
+          '/assets/img/portfolio/Feed/MP1.png',
+          '/assets/img/portfolio/Feed/feed-buahhati.png',
+          '/assets/img/portfolio/Feed/feed-hipno.png',
+          '/assets/img/portfolio/Feed/feed-madina.png',
+          '/assets/img/portfolio/Feed/feed-theta.png'
+        ],
+        company_profile: [
+          '/assets/img/portfolio/Book/book-aw.png',
+          '/assets/img/portfolio/Book/book-idjji.png',
+          '/assets/img/portfolio/Book/book-jji.png',
+          '/assets/img/portfolio/Book/book-psj.png',
+          '/assets/img/portfolio/Book/book-tja.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/cp-psj.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/1.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/2.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/3.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/4.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/5.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/6.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/7.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/8.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/9.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/10.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/11.png',
+          '/assets/img/portfolio/Book/CompanyProfile/PSJ/12.png',
+          '/assets/img/portfolio/Proposal/p-aw.png',
+          '/assets/img/portfolio/Proposal/1.png',
+          '/assets/img/portfolio/Proposal/2.png',
+          '/assets/img/portfolio/Proposal/3.png',
+          '/assets/img/portfolio/Proposal/4.png',
+          '/assets/img/portfolio/Proposal/5.png',
+          '/assets/img/portfolio/Proposal/6.png',
+          '/assets/img/portfolio/Proposal/7.png',
+          '/assets/img/portfolio/Proposal/8.png',
+          '/assets/img/portfolio/Proposal/9.png',
+          '/assets/img/portfolio/Proposal/10.png',
+          '/assets/img/portfolio/Proposal/11.png',
+          '/assets/img/portfolio/Proposal/12.png',
+          '/assets/img/portfolio/Proposal/13.png',
+          '/assets/img/portfolio/Proposal/14.png',
+          '/assets/img/portfolio/Proposal/15.png',
+          '/assets/img/portfolio/Proposal/16.png',
+          '/assets/img/portfolio/Proposal/17.png',
+          '/assets/img/portfolio/Proposal/18.png',
+          '/assets/img/portfolio/Proposal/19.png',
+          '/assets/img/portfolio/Proposal/20.png'
+        ]
+      };
+
       const ArrowRight = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>;
       const Play = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>;
       const PenTool = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>;
@@ -336,7 +459,7 @@
         const handleError = () => setHasError(true);
 
         if (hasError || !src) {
-          if (minimalFallback) { return <div className={`flex items-center justify-center font-black text-slate-300 bg-slate-50 tracking-tighter text-xs p-2 text-center break-all whitespace-normal ${className}`}>KARYA {alt.replace('Portfolio ', '')}</div>; }
+          if (minimalFallback) { return <div className={`flex items-center justify-center font-black text-slate-300 bg-slate-50 tracking-tighter text-xs p-4 border border-dashed rounded-xl whitespace-nowrap overflow-hidden ${className}`}>KARYA {alt.replace('Portfolio ', '')}</div>; }
           return (
             <div className={`flex flex-col items-center justify-center bg-gray-100 border border-gray-200 border-dashed text-gray-400 p-4 text-center ${className} transition-opacity ease-in-out ${isActive ? 'opacity-100 duration-300' : 'opacity-0 duration-1000 delay-150'}`}>
               <div className="w-10 h-10 bg-gray-200 rounded-full mb-2 animate-pulse"></div>
@@ -450,7 +573,7 @@
                 if (isMacScreenshot || isWinScreenshot) {
                     // Try to overwrite clipboard data
                     try {
-                        document.execCommand('copy');
+                        navigator.clipboard.writeText('Screenshots are disabled for portfolio items.');
                     } catch (err) {}
 
                     // Display "nonow.." in the middle of the screen
@@ -509,64 +632,6 @@
         const initialClipRef = useRef('inset(0px 0px 0px 0px round 2rem)');
         const [clipPathStyle, setClipPathStyle] = useState('inset(0px 0px 0px 0px round 2rem)');
 
-        // --- Restructured Portfolio Media Categories ---
-        const portfolioData = useMemo(() => {
-          const logoItems = [
-            'ayamdjagoan.png', 'baksokusuki.png', 'bebekkelana.png', 'buahhati.png', 'cobek89.png', 
-            'cotorempah.png', 'discountjunction.png', 'djogjasteak.png', 'eq.png', 'jembar.png', 
-            'madinachicken.png', 'mieayamcabeuleg.png', 'miecoet.png', 'miesapi.png', 'mugoramen.png', 
-            'ollakitchen.png', 'pmg.png', 'satelemoh.png', 'tagawadjogja.png', 'tgg.png', 'tja.png'
-          ].map(file => `/assets/img/portfolio/Logo/${file}`);
-
-          const bannerItems = [
-            'banner-cobek89.png', 'banner-dkriuk.png', 'banner-mietagawa.png', 'banner-smb.jpg', 
-            'banner-smb.png', 'banner-smb2.png', 'cwb-lh.png', 'cwb-ma.png', 'cwb-maceh.png', 
-            'miecoet89.png', 'ppb-scs.png'
-          ].map(file => `/assets/img/portfolio/Banner/${file}`);
-
-          const flyerItems = [
-            'cobekflyer.png', 'cwm-hp.png', 'cwp-btas.png', 'cwp-btbapm.png', 'cwp-btbc.png', 
-            'cwp-btma.png', 'cwp-bw.png', 'cwp-mcd.png', 'cwp-mcm.png', 'cwp-mcp.png', 'cwp-mw.png', 
-            'flyer-memberras.png', 'flyer-menumadina.png', 'flyer-menusmb.png', 'flyer-ras.png', 
-            'flyer-smb.png', 'flyer-soto.png', 'fwm-adh.png'
-          ].map(file => `/assets/img/portfolio/Flyer/${file}`);
-
-          const foodstalItems = [
-            'cwsu-bt.png', 'cwsu-btg.png', 'cwsu-ma.png', 'cwsu-smt.png', 'foodstal-akrilik.png', 
-            'foodstal-akrilik2.png', 'foodstal-mejastainless.png', 'foodstal-pintualu.png', 
-            'foodstal-ras1.png', 'foodstal-ras2.png', 'foodstal-ras3.png', 'foodstal-ruanglaktasi.png'
-          ].map(file => `/assets/img/portfolio/foodstal/${file}`);
-
-          const feedItems = [
-            'MP1.png', 'feed-buahhati.png', 'feed-hipno.png', 'feed-madina.png', 'feed-theta.png'
-          ].map(file => `/assets/img/portfolio/Feed/${file}`);
-
-          const bookBaseItems = [
-            'book-aw.png', 'book-idjji.png', 'book-jji.png', 'book-psj.png', 'book-tja.png'
-          ].map(file => `/assets/img/portfolio/Book/${file}`);
-
-          const bookPSJItems = [
-            '/assets/img/portfolio/Book/CompanyProfile/PSJ/cp-psj.png',
-            ...Array.from({ length: 12 }, (_, i) => `/assets/img/portfolio/Book/CompanyProfile/PSJ/${i + 1}.png`)
-          ];
-
-          const proposalItems = [
-            '/assets/img/portfolio/Proposal/p-aw.png',
-            ...Array.from({ length: 20 }, (_, i) => `/assets/img/portfolio/Proposal/${i + 1}.png`)
-          ];
-
-          return {
-            desain: logoItems,
-            website: [
-              '/assets/img/portfolio/website/website-tja.png'
-            ],
-            konstruksi: foodstalItems,
-            layout: [...bannerItems, ...flyerItems],
-            aplikasi: feedItems,
-            company_profile: [...bookBaseItems, ...bookPSJItems, ...proposalItems]
-          };
-        }, []);
-
         // --- Portfolio Page Logic ---
         const [portfolioFilter, setPortfolioFilter] = useState('all');
         const filterOptions = [
@@ -583,7 +648,7 @@
             return Object.entries(portfolioData).flatMap(([category, items]) => 
                 items.map(src => ({ category, src }))
             );
-        }, [portfolioData]);
+        }, []);
 
         const filteredPortfolio = useMemo(() => {
             if (portfolioFilter === 'all') return allPortfolioItems;
@@ -1267,7 +1332,7 @@
                                     className="w-full h-3 bg-gray-300 rounded-lg appearance-none cursor-pointer outline-none mb-6"
                                 />
                                 <div className="flex justify-between text-xs font-bold text-slate-400 px-1">
-                                    <span className="flex flex-col items-center gap-1"><span>1 Hari</span><span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded font-sans leading-normal">Urgent (2x)</span></span>
+                                    <span className="flex flex-col items-center gap-1"><span>1 Hari</span><span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded">Urgent (2x)</span></span>
                                     <span className="flex flex-col items-center gap-1 mt-4">7 Hari</span>
                                     <span className="flex flex-col items-center gap-1 mt-4">14 Hari</span>
                                 </div>
