@@ -20,6 +20,10 @@
     <meta property="og:title" content="Solusi Kreatif Desain Branding, Web & Gambar 3D | Fajar Jayadi">
     <meta property="og:description" content="Membantu bisnis Anda tampil lebih profesional. Dari identitas brand hingga gambar 3D presisi.">
     
+    <!-- PRIORITY 1: Browser Level Preload (Initiates immediately during HTML parsing) -->
+    <link rel="preload" href="me-default-netral.png" as="image" fetchpriority="high">
+    <link rel="preload" href="bg-netral.png" as="image" fetchpriority="high">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -300,7 +304,7 @@
           '/assets/img/portfolio/Flyer/fwm-adh.png'
         ],
         website: [
-          '/assets/img/portfolio/Book/book-tja.png' // Fallback preview since no explicit website files exist
+          '/assets/img/portfolio/Book/book-tja.png'
         ],
         konstruksi: [
           '/assets/img/portfolio/foodstal/cwsu-bt.png',
@@ -445,7 +449,7 @@
         );
       };
 
-      const DynamicImage = ({ src, alt, className, isActive = true, objectFit = 'object-cover', minimalFallback = false }) => {
+      const DynamicImage = ({ src, alt, className, isActive = true, objectFit = 'object-cover', minimalFallback = false, priority = 'auto' }) => {
         const [hasError, setHasError] = useState(false);
         const [isLoaded, setIsLoaded] = useState(false);
         const imgRef = useRef(null);
@@ -481,6 +485,9 @@
                alt={alt} 
                onLoad={handleLoad} 
                onError={handleError} 
+               loading={priority === 'high' ? 'eager' : 'lazy'}
+               fetchpriority={priority}
+               decoding="async"
                className={`w-full h-full ${objectFit} transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'} relative z-10`} 
              />
           </div>
@@ -655,16 +662,58 @@
             return allPortfolioItems.filter(item => item.category === portfolioFilter);
         }, [portfolioFilter, allPortfolioItems]);
 
-        // --- Background Preloading Logic ---
+        // --- ORDERED HIGH-PERFORMANCE PRELOAD MANAGER ---
         useEffect(() => {
           if (!isLoaded) return;
-          const preloadTimer = setTimeout(() => {
-            allPortfolioItems.forEach(item => {
-              const img = new Image();
-              img.src = item.src;
-            });
-          }, 2500); 
-          return () => clearTimeout(preloadTimer);
+          
+          const avatarImages = [
+            'me-default-netral.png', 'bg-netral.png',
+            'me-desain-grafis.png', 'bg-desain.png',
+            'me-website.png', 'bg-website.png',
+            'me-konstruksi.png', 'bg-konstruksi.png'
+          ];
+
+          const preloadPipeline = async () => {
+            // STEP 1: Preload hover avatars first to ensure buttery smooth interactive experiences
+            await Promise.all(
+              avatarImages.map(src => {
+                return new Promise((resolve) => {
+                  const img = new Image();
+                  img.src = src;
+                  img.onload = resolve;
+                  img.onerror = resolve; // Gracefully continue if some images fail
+                });
+              })
+            );
+
+            // STEP 2: Stagger the preload of downstream portfolio assets to avoid network thread bottlenecks
+            const triggerStaggeredPreload = () => {
+              const portfolioArray = allPortfolioItems;
+              let currentIndex = 0;
+              const batchSize = 3; // Stagger in batches to keep connection channels free
+
+              const queueNextBatch = () => {
+                if (currentIndex >= portfolioArray.length) return;
+                const batch = portfolioArray.slice(currentIndex, currentIndex + batchSize);
+                batch.forEach(item => {
+                  const img = new Image();
+                  img.src = item.src;
+                });
+                currentIndex += batchSize;
+                setTimeout(queueNextBatch, 150); // Stagger by 150ms
+              };
+              queueNextBatch();
+            };
+
+            // Use requestIdleCallback if supported to fully prioritize rendering thread
+            if ('requestIdleCallback' in window) {
+              window.requestIdleCallback(() => triggerStaggeredPreload());
+            } else {
+              setTimeout(triggerStaggeredPreload, 1200);
+            }
+          };
+
+          preloadPipeline();
         }, [isLoaded, allPortfolioItems]);
 
         // --- Estimasi Page Logic ---
@@ -997,7 +1046,7 @@
                             key={`bg-wrapper-${key}`} 
                             className={`absolute inset-0 transition-opacity ${activeCategory === key ? 'opacity-100 z-10 duration-500 ease-out' : 'opacity-0 z-0 duration-700 delay-300 ease-in'}`}
                           >
-                             <DynamicImage src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="w-full h-full" />
+                             <DynamicImage src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="w-full h-full" priority={key === 'default' ? 'high' : 'auto'} />
                           </div>
                         ))}
                       </div>
@@ -1012,6 +1061,7 @@
                               alt={`Fajar Jayadi - ${avatars[key].label}`} 
                               isActive={activeCategory === key} 
                               className="h-[85%] md:h-[95%] w-auto mask-fade-bottom" 
+                              priority={key === 'default' ? 'high' : 'auto'}
                             />
                           </div>
                         ))}
@@ -1230,7 +1280,7 @@
                             <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
                                 <Brain className="w-10 h-10 text-purple-400 mb-4"/>
                                 <h4 className="text-lg font-bold mb-2">Psikologi</h4>
-                                <p className="text-sm text-slate-400">Memahami persepsi audiens, emosi warna, dan bagaimana visual dapat mempengaruhi keputusan klien Anda.</p>
+                                <p className="text-sm text-slate-400">Memahami persepsi audiens, emosi warna, and bagaimana visual dapat mempengaruhi keputusan klien Anda.</p>
                             </div>
                             <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
                                 <Layout className="w-10 h-10 text-blue-400 mb-4"/>
@@ -1240,12 +1290,12 @@
                             <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
                                 <Monitor className="w-10 h-10 text-green-400 mb-4"/>
                                 <h4 className="text-lg font-bold mb-2">Teknologi</h4>
-                                <p className="text-sm text-slate-400">Paham arsitektur digital, optimalisasi kinerja web modern, integrasi SEO, dan logika UX/UI yang berbasis sistem.</p>
+                                <p className="text-sm text-slate-400">Paham arsitektur digital, optimalisasi kinerja web modern, integrasi SEO, and logika UX/UI yang berbasis sistem.</p>
                             </div>
                             <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
                                 <PenTool className="w-10 h-10 text-orange-400 mb-4"/>
                                 <h4 className="text-lg font-bold mb-2">Eksekusi Desain</h4>
-                                <p className="text-sm text-slate-400">Meleburkan seluruh knowledge lintas-disiplin di atas ke dalam satu output visual yang estetik dan tajam fungsinya.</p>
+                                <p className="text-sm text-slate-400">Meleburkan seluruh knowledge lintas-disiplin di atas ke dalam satu output visual yang estetik and tajam fungsinya.</p>
                             </div>
                         </div>
                     </div>
