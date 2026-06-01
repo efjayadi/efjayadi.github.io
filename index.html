@@ -241,6 +241,15 @@
           background-size: 200% 100%;
           animation: shimmer 1.6s infinite linear;
         }
+
+        /* Simple page fade-in reveal */
+        @keyframes page-mount {
+          0% { opacity: 0; transform: translateY(10px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-page-mount {
+          animation: page-mount 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
     </style>
 </head>
 <body>
@@ -428,18 +437,37 @@
         );
       };
 
-      const DynamicImage = ({ src, alt, className, isActive = true, objectFit = 'object-cover', minimalFallback = false, priority = 'auto' }) => {
+      const DynamicImage = ({ src, alt, className, isActive = true, objectFit = 'object-cover', minimalFallback = false, priority = 'auto', shimmerDelay = false }) => {
         const [hasError, setHasError] = useState(false);
         const [isLoaded, setIsLoaded] = useState(false);
+        const [shimmering, setShimmering] = useState(true);
         const imgRef = useRef(null);
 
         useEffect(() => {
-          setHasError(false); setIsLoaded(false);
-          if (imgRef.current && imgRef.current.complete) { setIsLoaded(true); }
+          setHasError(false); 
+          setIsLoaded(false);
+          setShimmering(true);
+          
+          if (shimmerDelay) {
+            const timer = setTimeout(() => {
+              setShimmering(false);
+            }, 400); // 400ms high-fidelity shimmer duration
+            return () => clearTimeout(timer);
+          } else {
+            setShimmering(false);
+          }
+        }, [src, shimmerDelay]);
+
+        useEffect(() => {
+          if (imgRef.current && imgRef.current.complete) { 
+            setIsLoaded(true); 
+          }
         }, [src]);
 
         const handleLoad = () => setIsLoaded(true);
         const handleError = () => setHasError(true);
+
+        const showShimmer = shimmerDelay ? (shimmering || !isLoaded) : !isLoaded;
 
         if (hasError || !src) {
           if (minimalFallback) { return <div className={`flex items-center justify-center font-black text-slate-300 bg-slate-50 tracking-tighter text-xs p-4 border border-dashed rounded-xl whitespace-nowrap overflow-hidden ${className}`}>KARYA {alt.replace('Portfolio ', '')}</div>; }
@@ -453,7 +481,7 @@
 
         return (
           <div className={`relative overflow-hidden ${className}`}>
-             {!isLoaded && (
+             {showShimmer && (
                <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden z-20 animate-shimmer">
                   {/* Subtle design indicator watermark */}
                   <div className="relative z-10 flex flex-col items-center gap-1 opacity-25">
@@ -475,7 +503,7 @@
                loading={priority === 'high' ? 'eager' : 'lazy'}
                fetchpriority={priority}
                decoding="async"
-               className={`w-full h-full ${objectFit} transition-all duration-700 ease-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} 
+               className={`w-full h-full ${objectFit} transition-all duration-700 ease-out ${(!showShimmer && isLoaded) ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-95 blur-[4px]'}`} 
              />
           </div>
         );
@@ -979,664 +1007,741 @@
             </header>
 
             {/* --- HOMEPAGE VIEW --- */}
-            <div className={currentPage === 'home' ? 'block' : 'hidden'}>
-                <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
-                  <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
-                    {["Jasa", "Desain", "Grafis,"].map((word, i) => (
-                      <Reveal key={`w1-${i}`} delay={100 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
-                        <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
-                        {word === "Jasa" && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 right-full mr-6 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">⚡ Presisi & Cepat</div></div>)}
-                        {word === "Grafis," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 left-full ml-1 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-[10px] font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">✨ Bernilai Tinggi</div></div>)}
-                      </Reveal>
-                    ))}
-                    <br />
-                    <span className="text-gray-400">
-                      {["Website", "Professional,"].map((word, i) => (
-                        <Reveal key={`w2-${i}`} delay={550 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
-                          <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
-                          {word === "Professional," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[32px] -mt-[6px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
-                              <div className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-[10px] font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
-                                ⚡ Modern & Clean
-                              </div>
-                            </div>)}
-                          {word === "Professional," && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 left-full ml-6 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
-                              <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">
-                                ✨ Estetik
-                              </div>
-                            </div>)}
-                        </Reveal>
-                      ))}
-                    </span>
-                    <br />
-                    {["&", "Gambar", "3D."].map((word, i) => {
-                        const is3D = word === "3D.";
-                        return (
-                          <Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4">
-                            <span className={`inline-block cursor-default ${is3D ? 'hover-3d-text' : 'hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100'}`}>
-                              {word}
-                            </span>
+            {currentPage === 'home' && (
+                <div className="animate-page-mount">
+                    <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
+                      <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
+                        {["Jasa", "Desain", "Grafis,"].map((word, i) => (
+                          <Reveal key={`w1-${i}`} delay={100 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
+                            <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
+                            {word === "Jasa" && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 right-full mr-6 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">⚡ Presisi & Cepat</div></div>)}
+                            {word === "Grafis," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 left-full ml-1 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-[10px] font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">✨ Bernilai Tinggi</div></div>)}
                           </Reveal>
-                        );
-                    })}
-                  </h1>
-                  <Reveal delay={1100} direction="up"><p className="text-base md:text-lg text-slate-500 max-w-2xl font-medium mb-6 md:mb-8">Membantu bisnis Anda tampil lebih kredibel and professional. Mulai dari <strong>identitas visual branding eksklusif</strong>, hingga <strong>pembuatan website professional</strong> and <strong>gambar 3D presisi</strong> yang siap dieksekusi.</p></Reveal>
-                  <Reveal delay={1300} direction="up" className="flex flex-row justify-center gap-2 md:gap-4 w-full">
-                    <button onClick={() => setCurrentPage('portfolio')} className="group px-4 py-3 md:px-8 md:py-4 bg-black text-white text-xs md:text-base font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-800 transition-colors w-auto">Lihat Portofolio <ArrowRight size={16} className="group-hover:translate-x-1 md:group-hover:translate-x-2 transition-transform duration-300 w-4 h-4 md:w-[18px] md:h-[18px]" /></button>
-                    <button className="group px-4 py-3 md:px-8 md:py-4 bg-white text-black text-xs md:text-base border border-gray-200 font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-50 transition-colors w-auto"><div className="relative flex items-center justify-center w-4 h-4 md:w-5 md:h-5"><div className="absolute inset-0 border-2 border-black rounded-full opacity-0 ripple-element"></div><Play size={14} className="text-black relative z-10 w-3 h-3 md:w-[14px] md:h-[14px]" /></div>Proses Kerja</button>
-                  </Reveal>
-                </section>
-
-                <section className="pt-20 pb-4 px-6 max-w-6xl mx-auto flex flex-col items-center relative">
-                  <RevealCircle />
-                  <Reveal delay={100} direction="up"><div className="flex items-center gap-2 mb-6"><div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div><span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span></div></Reveal>
-                  <Reveal delay={200} direction="up"><p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">Membantu merealisasikan ide bisnis Anda secara <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">{bouncyWords.map((word, i) => (<span key={i} className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`} style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}>{word}</span>))}</span> Mengeksekusi setiap detail dengan cermat agar visi Anda terwujud tanpa celah and memberikan hasil yang bisa diandalkan.</p></Reveal>
-                  <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[24rem] md:h-[28rem] flex justify-center items-end group mx-auto mt-6 md:mt-10">
-                    <div className="relative z-10 w-full flex justify-center h-full items-end pb-0">
-                      <div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 border border-gray-100 bg-slate-50">
-                        {Object.keys(avatars).map((key) => (
-                          <div 
-                            key={`bg-wrapper-${key}`} 
-                            className={`absolute inset-0 transition-opacity ${activeCategory === key ? 'opacity-100 z-10 duration-500 ease-out' : 'opacity-0 z-0 duration-700 delay-300 ease-in'}`}
-                          >
-                             <DynamicImage src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="w-full h-full" priority={key === 'default' ? 'high' : 'auto'} />
-                          </div>
                         ))}
-                      </div>
-                      <div className="absolute bottom-0 left-0 w-full h-full pointer-events-none">
-                        {Object.keys(avatars).map((key) => (
-                          <div 
-                            key={`me-container-${key}`} 
-                            className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full flex justify-center items-end transition-opacity ${activeCategory === key ? 'opacity-100 z-10 duration-500 ease-out' : 'opacity-0 z-0 duration-700 delay-300 ease-in'}`}
-                          >
-                            <DynamicImage 
-                              src={avatars[key].img} 
-                              alt={`Fajar Jayadi - ${avatars[key].label}`} 
-                              isActive={activeCategory === key} 
-                              className="h-[85%] md:h-[95%] w-auto mask-fade-bottom" 
-                              priority={key === 'default' ? 'high' : 'auto'}
-                            />
+                        <br />
+                        <span className="text-gray-400">
+                          {["Website", "Professional,"].map((word, i) => (
+                            <Reveal key={`w2-${i}`} delay={550 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
+                              <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
+                              {word === "Professional," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[32px] -mt-[6px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                                  <div className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-[10px] font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
+                                    ⚡ Modern & Clean
+                                  </div>
+                                </div>)}
+                              {word === "Professional," && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 left-full ml-6 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                                  <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">
+                                    ✨ Estetik
+                                  </div>
+                                </div>)}
+                            </Reveal>
+                          ))}
+                        </span>
+                        <br />
+                        {["&", "Gambar", "3D."].map((word, i) => {
+                            const is3D = word === "3D.";
+                            return (
+                              <Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4">
+                                <span className={`inline-block cursor-default ${is3D ? 'hover-3d-text' : 'hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100'}`}>
+                                  {word}
+                                </span>
+                              </Reveal>
+                            );
+                        })}
+                      </h1>
+                      <Reveal delay={1100} direction="up"><p className="text-base md:text-lg text-slate-500 max-w-2xl font-medium mb-6 md:mb-8">Membantu bisnis Anda tampil lebih kredibel and professional. Mulai dari <strong>identitas visual branding eksklusif</strong>, hingga <strong>pembuatan website professional</strong> and <strong>gambar 3D presisi</strong> yang siap dieksekusi.</p></Reveal>
+                      <Reveal delay={1300} direction="up" className="flex flex-row justify-center gap-2 md:gap-4 w-full">
+                        <button onClick={() => setCurrentPage('portfolio')} className="group px-4 py-3 md:px-8 md:py-4 bg-black text-white text-xs md:text-base font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-800 transition-colors w-auto">Lihat Portofolio <ArrowRight size={16} className="group-hover:translate-x-1 md:group-hover:translate-x-2 transition-transform duration-300 w-4 h-4 md:w-[18px] md:h-[18px]" /></button>
+                        <button className="group px-4 py-3 md:px-8 md:py-4 bg-white text-black text-xs md:text-base border border-gray-200 font-bold rounded-full flex items-center justify-center gap-1 md:gap-2 hover:bg-gray-50 transition-colors w-auto"><div className="relative flex items-center justify-center w-4 h-4 md:w-5 md:h-5"><div className="absolute inset-0 border-2 border-black rounded-full opacity-0 ripple-element"></div><Play size={14} className="text-black relative z-10 w-3 h-3 md:w-[14px] md:h-[14px]" /></div>Proses Kerja</button>
+                      </Reveal>
+                    </section>
+
+                    <section className="pt-20 pb-4 px-6 max-w-6xl mx-auto flex flex-col items-center relative">
+                      <RevealCircle />
+                      <Reveal delay={100} direction="up"><div className="flex items-center gap-2 mb-6"><div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div><span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span></div></Reveal>
+                      <Reveal delay={200} direction="up"><p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">Membantu merealisasikan ide bisnis Anda secara <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">{bouncyWords.map((word, i) => (<span key={i} className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`} style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}>{word}</span>))}</span> Mengeksekusi setiap detail dengan cermat agar visi Anda terwujud tanpa celah and memberikan hasil yang bisa diandalkan.</p></Reveal>
+                      <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[24rem] md:h-[28rem] flex justify-center items-end group mx-auto mt-6 md:mt-10">
+                        <div className="relative z-10 w-full flex justify-center h-full items-end pb-0">
+                          <div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 w-[95%] md:w-full max-w-3xl aspect-[3/1] rounded-3xl md:rounded-[2.5rem] overflow-hidden -z-10 border border-gray-100 bg-slate-50">
+                            {Object.keys(avatars).map((key) => (
+                              <div 
+                                key={`bg-wrapper-${key}`} 
+                                className={`absolute inset-0 transition-opacity ${activeCategory === key ? 'opacity-100 z-10 duration-500 ease-out' : 'opacity-0 z-0 duration-700 delay-300 ease-in'}`}
+                              >
+                                 <DynamicImage src={avatars[key].bgImg} alt={`Background ${avatars[key].label}`} isActive={activeCategory === key} objectFit="object-cover" className="w-full h-full" priority={key === 'default' ? 'high' : 'auto'} />
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                    <Reveal delay={400} direction="left" className="absolute top-1/4 left-4 md:left-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('desain')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:shadow-2xl hover:shadow-blue-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-blue-400 rounded-full transition-opacity duration-300 ${activeCategory === 'desain' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><PenTool size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Desain Branding</span></MagneticButton></Reveal>
-                    <Reveal delay={500} direction="right" className="absolute top-1/3 right-4 md:right-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('website')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:shadow-2xl hover:shadow-purple-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-purple-400 rounded-full transition-opacity duration-300 ${activeCategory === 'website' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-purple-100 text-purple-500 rounded-full flex items-center justify-center relative z-10"><Monitor size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Website Professional</span></MagneticButton></Reveal>
-                    <Reveal delay={600} direction="up" className="absolute bottom-1/4 left-10 md:left-32 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('konstruksi')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:shadow-2xl hover:shadow-orange-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-orange-400 rounded-full transition-opacity duration-300 ${activeCategory === 'konstruksi' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><HardHat size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Gambar 3D</span></MagneticButton></Reveal>
-                  </Reveal>
-                </section>
+                          <div className="absolute bottom-0 left-0 w-full h-full pointer-events-none">
+                            {Object.keys(avatars).map((key) => (
+                              <div 
+                                key={`me-container-${key}`} 
+                                className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full flex justify-center items-end transition-opacity ${activeCategory === key ? 'opacity-100 z-10 duration-500 ease-out' : 'opacity-0 z-0 duration-700 delay-300 ease-in'}`}
+                              >
+                                <DynamicImage 
+                                  src={avatars[key].img} 
+                                  alt={`Fajar Jayadi - ${avatars[key].label}`} 
+                                  isActive={activeCategory === key} 
+                                  className="h-[85%] md:h-[95%] w-auto mask-fade-bottom" 
+                                  priority={key === 'default' ? 'high' : 'auto'}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <Reveal delay={400} direction="left" className="absolute top-1/4 left-4 md:left-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('desain')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-blue-900/5 cursor-pointer hover:shadow-2xl hover:shadow-blue-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-blue-400 rounded-full transition-opacity duration-300 ${activeCategory === 'desain' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><PenTool size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Desain Branding</span></MagneticButton></Reveal>
+                        <Reveal delay={500} direction="right" className="absolute top-1/3 right-4 md:right-24 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('website')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-purple-900/5 cursor-pointer hover:shadow-2xl hover:shadow-purple-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-purple-400 rounded-full transition-opacity duration-300 ${activeCategory === 'website' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-purple-100 text-purple-500 rounded-full flex items-center justify-center relative z-10"><Monitor size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Website Professional</span></MagneticButton></Reveal>
+                        <Reveal delay={600} direction="up" className="absolute bottom-1/4 left-10 md:left-32 z-20"><MagneticButton onMouseEnter={() => setActiveCategory('konstruksi')} onMouseLeave={() => setActiveCategory('default')} className="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-orange-900/5 cursor-pointer hover:shadow-2xl hover:shadow-orange-900/20 border border-gray-100 flex items-center gap-3"><div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10"><div className={`absolute inset-0 bg-orange-400 rounded-full transition-opacity duration-300 ${activeCategory === 'konstruksi' ? 'animate-pulse-ripple' : 'opacity-0'}`}></div><div className="w-full h-full bg-blue-100 text-blue-500 rounded-full flex items-center justify-center relative z-10"><HardHat size={16} className="md:w-5 md:h-5" /></div></div><span className="font-bold text-xs md:text-sm hidden md:block">Gambar 3D</span></MagneticButton></Reveal>
+                      </Reveal>
+                    </section>
 
-                <section className="pt-10 pb-24 px-6 relative z-0">
-                  <RevealGrid 
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-30"
-                    animationClass="animate-grid-center"
-                    maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)' }}
-                  />
-                  <div className="max-w-6xl mx-auto"><Reveal direction="up" className="text-center mb-16"><h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">Solusi Menyeluruh <br/>untuk Bisnis Anda <span ref={rocketRef} className={`inline-block ml-3 origin-bottom-left relative z-[100] ${rocketTriggered ? 'animate-rocket-fly pointer-events-none' : ''}`}>🚀</span></h2><p className="text-slate-500 font-medium">Semua keahlian yang dibutuhkan untuk melesatkan brand Anda, tersedia di sini.</p></Reveal></div>
-                  <div ref={bentoSectionRef} className="max-w-6xl mx-auto grid grid-cols-1 grid-rows-1 relative">
-                    <div className="col-start-1 col-end-1 row-start-1 row-end-1 w-full">
-                      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[15rem]">
-                        <div onClick={(e) => openService(e, 'desain')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('desain')}><h3 className="text-xl font-bold mb-1">Identitas & Branding Visual</h3><p className="text-slate-500 text-sm">Logo, flyer, and packaging premium untuk memperkuat karakter brand di mata pasar.</p><div className="absolute right-0 bottom-0 w-64 h-48 bg-gradient-to-tl from-blue-200 to-transparent rounded-tl-full opacity-50 translate-x-10 translate-y-10 group-hover:scale-110 transition-transform duration-500"></div><PenTool className="absolute bottom-8 right-12 text-blue-500 w-24 h-24 opacity-20 group-hover:opacity-40 transition-opacity" /></div></div>
-                        <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer"><div className={getTileContentClass('website')}><h3 className="text-xl font-bold mb-1 text-white">Website Professional</h3><p className="text-slate-400 text-sm">Landing page yang dioptimalkan untuk performa, SEO, and konversi maksimal.</p><Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" /></div></div>
-                        <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('konstruksi')}><h3 className="text-xl font-bold mb-1">Gambar 3D & Visualisasi</h3><p className="text-slate-500 text-sm">Desain food stall and modeling arsitektur 3D yang nyata and presisi.</p><Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" /></div></div>
-                        <div onClick={(e) => openService(e, 'company_profile')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('company_profile')}><h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3><p className="text-slate-500 text-sm">Profil perusahaan, book design, and media cetak elegan.</p><Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" /></div></div>
-                        <div onClick={(e) => openService(e, 'aplikasi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('aplikasi')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
-                        <div onClick={(e) => openService(e, 'layout')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('layout')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
-                      </div>
-                    </div>
+                    <section className="pt-10 pb-24 px-6 relative z-0">
+                      <RevealGrid 
+                        className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-30"
+                        animationClass="animate-grid-center"
+                        maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)' }}
+                      />
+                      <div className="max-w-6xl mx-auto"><Reveal direction="up" className="text-center mb-16"><h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">Solusi Menyeluruh <br/>untuk Bisnis Anda <span ref={rocketRef} className={`inline-block ml-3 origin-bottom-left relative z-[100] ${rocketTriggered ? 'animate-rocket-fly pointer-events-none' : ''}`}>🚀</span></h2><p className="text-slate-500 font-medium">Semua keahlian yang dibutuhkan untuk melesatkan brand Anda, tersedia di sini.</p></Reveal></div>
+                      <div ref={bentoSectionRef} className="max-w-6xl mx-auto grid grid-cols-1 grid-rows-1 relative">
+                        <div className="col-start-1 col-end-1 row-start-1 row-end-1 w-full">
+                          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[15rem]">
+                            <div onClick={(e) => openService(e, 'desain')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('desain')}><h3 className="text-xl font-bold mb-1">Identitas & Branding Visual</h3><p className="text-slate-500 text-sm">Logo, flyer, and packaging premium untuk memperkuat karakter brand di mata pasar.</p><div className="absolute right-0 bottom-0 w-64 h-48 bg-gradient-to-tl from-blue-200 to-transparent rounded-tl-full opacity-50 translate-x-10 translate-y-10 group-hover:scale-110 transition-transform duration-500"></div><PenTool className="absolute bottom-8 right-12 text-blue-500 w-24 h-24 opacity-20 group-hover:opacity-40 transition-opacity" /></div></div>
+                            <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer"><div className={getTileContentClass('website')}><h3 className="text-xl font-bold mb-1 text-white">Website Professional</h3><p className="text-slate-400 text-sm">Landing page yang dioptimalkan untuk performa, SEO, and konversi maksimal.</p><Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" /></div></div>
+                            <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('konstruksi')}><h3 className="text-xl font-bold mb-1">Gambar 3D & Visualisasi</h3><p className="text-slate-500 text-sm">Desain food stall and modeling arsitektur 3D yang nyata and presisi.</p><Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" /></div></div>
+                            <div onClick={(e) => openService(e, 'company_profile')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('company_profile')}><h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3><p className="text-slate-500 text-sm">Profil perusahaan, book design, and media cetak elegan.</p><Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" /></div></div>
+                            <div onClick={(e) => openService(e, 'aplikasi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('aplikasi')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
+                            <div onClick={(e) => openService(e, 'layout')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('layout')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
+                          </div>
+                        </div>
 
-                    <div onClick={closeService} className={`col-start-1 col-end-1 row-start-1 row-end-1 z-40 ${activeServiceContent === 'website' ? 'bg-slate-900' : 'bg-[#F5F5F7]'} rounded-[2rem] w-full cursor-pointer overflow-hidden`} style={{ clipPath: expandedService ? clipPathStyle : initialClipRef.current, pointerEvents: expandedService && !isClosing ? 'auto' : 'none', visibility: activeServiceContent ? 'visible' : 'hidden', opacity: isClosing ? 0 : 1, transition: isClosing ? 'opacity 0.2s ease-out' : (isTransitioning ? 'clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in' : 'none') }}>
-                        {activeServiceContent && (
-                            <div className="relative pb-16 pt-8 px-6 h-full overflow-y-auto hide-scrollbar">
-                                <div onClick={(e) => e.stopPropagation()} className="max-w-5xl mx-auto cursor-default w-full">
-                                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                      {portfolioData[activeServiceContent]?.map((path, itemIdx) => (
-                                         <div 
-                                            key={itemIdx} 
-                                            className={`aspect-square rounded-3xl overflow-hidden relative cursor-pointer group border ${activeServiceContent === 'website' ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200/50'}`}
-                                          >
-                                            <div 
-                                              className={`w-full h-full transition-all duration-300 ease-out hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center ${expandedService && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-                                              style={{ transitionDelay: (expandedService && !isClosing && !isTransitioning) ? `${400 + (itemIdx * 80)}ms` : '0ms' }}
-                                            >
-                                              <DynamicImage src={path} alt={`Portfolio ${itemIdx}`} minimalFallback={true} className="w-full h-full object-cover" />
-                                            </div>
-                                         </div>
-                                      ))}
-                                   </div>
+                        <div onClick={closeService} className={`col-start-1 col-end-1 row-start-1 row-end-1 z-40 ${activeServiceContent === 'website' ? 'bg-slate-900' : 'bg-[#F5F5F7]'} rounded-[2rem] w-full cursor-pointer overflow-hidden`} style={{ clipPath: expandedService ? clipPathStyle : initialClipRef.current, pointerEvents: expandedService && !isClosing ? 'auto' : 'none', visibility: activeServiceContent ? 'visible' : 'hidden', opacity: isClosing ? 0 : 1, transition: isClosing ? 'opacity 0.2s ease-out' : (isTransitioning ? 'clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in' : 'none') }}>
+                            {activeServiceContent && (
+                                <div className="relative pb-16 pt-8 px-6 h-full overflow-y-auto hide-scrollbar">
+                                    <div onClick={(e) => e.stopPropagation()} className="max-w-5xl mx-auto cursor-default w-full">
+                                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                          {portfolioData[activeServiceContent]?.map((path, itemIdx) => (
+                                             <div 
+                                                key={itemIdx} 
+                                                className={`aspect-square rounded-3xl overflow-hidden relative cursor-pointer group border ${activeServiceContent === 'website' ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200/50'}`}
+                                              >
+                                                <div 
+                                                  className={`w-full h-full transition-all duration-300 ease-out hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center ${expandedService && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+                                                  style={{ transitionDelay: (expandedService && !isClosing && !isTransitioning) ? `${400 + (itemIdx * 80)}ms` : '0ms' }}
+                                                >
+                                                  <DynamicImage src={path} alt={`Portfolio ${itemIdx}`} minimalFallback={true} className="w-full h-full object-cover" shimmerDelay={true} />
+                                                </div>
+                                             </div>
+                                          ))}
+                                       </div>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                  </div>
-                </section>
+                            )}
+                        </div>
+                      </div>
+                    </section>
 
-                <section className="py-20 border-y border-gray-100 overflow-hidden relative z-0">
-                  <RevealGrid 
-                    className="absolute inset-0 pointer-events-none opacity-30"
-                    animationClass="animate-grid-center"
-                    maskStyle={{ maskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 0%, transparent 100%)' }}
-                  />
-                  <Reveal direction="up" className="max-w-6xl mx-auto px-6 mb-12 text-center pointer-events-none"><h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight text-slate-900">Client Fajar</h2><p className="text-slate-500 font-medium">Berbagai entitas bisnis yang telah mempercayakan identitas visual mereka.</p></Reveal>
-                  <Reveal delay={200} direction="none" className="w-full relative">
-                    <div className="absolute top-0 left-0 w-16 md:w-32 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div><div className="absolute top-0 right-0 w-16 md:w-32 h-full bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
-                    <div ref={carouselRef} onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseUp={handleMouseUp} onMouseMove={handleMouseMoveCarousel} className={`flex items-center gap-16 md:gap-24 px-10 overflow-x-auto py-4 select-none hide-scrollbar ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}>{displayLogos.map((item, index) => (<div key={`client-${item}-${index}`} className="flex-shrink-0 transition-transform duration-500 hover:scale-110"><DynamicImage src={`client-logo-${item}.png`} alt={`Client Logo ${item}`} minimalFallback={true} className="h-8 md:h-12 text-2xl w-auto object-contain grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 pointer-events-none" /></div>))}</div>
-                  </Reveal>
-                </section>
+                    <section className="py-20 border-y border-gray-100 overflow-hidden relative z-0">
+                      <RevealGrid 
+                        className="absolute inset-0 pointer-events-none opacity-30"
+                        animationClass="animate-grid-center"
+                        maskStyle={{ maskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 0%, transparent 100%)' }}
+                      />
+                      <Reveal direction="up" className="max-w-6xl mx-auto px-6 mb-12 text-center pointer-events-none"><h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight text-slate-900">Client Fajar</h2><p className="text-slate-500 font-medium">Berbagai entitas bisnis yang telah mempercayakan identitas visual mereka.</p></Reveal>
+                      <Reveal delay={200} direction="none" className="w-full relative">
+                        <div className="absolute top-0 left-0 w-16 md:w-32 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div><div className="absolute top-0 right-0 w-16 md:w-32 h-full bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+                        <div ref={carouselRef} onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseUp={handleMouseUp} onMouseMove={handleMouseMoveCarousel} className={`flex items-center gap-16 md:gap-24 px-10 overflow-x-auto py-4 select-none hide-scrollbar ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}>{displayLogos.map((item, index) => (<div key={`client-${item}-${index}`} className="flex-shrink-0 transition-transform duration-500 hover:scale-110"><DynamicImage src={`client-logo-${item}.png`} alt={`Client Logo ${item}`} minimalFallback={true} className="h-8 md:h-12 text-2xl w-auto object-contain grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 pointer-events-none" /></div>))}</div>
+                      </Reveal>
+                    </section>
 
-                <section className="py-24 px-6 max-w-4xl mx-auto">
-                  <Reveal direction="up">
-                    <div className="w-full relative testi-container min-h-[350px] md:min-h-[300px]">
-                      {testimonials.map((t, idx) => {
-                        const state = getTestiState(idx);
-                        return (<div key={idx} className={`testi-card bg-gray-50 rounded-[2.5rem] p-8 md:p-16 border border-gray-100 flex flex-col md:flex-row gap-6 md:gap-10 items-center shadow-sm ${getTestiClass(state)}`} style={getTestiStyle(state)}><div className="flex-1 text-center md:text-left"><div className="flex gap-1 text-orange-400 mb-6 justify-center md:justify-start"><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /></div><h3 className="text-xl md:text-2xl font-bold leading-tight mb-8 text-slate-800">"{t.text}"</h3><div className="flex items-center gap-4 justify-center md:justify-start mt-auto"><div className="w-12 h-12 bg-slate-300 text-slate-700 rounded-full flex items-center justify-center font-black text-lg shrink-0">{t.name.charAt(0)}</div><div className="text-left"><p className="font-bold text-sm text-slate-900">{t.name}</p><p className="text-slate-500 text-xs">{t.role}</p></div></div></div><div className="hidden md:flex gap-3 shrink-0 z-20 self-end md:self-auto mb-2 md:mb-0">
-                               <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
-                               <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
-                            </div><div className="flex md:hidden gap-4 mt-4 z-20 w-full justify-center">
-                               <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
-                               <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
-                            </div></div>);
-                      })}
-                    </div>
-                  </Reveal>
-                </section>
+                    <section className="py-24 px-6 max-w-4xl mx-auto">
+                      <Reveal direction="up">
+                        <div className="w-full relative testi-container min-h-[350px] md:min-h-[300px]">
+                          {testimonials.map((t, idx) => {
+                            const state = getTestiState(idx);
+                            return (<div key={idx} className={`testi-card bg-gray-50 rounded-[2.5rem] p-8 md:p-16 border border-gray-100 flex flex-col md:flex-row gap-6 md:gap-10 items-center shadow-sm ${getTestiClass(state)}`} style={getTestiStyle(state)}><div className="flex-1 text-center md:text-left"><div className="flex gap-1 text-orange-400 mb-6 justify-center md:justify-start"><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /></div><h3 className="text-xl md:text-2xl font-bold leading-tight mb-8 text-slate-800">"{t.text}"</h3><div className="flex items-center gap-4 justify-center md:justify-start mt-auto"><div className="w-12 h-12 bg-slate-300 text-slate-700 rounded-full flex items-center justify-center font-black text-lg shrink-0">{t.name.charAt(0)}</div><div className="text-left"><p className="font-bold text-sm text-slate-900">{t.name}</p><p className="text-slate-500 text-xs">{t.role}</p></div></div></div><div className="hidden md:flex gap-3 shrink-0 z-20 self-end md:self-auto mb-2 md:mb-0">
+                                   <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
+                                   <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
+                                </div><div className="flex md:hidden gap-4 mt-4 z-20 w-full justify-center">
+                                   <button onClick={nextTesti} className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm pointer-events-auto"><ChevronLeft size={20}/></button>
+                                   <button onClick={prevTesti} className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-sm pointer-events-auto"><ChevronRight size={20}/></button>
+                                </div></div>);
+                          })}
+                        </div>
+                      </Reveal>
+                    </section>
 
-                <section className="py-24 px-6 border-b border-gray-100 relative z-0">
-                  <RevealGrid 
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-30"
-                    animationClass="animate-grid-center"
-                    maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)' }}
-                  />
-                  <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-16 items-center">
-                    <Reveal direction="right" className="flex-1"><h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">Wujudkan Visi.<br/>Mulai Hari Ini.</h2><p className="text-slate-500 font-medium mb-10 max-w-md">Serahkan tantangan visual and teknis Anda kepada partner yang tepat. Dapatkan hasil maksimal untuk perkembangan bisnis Anda.</p><div className="flex gap-4"><button onClick={handleMulaiProyekClick} className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">Konsultasi Sekarang</button><button onClick={() => setCurrentPage('estimasi')} className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">Detail Estimasi</button></div></Reveal>
-                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-                        {[{ icon: PenTool, text: 'Identitas Visual', color: 'text-blue-500', bg: 'bg-blue-100' },{ icon: Monitor, text: 'Web Professional', color: 'text-purple-500', bg: 'bg-purple-100' },{ icon: Box, text: 'Gambar 3D Realis', color: 'text-orange-500', bg: 'bg-orange-100' },{ icon: Zap, text: 'Eksekusi Tangkas', color: 'text-yellow-500', bg: 'bg-yellow-100' },{ icon: Layout, text: 'User Experience', color: 'text-pink-500', bg: 'bg-pink-100' },{ icon: CheckCircle2, text: 'Komitmen Kualitas', color: 'text-green-500', bg: 'bg-green-100' }].map((feat, i) => (
-                            <Reveal key={i} delay={i * 100} direction="left">
-                                <div className="flex items-center gap-4 p-2">
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${feat.bg} ${feat.color}`}><feat.icon size={18} /></div>
-                                    <span className="font-bold text-slate-800">{feat.text}</span>
+                    <section className="py-24 px-6 border-b border-gray-100 relative z-0">
+                      <RevealGrid 
+                        className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-30"
+                        animationClass="animate-grid-center"
+                        maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%)' }}
+                      />
+                      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-16 items-center">
+                        <Reveal direction="right" className="flex-1"><h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] mb-6">Wujudkan Visi.<br/>Mulai Hari Ini.</h2><p className="text-slate-500 font-medium mb-10 max-w-md">Serahkan tantangan visual and teknis Anda kepada partner yang tepat. Dapatkan hasil maksimal untuk perkembangan bisnis Anda.</p><div className="flex gap-4"><button onClick={handleMulaiProyekClick} className="px-8 py-4 bg-green-400 text-white font-bold rounded-full hover:bg-green-500 transition-colors">Konsultasi Sekarang</button><button onClick={() => setCurrentPage('estimasi')} className="px-8 py-4 bg-gray-100 text-black font-bold rounded-full hover:bg-gray-200 transition-colors">Detail Estimasi</button></div></Reveal>
+                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+                            {[{ icon: PenTool, text: 'Identitas Visual', color: 'text-blue-500', bg: 'bg-blue-100' },{ icon: Monitor, text: 'Web Professional', color: 'text-purple-500', bg: 'bg-purple-100' },{ icon: Box, text: 'Gambar 3D Realis', color: 'text-orange-500', bg: 'bg-orange-100' },{ icon: Zap, text: 'Eksekusi Tangkas', color: 'text-yellow-500', bg: 'bg-yellow-100' },{ icon: Layout, text: 'User Experience', color: 'text-pink-500', bg: 'bg-pink-100' },{ icon: CheckCircle2, text: 'Komitmen Kualitas', color: 'text-green-500', bg: 'bg-green-100' }].map((feat, i) => (
+                                <Reveal key={i} delay={i * 100} direction="left">
+                                    <div className="flex items-center gap-4 p-2">
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${feat.bg} ${feat.color}`}><feat.icon size={18} /></div>
+                                        <span className="font-bold text-slate-800">{feat.text}</span>
+                                    </div>
+                                </Reveal>
+                            ))}
+                        </div>
+                      </div>
+                    </section>
+                </div>
+            )}
+
+            {/* --- PORTFOLIO VIEW --- */}
+            {currentPage === 'portfolio' && (
+                <div className="pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen relative z-0 animate-page-mount">
+                    <RevealGrid 
+                        className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
+                        animationClass="animate-grid-portfolio"
+                        maskStyle={{ maskImage: 'radial-gradient(ellipse 60% 80% at 50% 40%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 60% 80% at 50% 40%, black 0%, transparent 100%)' }}
+                    />
+                    
+                    <Reveal direction="up" className="text-center mb-10">
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Eksplorasi & Karya</h1>
+                        <p className="text-slate-500 font-medium max-w-2xl mx-auto">Koleksi desain kreatif, perencanaan visual, dan pengembangan digital yang pernah kami kerjakan.</p>
+                    </Reveal>
+
+                    <Reveal delay={150} direction="up" className="flex flex-wrap justify-center gap-2 mb-12">
+                        {filterOptions.map(f => (
+                            <button
+                                key={f.id}
+                                onClick={() => setPortfolioFilter(f.id)}
+                                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${portfolioFilter === f.id ? 'bg-black text-white shadow-lg' : 'bg-gray-100 text-slate-600 hover:bg-gray-200'}`}
+                            >
+                                {f.label}
+                            </button>
+                        ))}
+                    </Reveal>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {filteredPortfolio.map((item, idx) => (
+                            <Reveal 
+                                key={`${item.src}-${idx}-${portfolioFilter}`} 
+                                delay={(idx % 6) * 100} 
+                                direction="up" 
+                                className="aspect-square rounded-3xl overflow-hidden bg-gray-50 border border-gray-100 group relative cursor-pointer"
+                            >
+                                <DynamicImage 
+                                    src={item.src} 
+                                    alt={`Karya ${item.category} ${idx}`} 
+                                    className="w-full h-full group-hover:scale-105 transition-transform duration-500 ease-out" 
+                                    objectFit="object-cover" 
+                                    minimalFallback={true} 
+                                    shimmerDelay={true}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                                    <span className="text-white font-bold capitalize bg-black/30 backdrop-blur-md px-4 py-1.5 rounded-full text-xs shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                                        {item.category.replace('_', ' ')}
+                                    </span>
                                 </div>
                             </Reveal>
                         ))}
                     </div>
-                  </div>
-                </section>
-            </div>
-
-            {/* --- PORTFOLIO VIEW --- */}
-            <div className={currentPage === 'portfolio' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen relative z-0' : 'hidden'}>
-                <RevealGrid 
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
-                    animationClass="animate-grid-portfolio"
-                    maskStyle={{ maskImage: 'radial-gradient(ellipse 60% 80% at 50% 40%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 60% 80% at 50% 40%, black 0%, transparent 100%)' }}
-                />
-                
-                <Reveal direction="up" className="text-center mb-10">
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Eksplorasi & Karya</h1>
-                    <p className="text-slate-500 font-medium max-w-2xl mx-auto">Koleksi desain kreatif, perencanaan visual, dan pengembangan digital yang pernah kami kerjakan.</p>
-                </Reveal>
-
-                <Reveal delay={150} direction="up" className="flex flex-wrap justify-center gap-2 mb-12">
-                    {filterOptions.map(f => (
-                        <button
-                            key={f.id}
-                            onClick={() => setPortfolioFilter(f.id)}
-                            className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${portfolioFilter === f.id ? 'bg-black text-white shadow-lg' : 'bg-gray-100 text-slate-600 hover:bg-gray-200'}`}
-                        >
-                            {f.label}
-                        </button>
-                    ))}
-                </Reveal>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {filteredPortfolio.map((item, idx) => (
-                        <Reveal 
-                            key={`${item.src}-${idx}-${portfolioFilter}`} 
-                            delay={(idx % 6) * 100} 
-                            direction="up" 
-                            className="aspect-square rounded-3xl overflow-hidden bg-gray-50 border border-gray-100 group relative cursor-pointer"
-                        >
-                            <DynamicImage 
-                                src={item.src} 
-                                alt={`Karya ${item.category} ${idx}`} 
-                                className="w-full h-full group-hover:scale-105 transition-transform duration-500 ease-out" 
-                                objectFit="object-cover" 
-                                minimalFallback={true} 
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                                <span className="text-white font-bold capitalize bg-black/30 backdrop-blur-md px-4 py-1.5 rounded-full text-xs shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                                    {item.category.replace('_', ' ')}
-                                </span>
-                            </div>
-                        </Reveal>
-                    ))}
+                    
+                    {filteredPortfolio.length === 0 && (
+                        <div className="text-center py-20 text-slate-400 font-medium">Belum ada karya di kategori ini.</div>
+                    )}
                 </div>
-                
-                {filteredPortfolio.length === 0 && (
-                    <div className="text-center py-20 text-slate-400 font-medium">Belum ada karya di kategori ini.</div>
-                )}
-            </div>
+            )}
 
             {/* --- WHY FAJAR VIEW --- */}
-            <div className={currentPage === 'why-fajar' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen relative z-0' : 'hidden'}>
-                <RevealGrid 
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
-                    animationClass="animate-grid-center"
-                    maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)' }}
-                />
+            {currentPage === 'why-fajar' && (
+                <div className="pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen relative z-0 animate-page-mount">
+                    <RevealGrid 
+                        className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
+                        animationClass="animate-grid-center"
+                        maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)' }}
+                    />
 
-                <Reveal direction="up" className="text-center mb-16">
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-6 text-slate-900">Kenapa Mending ke Fajar?</h1>
-                    <p className="text-slate-500 font-medium max-w-3xl mx-auto text-lg">Bukan sekadar biro jasa biasa. Saya membawa dedikasi personal, value maksimal, dan kedalaman pengetahuan untuk memastikan karya Anda berada di level tertinggi.</p>
-                </Reveal>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-                    {/* Agency vs Fajar */}
-                    <Reveal delay={100} direction="up" className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-10 border border-gray-200/50">
-                        <h3 className="text-2xl font-bold mb-8 flex items-center gap-3"><Monitor className="text-slate-400"/> Design Agency</h3>
-                        <div className="space-y-6">
-                            <div className="flex items-start gap-4"><XCircle className="text-red-400 mt-1 shrink-0"/><p className="text-slate-600">Fokus pada <strong className="text-slate-900">kuantitas klien</strong> demi memenuhi target omset perusahaan.</p></div>
-                            <div className="flex items-start gap-4"><XCircle className="text-red-400 mt-1 shrink-0"/><p className="text-slate-600">Komunikasi sering berlapis lewat akun eksekutif atau manajer, yang rentan miskomunikasi.</p></div>
-                        </div>
-                        <div className="my-8 border-t border-gray-300/50 relative"><span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] px-4 text-xs font-bold text-slate-400 uppercase tracking-widest">VS Fajar Jayadi</span></div>
-                        <div className="space-y-6">
-                            <div className="flex items-start gap-4"><CheckCircle2 className="text-green-500 mt-1 shrink-0"/><p className="text-slate-800">Fokus 100% pada <strong className="text-black">kualitas dan legacy nama baik</strong>. Satu desainer berdedikasi penuh untuk hasil yang membanggakan.</p></div>
-                            <div className="flex items-start gap-4"><CheckCircle2 className="text-green-500 mt-1 shrink-0"/><p className="text-slate-800">Komunikasi langsung tanpa perantara, visi Anda didengar dan langsung dieksekusi oleh ahlinya.</p></div>
-                        </div>
+                    <Reveal direction="up" className="text-center mb-16">
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-6 text-slate-900">Kenapa Mending ke Fajar?</h1>
+                        <p className="text-slate-500 font-medium max-w-3xl mx-auto text-lg">Bukan sekadar biro jasa biasa. Saya membawa dedikasi personal, value maksimal, dan kedalaman pengetahuan untuk memastikan karya Anda berada di level tertinggi.</p>
                     </Reveal>
 
-                    {/* Famous Freelancer vs Fajar */}
-                    <Reveal delay={200} direction="up" className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-10 border border-gray-200/50">
-                        <h3 className="text-2xl font-bold mb-8 flex items-center gap-3"><Star className="text-slate-400"/> "Famous" Freelancer</h3>
-                        <div className="space-y-6">
-                            <div className="flex items-start gap-4"><XCircle className="text-red-400 mt-1 shrink-0"/><p className="text-slate-600">Harga seringkali terlalu mahal (overpriced) namun dengan <strong className="text-slate-900">value paket yang sangat dibatasi</strong>.</p></div>
-                            <div className="flex items-start gap-4"><XCircle className="text-red-400 mt-1 shrink-0"/><p className="text-slate-600">Pada praktiknya, pekerjaan sering dilempar ke tim atau junior di balik layar.</p></div>
-                        </div>
-                        <div className="my-8 border-t border-gray-300/50 relative"><span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] px-4 text-xs font-bold text-slate-400 uppercase tracking-widest">VS Fajar Jayadi</span></div>
-                        <div className="space-y-6">
-                            <div className="flex items-start gap-4"><CheckCircle2 className="text-green-500 mt-1 shrink-0"/><p className="text-slate-800">Menawarkan <strong className="text-black">harga menengah (mid-price)</strong> dengan value fitur yang jauh lebih komplit, fair, dan transparan.</p></div>
-                            <div className="flex items-start gap-4"><CheckCircle2 className="text-green-500 mt-1 shrink-0"/><p className="text-slate-800">Dikerjakan murni 100% oleh saya sendiri (One-Man Army) demi menjaga standar presisi tingkat tinggi.</p></div>
+                    <div className="space-y-12 mb-16">
+                        {/* Agency vs Fajar (Horizontal Split Card) */}
+                        <Reveal delay={100} direction="up" className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 relative items-stretch">
+                                {/* Left Side: Competitor */}
+                                <div className="flex flex-col justify-between">
+                                    <div>
+                                        <h3 className="text-2xl font-bold mb-6 flex items-center gap-3 text-slate-400"><Monitor className="text-slate-400"/> Design Agency</h3>
+                                        <div className="space-y-6">
+                                            <div className="flex items-start gap-4">
+                                                <XCircle className="text-red-400 mt-1 shrink-0"/>
+                                                <p className="text-slate-600">Fokus pada <strong className="text-slate-900">kuantitas klien</strong> demi memenuhi target omset perusahaan.</p>
+                                            </div>
+                                            <div className="flex items-start gap-4">
+                                                <XCircle className="text-red-400 mt-1 shrink-0"/>
+                                                <p className="text-slate-600">Komunikasi sering berlapis lewat akun eksekutif atau manajer, yang rentan miskomunikasi.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Premium Center Divider */}
+                                <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-gray-300/40 -translate-x-1/2">
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] py-2 px-1 text-[10px] font-black text-slate-400 tracking-widest uppercase">VS</div>
+                                </div>
+                                <div className="block md:hidden my-4 border-t border-gray-300/40 relative">
+                                    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] px-4 text-[10px] font-black text-slate-400 tracking-widest uppercase">VS</span>
+                                </div>
+
+                                {/* Right Side: Fajar Jayadi */}
+                                <div className="flex flex-col justify-between md:pl-8">
+                                    <div>
+                                        <h3 className="text-2xl font-bold mb-6 flex items-center gap-3 text-black"><CheckCircle2 className="text-green-500"/> Fajar Jayadi</h3>
+                                        <div className="space-y-6">
+                                            <div className="flex items-start gap-4">
+                                                <CheckCircle2 className="text-green-500 mt-1 shrink-0"/>
+                                                <p className="text-slate-800">Fokus 100% pada <strong className="text-black">kualitas dan legacy nama baik</strong>. Satu desainer berdedikasi penuh untuk hasil yang membanggakan.</p>
+                                            </div>
+                                            <div className="flex items-start gap-4">
+                                                <CheckCircle2 className="text-green-500 mt-1 shrink-0"/>
+                                                <p className="text-slate-800">Komunikasi langsung tanpa perantara, visi Anda didengar dan langsung dieksekusi oleh ahlinya.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Reveal>
+
+                        {/* Famous Freelancer vs Fajar (Horizontal Split Card) */}
+                        <Reveal delay={200} direction="up" className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 relative items-stretch">
+                                {/* Left Side: Competitor */}
+                                <div className="flex flex-col justify-between">
+                                    <div>
+                                        <h3 className="text-2xl font-bold mb-6 flex items-center gap-3 text-slate-400"><Star className="text-slate-400"/> "Famous" Freelancer</h3>
+                                        <div className="space-y-6">
+                                            <div className="flex items-start gap-4">
+                                                <XCircle className="text-red-400 mt-1 shrink-0"/>
+                                                <p className="text-slate-600">Harga seringkali terlalu mahal (overpriced) namun dengan <strong className="text-slate-900">value paket yang sangat dibatasi</strong>.</p>
+                                            </div>
+                                            <div className="flex items-start gap-4">
+                                                <XCircle className="text-red-400 mt-1 shrink-0"/>
+                                                <p className="text-slate-600">Pada praktiknya, pekerjaan sering dilempar ke tim atau junior di balik layar.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Premium Center Divider */}
+                                <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-gray-300/40 -translate-x-1/2">
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] py-2 px-1 text-[10px] font-black text-slate-400 tracking-widest uppercase">VS</div>
+                                </div>
+                                <div className="block md:hidden my-4 border-t border-gray-300/40 relative">
+                                    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] px-4 text-[10px] font-black text-slate-400 tracking-widest uppercase">VS</span>
+                                </div>
+
+                                {/* Right Side: Fajar Jayadi */}
+                                <div className="flex flex-col justify-between md:pl-8">
+                                    <div>
+                                        <h3 className="text-2xl font-bold mb-6 flex items-center gap-3 text-black"><CheckCircle2 className="text-green-500"/> Fajar Jayadi</h3>
+                                        <div className="space-y-6">
+                                            <div className="flex items-start gap-4">
+                                                <CheckCircle2 className="text-green-500 mt-1 shrink-0"/>
+                                                <p className="text-slate-800">Menawarkan <strong className="text-black">harga menengah (mid-price)</strong> dengan value fitur yang jauh lebih komplit, fair, dan transparan.</p>
+                                            </div>
+                                            <div className="flex items-start gap-4">
+                                                <CheckCircle2 className="text-green-500 mt-1 shrink-0"/>
+                                                <p className="text-slate-800">Dikerjakan murni 100% oleh saya sendiri (One-Man Army) demi menjaga standar presisi tingkat tinggi.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Reveal>
+                    </div>
+
+                    {/* Multi-talent Edge */}
+                    <Reveal delay={300} direction="up" className="bg-slate-900 text-white rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
+                        <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
+                        
+                        <div className="relative z-10">
+                            <h3 className="text-3xl md:text-4xl font-black mb-6">The Multi-Talent Edge <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">✨</span></h3>
+                            <p className="text-slate-300 text-lg md:text-xl max-w-3xl mb-12">Tidak sedikit freelancer di luar sana yang bahkan belum bisa mengeja kosa kata bahasa Inggris dengan benar, apalagi menerjemahkan strategi bisnis. Dengan wawasan generalis yang luas dan mendalam, karya yang saya hasilkan jauh lebih strategis, rapi, dan profesional.</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
+                                    <Brain className="w-10 h-10 text-purple-400 mb-4"/>
+                                    <h4 className="text-lg font-bold mb-2">Psikologi</h4>
+                                    <p className="text-sm text-slate-400">Memahami persepsi audiens, emosi warna, and bagaimana visual dapat mempengaruhi keputusan klien Anda.</p>
+                                </div>
+                                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
+                                    <Layout className="w-10 h-10 text-blue-400 mb-4"/>
+                                    <h4 className="text-lg font-bold mb-2">Linguistik & Bahasa</h4>
+                                    <p className="text-sm text-slate-400">Copywriting yang rapi, struktur tata bahasa (termasuk English) terukur, terhindar dari typo yang memalukan brand.</p>
+                                </div>
+                                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
+                                    <Monitor className="w-10 h-10 text-green-400 mb-4"/>
+                                    <h4 className="text-lg font-bold mb-2">Teknologi</h4>
+                                    <p className="text-sm text-slate-400">Paham arsitektur digital, optimalisasi kinerja web modern, integrasi SEO, and logika UX/UI yang berbasis sistem.</p>
+                                </div>
+                                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
+                                    <PenTool className="w-10 h-10 text-orange-400 mb-4"/>
+                                    <h4 className="text-lg font-bold mb-2">Eksekusi Desain</h4>
+                                    <p className="text-sm text-slate-400">Meleburkan seluruh knowledge lintas-disiplin di atas ke dalam satu output visual yang estetik and tajam fungsinya.</p>
+                                </div>
+                            </div>
                         </div>
                     </Reveal>
                 </div>
-
-                {/* Multi-talent Edge */}
-                <Reveal delay={300} direction="up" className="bg-slate-900 text-white rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
-                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
-                    
-                    <div className="relative z-10">
-                        <h3 className="text-3xl md:text-4xl font-black mb-6">The Multi-Talent Edge <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">✨</span></h3>
-                        <p className="text-slate-300 text-lg md:text-xl max-w-3xl mb-12">Tidak sedikit freelancer di luar sana yang bahkan belum bisa mengeja kosa kata bahasa Inggris dengan benar, apalagi menerjemahkan strategi bisnis. Dengan wawasan generalis yang luas dan mendalam, karya yang saya hasilkan jauh lebih strategis, rapi, dan profesional.</p>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
-                                <Brain className="w-10 h-10 text-purple-400 mb-4"/>
-                                <h4 className="text-lg font-bold mb-2">Psikologi</h4>
-                                <p className="text-sm text-slate-400">Memahami persepsi audiens, emosi warna, and bagaimana visual dapat mempengaruhi keputusan klien Anda.</p>
-                            </div>
-                            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
-                                <Layout className="w-10 h-10 text-blue-400 mb-4"/>
-                                <h4 className="text-lg font-bold mb-2">Linguistik & Bahasa</h4>
-                                <p className="text-sm text-slate-400">Copywriting yang rapi, struktur tata bahasa (termasuk English) terukur, terhindar dari typo yang memalukan brand.</p>
-                            </div>
-                            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
-                                <Monitor className="w-10 h-10 text-green-400 mb-4"/>
-                                <h4 className="text-lg font-bold mb-2">Teknologi</h4>
-                                <p className="text-sm text-slate-400">Paham arsitektur digital, optimalisasi kinerja web modern, integrasi SEO, and logika UX/UI yang berbasis sistem.</p>
-                            </div>
-                            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
-                                <PenTool className="w-10 h-10 text-orange-400 mb-4"/>
-                                <h4 className="text-lg font-bold mb-2">Eksekusi Desain</h4>
-                                <p className="text-sm text-slate-400">Meleburkan seluruh knowledge lintas-disiplin di atas ke dalam satu output visual yang estetik and tajam fungsinya.</p>
-                            </div>
-                        </div>
-                    </div>
-                </Reveal>
-            </div>
+            )}
 
             {/* --- ESTIMASI VIEW --- */}
-            <div className={currentPage === 'estimasi' ? 'block pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen relative z-0' : 'hidden'}>
-                <RevealGrid 
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
-                    animationClass="animate-grid-center"
-                    maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)' }}
-                />
+            {currentPage === 'estimasi' && (
+                <div className="pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen relative z-0 animate-page-mount">
+                    <RevealGrid 
+                        className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
+                        animationClass="animate-grid-center"
+                        maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)' }}
+                    />
 
-                <Reveal direction="up" className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Kalkulator Estimasi</h1>
-                    <p className="text-slate-500 font-medium max-w-2xl mx-auto">Sesuaikan kebutuhan project dan deadline yang Anda inginkan. Perhitungan ini transparan untuk membantu Anda mengambil keputusan terbaik.</p>
-                </Reveal>
+                    <Reveal direction="up" className="text-center mb-12">
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Kalkulator Estimasi</h1>
+                        <p className="text-slate-500 font-medium max-w-2xl mx-auto">Sesuaikan kebutuhan project dan deadline yang Anda inginkan. Perhitungan ini transparan untuk membantu Anda mengambil keputusan terbaik.</p>
+                    </Reveal>
 
-                <div className="flex flex-col lg:flex-row gap-8 items-start">
-                    {/* Left Column: Form / Inputs */}
-                    <div className="w-full lg:w-2/3 flex flex-col gap-6">
-                        
-                        <Reveal delay={100} direction="right" className="bg-[#F5F5F7] rounded-[2rem] p-6 md:p-8 border border-gray-200/50">
-                            <h3 className="text-xl font-bold mb-6 flex items-center gap-3"><Layout className="text-slate-400"/> Pilih Kebutuhan Layanan</h3>
+                    <div className="flex flex-col lg:flex-row gap-8 items-start">
+                        {/* Left Column: Form / Inputs */}
+                        <div className="w-full lg:w-2/3 flex flex-col gap-6">
                             
-                            <div className="flex flex-col gap-4">
-                                {pricingCategories.map((category) => (
-                                    <div key={category.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-                                        <button 
-                                            onClick={() => toggleEstimasiCategory(category.id)}
-                                            className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
-                                        >
-                                            <div className="flex items-center gap-4">
-                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${category.bg} ${category.color}`}>
-                                                    <category.icon size={18} />
+                            <Reveal delay={100} direction="right" className="bg-[#F5F5F7] rounded-[2rem] p-6 md:p-8 border border-gray-200/50">
+                                <h3 className="text-xl font-bold mb-6 flex items-center gap-3"><Layout className="text-slate-400"/> Pilih Kebutuhan Layanan</h3>
+                                
+                                <div className="flex flex-col gap-4">
+                                    {pricingCategories.map((category) => (
+                                        <div key={category.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                                            <button 
+                                                onClick={() => toggleEstimasiCategory(category.id)}
+                                                className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
+                                            >
+                                                <div className="flex items-center gap-4">
+                                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${category.bg} ${category.color}`}>
+                                                        <category.icon size={18} />
+                                                    </div>
+                                                    <span className="font-bold text-slate-800 text-lg">{category.title}</span>
                                                 </div>
-                                                <span className="font-bold text-slate-800 text-lg">{category.title}</span>
-                                            </div>
-                                            <ChevronDown size={20} className={`text-slate-400 transition-transform duration-300 ${estimasiExpandedCat === category.id ? 'rotate-180' : ''}`} />
-                                        </button>
-                                        
-                                        {/* Dropdown Content */}
-                                        <div className={`transition-all duration-500 ease-in-out bg-slate-50 border-t border-gray-100 ${estimasiExpandedCat === category.id ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-                                            <div className="p-5 flex flex-col gap-3">
-                                                {category.items.map(item => {
-                                                    const isSelected = !!estimasiSelectedItems[item.id];
-                                                    return (
-                                                        <div 
-                                                            key={item.id} 
-                                                            onClick={(e) => toggleEstimasiItem(item.id, e)}
-                                                            className={`flex items-center justify-between p-4 rounded-xl cursor-pointer border transition-all ${isSelected ? 'bg-white border-black shadow-md' : 'bg-white border-transparent shadow-sm hover:border-gray-300'}`}
-                                                        >
-                                                            <div className="flex items-center gap-3">
-                                                                <div className={`w-6 h-6 rounded-full flex items-center justify-center border transition-colors ${isSelected ? 'bg-black border-black text-white' : 'border-gray-300 text-transparent'}`}>
-                                                                    <CheckCircle2 size={16} strokeWidth={3} />
+                                                <ChevronDown size={20} className={`text-slate-400 transition-transform duration-300 ${estimasiExpandedCat === category.id ? 'rotate-180' : ''}`} />
+                                            </button>
+                                            
+                                            {/* Dropdown Content */}
+                                            <div className={`transition-all duration-500 ease-in-out bg-slate-50 border-t border-gray-100 ${estimasiExpandedCat === category.id ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                                                <div className="p-5 flex flex-col gap-3">
+                                                    {category.items.map(item => {
+                                                        const isSelected = !!estimasiSelectedItems[item.id];
+                                                        return (
+                                                            <div 
+                                                                key={item.id} 
+                                                                onClick={(e) => toggleEstimasiItem(item.id, e)}
+                                                                className={`flex items-center justify-between p-4 rounded-xl cursor-pointer border transition-all ${isSelected ? 'bg-white border-black shadow-md' : 'bg-white border-transparent shadow-sm hover:border-gray-300'}`}
+                                                            >
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className={`w-6 h-6 rounded-full flex items-center justify-center border transition-colors ${isSelected ? 'bg-black border-black text-white' : 'border-gray-300 text-transparent'}`}>
+                                                                        <CheckCircle2 size={16} strokeWidth={3} />
+                                                                    </div>
+                                                                    <span className={`font-semibold ${isSelected ? 'text-black' : 'text-slate-600'}`}>{item.name}</span>
                                                                 </div>
-                                                                <span className={`font-semibold ${isSelected ? 'text-black' : 'text-slate-600'}`}>{item.name}</span>
+                                                                <span className="text-slate-400 font-medium text-sm">{formatRupiah(item.price)}</span>
                                                             </div>
-                                                            <span className="text-slate-400 font-medium text-sm">{formatRupiah(item.price)}</span>
-                                                        </div>
-                                                    );
-                                                })}
+                                                        );
+                                                    })}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </Reveal>
-
-                        <Reveal delay={200} direction="right" className="bg-[#F5F5F7] rounded-[2rem] p-6 md:p-8 border border-gray-200/50">
-                            <div className="flex justify-between items-end mb-8">
-                                <h3 className="text-xl font-bold flex items-center gap-3"><CalendarClock className="text-slate-400"/> Tenggat Waktu (Deadline)</h3>
-                                <div className="bg-black text-white px-4 py-2 rounded-xl font-black text-lg shadow-md">{estimasiDeadline} Hari</div>
-                            </div>
-                            
-                            <div className="relative px-2">
-                                <input 
-                                    type="range" 
-                                    min="1" 
-                                    max="14" 
-                                    value={estimasiDeadline} 
-                                    onChange={(e) => setEstimasiDeadline(parseInt(e.target.value))}
-                                    className="w-full h-3 bg-gray-300 rounded-lg appearance-none cursor-pointer outline-none mb-6"
-                                />
-                                <div className="flex justify-between text-xs font-bold text-slate-400 px-1">
-                                    <span className="flex flex-col items-center gap-1"><span>1 Hari</span><span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded">Urgent (2x)</span></span>
-                                    <span className="flex flex-col items-center gap-1 mt-4">7 Hari</span>
-                                    <span className="flex flex-col items-center gap-1 mt-4">14 Hari</span>
+                                    ))}
                                 </div>
-                            </div>
-                        </Reveal>
+                            </Reveal>
 
-                    </div>
-
-                    {/* Right Column: Sticky Summary */}
-                    <Reveal delay={300} direction="left" className="w-full lg:w-1/3 sticky top-32">
-                        <div className="bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
-                            <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-500 rounded-full mix-blend-screen filter blur-[40px] opacity-20 pointer-events-none"></div>
-                            
-                            <h3 className="text-xl font-black mb-6 flex items-center gap-2"><Calculator className="text-green-400"/> Summary Estimasi</h3>
-                            
-                            <div className="space-y-4 mb-8 min-h-[100px]">
-                                {Object.keys(estimasiSelectedItems).filter(id => estimasiSelectedItems[id]).length === 0 ? (
-                                    <p className="text-slate-500 text-sm italic">Belum ada layanan yang dipilih.</p>
-                                ) : (
-                                    pricingCategories.flatMap(c => c.items).filter(item => estimasiSelectedItems[item.id]).map(item => (
-                                        <div key={item.id} className="flex justify-between items-start text-sm">
-                                            <span className="text-slate-300 pr-4">{item.name}</span>
-                                            <span className="font-semibold">{formatRupiah(item.price)}</span>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-
-                            <div className="border-t border-slate-700 pt-6 mb-8">
-                                <div className="flex justify-between items-center mb-2 text-slate-400 text-sm">
-                                    <span>Subtotal</span>
-                                    <span>{formatRupiah(calculateEstimasiTotal / (estimasiDeadline <= 1 ? 2.0 : estimasiDeadline === 2 ? 1.8 : estimasiDeadline === 3 ? 1.5 : estimasiDeadline === 4 ? 1.3 : estimasiDeadline <= 6 ? 1.1 : 1.0))}</span>
-                                </div>
-                                <div className="flex justify-between items-center mb-6 text-slate-400 text-sm">
-                                    <span>Multiplier Waktu ({estimasiDeadline} hr)</span>
-                                    <span className={estimasiDeadline < 7 ? "text-orange-400" : ""}>x {estimasiDeadline <= 1 ? "2.0" : estimasiDeadline === 2 ? "1.8" : estimasiDeadline === 3 ? "1.5" : estimasiDeadline === 4 ? "1.3" : estimasiDeadline <= 6 ? "1.1" : "1.0"}</span>
+                            <Reveal delay={200} direction="right" className="bg-[#F5F5F7] rounded-[2rem] p-6 md:p-8 border border-gray-200/50">
+                                <div className="flex justify-between items-end mb-8">
+                                    <h3 className="text-xl font-bold flex items-center gap-3"><CalendarClock className="text-slate-400"/> Tenggat Waktu (Deadline)</h3>
+                                    <div className="bg-black text-white px-4 py-2 rounded-xl font-black text-lg shadow-md">{estimasiDeadline} Hari</div>
                                 </div>
                                 
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-xs text-slate-500 uppercase tracking-widest font-bold">Total Estimasi Biaya</span>
-                                    <span className="text-3xl md:text-4xl font-black text-green-400 break-all">{formatRupiah(calculateEstimasiTotal)}</span>
+                                <div className="relative px-2">
+                                    <input 
+                                        type="range" 
+                                        min="1" 
+                                        max="14" 
+                                        value={estimasiDeadline} 
+                                        onChange={(e) => setEstimasiDeadline(parseInt(e.target.value))}
+                                        className="w-full h-3 bg-gray-300 rounded-lg appearance-none cursor-pointer outline-none mb-6"
+                                    />
+                                    <div className="flex justify-between text-xs font-bold text-slate-400 px-1">
+                                        <span className="flex flex-col items-center gap-1"><span>1 Hari</span><span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded">Urgent (2x)</span></span>
+                                        <span className="flex flex-col items-center gap-1 mt-4">7 Hari</span>
+                                        <span className="flex flex-col items-center gap-1 mt-4">14 Hari</span>
+                                    </div>
+                                </div>
+                            </Reveal>
+
+                        </div>
+
+                        {/* Right Column: Sticky Summary */}
+                        <Reveal delay={300} direction="left" className="w-full lg:w-1/3 sticky top-32">
+                            <div className="bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
+                                <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-500 rounded-full mix-blend-screen filter blur-[40px] opacity-20 pointer-events-none"></div>
+                                
+                                <h3 className="text-xl font-black mb-6 flex items-center gap-2"><Calculator className="text-green-400"/> Summary Estimasi</h3>
+                                
+                                <div className="space-y-4 mb-8 min-h-[100px]">
+                                    {Object.keys(estimasiSelectedItems).filter(id => estimasiSelectedItems[id]).length === 0 ? (
+                                        <p className="text-slate-500 text-sm italic">Belum ada layanan yang dipilih.</p>
+                                    ) : (
+                                        pricingCategories.flatMap(c => c.items).filter(item => estimasiSelectedItems[item.id]).map(item => (
+                                            <div key={item.id} className="flex justify-between items-start text-sm">
+                                                <span className="text-slate-300 pr-4">{item.name}</span>
+                                                <span className="font-semibold">{formatRupiah(item.price)}</span>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+
+                                <div className="border-t border-slate-700 pt-6 mb-8">
+                                    <div className="flex justify-between items-center mb-2 text-slate-400 text-sm">
+                                        <span>Subtotal</span>
+                                        <span>{formatRupiah(calculateEstimasiTotal / (estimasiDeadline <= 1 ? 2.0 : estimasiDeadline === 2 ? 1.8 : estimasiDeadline === 3 ? 1.5 : estimasiDeadline === 4 ? 1.3 : estimasiDeadline <= 6 ? 1.1 : 1.0))}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center mb-6 text-slate-400 text-sm">
+                                        <span>Multiplier Waktu ({estimasiDeadline} hr)</span>
+                                        <span className={estimasiDeadline < 7 ? "text-orange-400" : ""}>x {estimasiDeadline <= 1 ? "2.0" : estimasiDeadline === 2 ? "1.8" : estimasiDeadline === 3 ? "1.5" : estimasiDeadline === 4 ? "1.3" : estimasiDeadline <= 6 ? "1.1" : "1.0"}</span>
+                                    </div>
+                                    
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-xs text-slate-500 uppercase tracking-widest font-bold">Total Estimasi Biaya</span>
+                                        <span className="text-3xl md:text-4xl font-black text-green-400 break-all">{formatRupiah(calculateEstimasiTotal)}</span>
+                                    </div>
+                                </div>
+
+                                <div className="bg-slate-800/50 rounded-xl p-4 text-xs text-slate-400 leading-relaxed border border-slate-700/50">
+                                    <strong className="text-slate-300 block mb-1">Catatan Penting:</strong>
+                                    Angka ini hanya <em>estimasi</em> untuk memberikan gambaran budget. Angka aktual tergantung nanti seberapa rumit dan spesifik pekerjaannya setelah kita berdiskusi lebih lanjut.
                                 </div>
                             </div>
-
-                            <div className="bg-slate-800/50 rounded-xl p-4 text-xs text-slate-400 leading-relaxed border border-slate-700/50">
-                                <strong className="text-slate-300 block mb-1">Catatan Penting:</strong>
-                                Angka ini hanya <em>estimasi</em> untuk memberikan gambaran budget. Angka aktual tergantung nanti seberapa rumit dan spesifik pekerjaannya setelah kita berdiskusi lebih lanjut.
-                            </div>
-                        </div>
-                    </Reveal>
+                        </Reveal>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* --- MULAI PROYEK VIEW --- */}
-            <div className={currentPage === 'mulai-proyek' ? 'block pt-40 pb-24 px-6 max-w-4xl mx-auto min-h-screen relative z-0' : 'hidden'}>
-                <RevealGrid 
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
-                    animationClass="animate-grid-center"
-                    maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)' }}
-                />
+            {currentPage === 'mulai-proyek' && (
+                <div className="pt-40 pb-24 px-6 max-w-4xl mx-auto min-h-screen relative z-0 animate-page-mount">
+                    <RevealGrid 
+                        className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-40"
+                        animationClass="animate-grid-center"
+                        maskStyle={{ maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 0%, transparent 100%)' }}
+                    />
 
-                <Reveal direction="up" className="text-center mb-10">
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Mulai Proyek Baru</h1>
-                    <p className="text-slate-500 font-medium max-w-2xl mx-auto text-lg">Ceritakan visi Anda. Formulir progresif ini dirancang untuk menggali kebutuhan dan ekspektasi Anda agar hasil akhir bisa melampaui standar.</p>
-                </Reveal>
+                    <Reveal direction="up" className="text-center mb-10">
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Mulai Proyek Baru</h1>
+                        <p className="text-slate-500 font-medium max-w-2xl mx-auto text-lg">Ceritakan visi Anda. Formulir progresif ini dirancang untuk menggali kebutuhan dan ekspektasi Anda agar hasil akhir bisa melampaui standar.</p>
+                    </Reveal>
 
-                {/* Progress Indicator */}
-                <Reveal delay={150} direction="up" className="mb-12">
-                    <div className="flex justify-between items-center relative max-w-2xl mx-auto">
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 -z-10 rounded-full"></div>
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-black -z-10 rounded-full transition-all duration-500" style={{ width: `${((mulaiProyekStep - 1) / 4) * 100}%` }}></div>
-                        
-                        {[1, 2, 3, 4, 5].map((step) => (
-                            <div key={step} className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-sm md:text-base border-4 transition-colors duration-300 ${mulaiProyekStep >= step ? 'bg-black text-white border-black' : 'bg-white text-slate-400 border-gray-200'}`}>
-                                {step}
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex justify-between max-w-2xl mx-auto mt-4 px-1">
-                        <span className={`text-xs font-bold ${mulaiProyekStep >= 1 ? 'text-black' : 'text-slate-400'}`}>Identitas</span>
-                        <span className={`text-xs font-bold ${mulaiProyekStep >= 2 ? 'text-black' : 'text-slate-400'} -translate-x-1/2`}>Layanan</span>
-                        <span className={`text-xs font-bold ${mulaiProyekStep >= 3 ? 'text-black' : 'text-slate-400'} -translate-x-1/2`}>Brief</span>
-                        <span className={`text-xs font-bold ${mulaiProyekStep >= 4 ? 'text-black' : 'text-slate-400'} -translate-x-1/2`}>Budget</span>
-                        <span className={`text-xs font-bold ${mulaiProyekStep >= 5 ? 'text-black' : 'text-slate-400'}`}>Kirim</span>
-                    </div>
-                </Reveal>
-
-                {/* Step 1: Identitas */}
-                <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 1 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
-                    <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
-                        <h2 className="text-2xl font-bold mb-8">Informasi Dasar</h2>
-                        <div className="space-y-6">
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Nama Lengkap</label>
-                                <div className="relative">
-                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><User size={20}/></div>
-                                    <input type="text" name="nama" value={mulaiProyekForm.nama} onChange={handleMulaiProyekChange} placeholder="John Doe" className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
+                    {/* Progress Indicator */}
+                    <Reveal delay={150} direction="up" className="mb-12">
+                        <div className="flex justify-between items-center relative max-w-2xl mx-auto">
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 -z-10 rounded-full"></div>
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-black -z-10 rounded-full transition-all duration-500" style={{ width: `${((mulaiProyekStep - 1) / 4) * 100}%` }}></div>
+                            
+                            {[1, 2, 3, 4, 5].map((step) => (
+                                <div key={step} className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-sm md:text-base border-4 transition-colors duration-300 ${mulaiProyekStep >= step ? 'bg-black text-white border-black' : 'bg-white text-slate-400 border-gray-200'}`}>
+                                    {step}
                                 </div>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Nama Brand / Perusahaan</label>
-                                <div className="relative">
-                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Briefcase size={20}/></div>
-                                    <input type="text" name="brand" value={mulaiProyekForm.brand} onChange={handleMulaiProyekChange} placeholder="PT Sukses Makmur" className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
-                                </div>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Nomor WhatsApp</label>
-                                <div className="relative">
-                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Phone size={20}/></div>
-                                    <input type="tel" name="whatsapp" value={mulaiProyekForm.whatsapp} onChange={handleMulaiProyekChange} placeholder="081234567890" className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
-                                </div>
-                            </div>
+                            ))}
                         </div>
-                        <div className="flex justify-end mt-10">
-                            <button onClick={nextMulaiProyekStep} disabled={!mulaiProyekForm.nama} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">Lanjut ke Layanan <ArrowRight size={18}/></button>
+                        <div className="flex justify-between max-w-2xl mx-auto mt-4 px-1">
+                            <span className={`text-xs font-bold ${mulaiProyekStep >= 1 ? 'text-black' : 'text-slate-400'}`}>Identitas</span>
+                            <span className={`text-xs font-bold ${mulaiProyekStep >= 2 ? 'text-black' : 'text-slate-400'} -translate-x-1/2`}>Layanan</span>
+                            <span className={`text-xs font-bold ${mulaiProyekStep >= 3 ? 'text-black' : 'text-slate-400'} -translate-x-1/2`}>Brief</span>
+                            <span className={`text-xs font-bold ${mulaiProyekStep >= 4 ? 'text-black' : 'text-slate-400'} -translate-x-1/2`}>Budget</span>
+                            <span className={`text-xs font-bold ${mulaiProyekStep >= 5 ? 'text-black' : 'text-slate-400'}`}>Kirim</span>
                         </div>
-                    </div>
-                </div>
+                    </Reveal>
 
-                {/* Step 2: Layanan */}
-                <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 2 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
-                    <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
-                        <h2 className="text-2xl font-bold mb-2">Kebutuhan Proyek</h2>
-                        <p className="text-slate-500 mb-8">Pilih satu atau beberapa layanan yang Anda butuhkan.</p>
-                        
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {[
-                                { id: 'Desain Branding', icon: PenTool, color: 'text-blue-500', bg: 'bg-blue-100' },
-                                { id: 'Website / Landing Page', icon: Monitor, color: 'text-purple-500', bg: 'bg-purple-100' },
-                                { id: 'Gambar 3D / Konstruksi', icon: HardHat, color: 'text-orange-500', bg: 'bg-orange-100' },
-                                { id: 'Social Media Management', icon: Smartphone, color: 'text-pink-500', bg: 'bg-pink-100' },
-                                { id: 'Company Profile / Buku', icon: Layout, color: 'text-green-500', bg: 'bg-green-100' },
-                                { id: 'Lainnya', icon: Box, color: 'text-slate-500', bg: 'bg-slate-200' }
-                            ].map((layanan) => {
-                                const isSelected = mulaiProyekForm.layanan.includes(layanan.id);
-                                return (
-                                    <div 
-                                        key={layanan.id} 
-                                        onClick={() => toggleLayananProyek(layanan.id)}
-                                        className={`cursor-pointer border-2 rounded-2xl p-6 flex items-center gap-4 transition-all duration-300 ${isSelected ? 'border-black bg-white shadow-lg' : 'border-transparent bg-white hover:border-gray-300 shadow-sm'}`}
-                                    >
-                                        <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${layanan.bg} ${layanan.color}`}>
-                                            <layanan.icon size={20} />
-                                        </div>
-                                        <span className={`font-bold ${isSelected ? 'text-black' : 'text-slate-700'}`}>{layanan.id}</span>
-                                        {isSelected && <CheckCircle2 className="ml-auto text-black" size={20}/>}
+                    {/* Step 1: Identitas */}
+                    <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 1 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
+                        <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
+                            <h2 className="text-2xl font-bold mb-8">Informasi Dasar</h2>
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-2">Nama Lengkap</label>
+                                    <div className="relative">
+                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><User size={20}/></div>
+                                        <input type="text" name="nama" value={mulaiProyekForm.nama} onChange={handleMulaiProyekChange} placeholder="John Doe" className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
                                     </div>
-                                )
-                            })}
-                        </div>
-
-                        <div className="flex justify-between mt-10">
-                            <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-white text-black border border-gray-200 font-bold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2"><ChevronLeft size={18}/> Kembali</button>
-                            <button onClick={nextMulaiProyekStep} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors flex items-center gap-2">Lanjut Briefing <ArrowRight size={18}/></button>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-2">Nama Brand / Perusahaan</label>
+                                    <div className="relative">
+                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Briefcase size={20}/></div>
+                                        <input type="text" name="brand" value={mulaiProyekForm.brand} onChange={handleMulaiProyekChange} placeholder="PT Sukses Makmur" className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-2">Nomor WhatsApp</label>
+                                    <div className="relative">
+                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Phone size={20}/></div>
+                                        <input type="tel" name="whatsapp" value={mulaiProyekForm.whatsapp} onChange={handleMulaiProyekChange} placeholder="081234567890" className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex justify-end mt-10">
+                                <button onClick={nextMulaiProyekStep} disabled={!mulaiProyekForm.nama} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">Lanjut ke Layanan <ArrowRight size={18}/></button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Step 3: Brief */}
-                <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 3 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
-                    <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
-                        <h2 className="text-2xl font-bold mb-2">Brief Singkat</h2>
-                        <p className="text-slate-500 mb-8">Bantu saya memahami bisnis Anda agar hasil visual selaras dengan visi Anda.</p>
-                        
-                        <div className="space-y-6">
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Ceritakan tentang bisnis/produk Anda</label>
-                                <textarea name="deskripsi" value={mulaiProyekForm.deskripsi} onChange={handleMulaiProyekChange} placeholder="Bisnis ini bergerak di bidang F&B dengan fokus ke makanan sehat..." rows="4" className="w-full px-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white resize-none"></textarea>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Siapa target pasar utama Anda?</label>
-                                <textarea name="targetPasar" value={mulaiProyekForm.targetPasar} onChange={handleMulaiProyekChange} placeholder="Gen Z, usia 18-25 tahun, menyukai gaya hidup modern..." rows="2" className="w-full px-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white resize-none"></textarea>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Referensi Gaya Visual (Link URL atau deskripsi)</label>
-                                <input type="text" name="referensi" value={mulaiProyekForm.referensi} onChange={handleMulaiProyekChange} placeholder="Suka gaya minimalis elegan seperti brand Apple atau link Pinterest..." className="w-full px-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
-                            </div>
-                        </div>
-
-                        <div className="flex justify-between mt-10">
-                            <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-white text-black border border-gray-200 font-bold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2"><ChevronLeft size={18}/> Kembali</button>
-                            <button onClick={nextMulaiProyekStep} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors flex items-center gap-2">Lanjut Budget <ArrowRight size={18}/></button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Step 4: Budget & Timeline */}
-                <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 4 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
-                    <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
-                        <h2 className="text-2xl font-bold mb-2">Timeline & Budget</h2>
-                        <p className="text-slate-500 mb-8">Mari selaraskan ekspektasi waktu dan investasi proyek.</p>
-                        
-                        <div className="space-y-10">
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-4">Estimasi Budget Tersedia</label>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                                    {['< Rp 2 Juta', 'Rp 2 - 5 Juta', 'Rp 5 - 10 Juta', '> Rp 10 Juta'].map(bud => (
+                    {/* Step 2: Layanan */}
+                    <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 2 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
+                        <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
+                            <h2 className="text-2xl font-bold mb-2">Kebutuhan Proyek</h2>
+                            <p className="text-slate-500 mb-8">Pilih satu atau beberapa layanan yang Anda butuhkan.</p>
+                            
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {[
+                                    { id: 'Desain Branding', icon: PenTool, color: 'text-blue-500', bg: 'bg-blue-100' },
+                                    { id: 'Website / Landing Page', icon: Monitor, color: 'text-purple-500', bg: 'bg-purple-100' },
+                                    { id: 'Gambar 3D / Konstruksi', icon: HardHat, color: 'text-orange-500', bg: 'bg-orange-100' },
+                                    { id: 'Social Media Management', icon: Smartphone, color: 'text-pink-500', bg: 'bg-pink-100' },
+                                    { id: 'Company Profile / Buku', icon: Layout, color: 'text-green-500', bg: 'bg-green-100' },
+                                    { id: 'Lainnya', icon: Box, color: 'text-slate-500', bg: 'bg-slate-200' }
+                                ].map((layanan) => {
+                                    const isSelected = mulaiProyekForm.layanan.includes(layanan.id);
+                                    return (
                                         <div 
-                                            key={bud} 
-                                            onClick={() => setMulaiProyekForm(prev => ({ ...prev, budget: bud }))}
-                                            className={`cursor-pointer border-2 rounded-xl p-4 text-center transition-all ${mulaiProyekForm.budget === bud ? 'border-black bg-black text-white font-bold shadow-md' : 'border-gray-200 bg-white text-slate-600 font-medium hover:border-gray-300'}`}
+                                            key={layanan.id} 
+                                            onClick={() => toggleLayananProyek(layanan.id)}
+                                            className={`cursor-pointer border-2 rounded-2xl p-6 flex items-center gap-4 transition-all duration-300 ${isSelected ? 'border-black bg-white shadow-lg' : 'border-transparent bg-white hover:border-gray-300 shadow-sm'}`}
                                         >
-                                            {bud}
+                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${layanan.bg} ${layanan.color}`}>
+                                                <layanan.icon size={20} />
+                                            </div>
+                                            <span className={`font-bold ${isSelected ? 'text-black' : 'text-slate-700'}`}>{layanan.id}</span>
+                                            {isSelected && <CheckCircle2 className="ml-auto text-black" size={20}/>}
                                         </div>
-                                    ))}
+                                    )
+                                })}
+                            </div>
+
+                            <div className="flex justify-between mt-10">
+                                <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-white text-black border border-gray-200 font-bold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2"><ChevronLeft size={18}/> Kembali</button>
+                                <button onClick={nextMulaiProyekStep} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors flex items-center gap-2">Lanjut Briefing <ArrowRight size={18}/></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Step 3: Brief */}
+                    <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 3 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
+                        <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
+                            <h2 className="text-2xl font-bold mb-2">Brief Singkat</h2>
+                            <p className="text-slate-500 mb-8">Bantu saya memahami bisnis Anda agar hasil visual selaras dengan visi Anda.</p>
+                            
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-2">Ceritakan tentang bisnis/produk Anda</label>
+                                    <textarea name="deskripsi" value={mulaiProyekForm.deskripsi} onChange={handleMulaiProyekChange} placeholder="Bisnis ini bergerak di bidang F&B dengan fokus ke makanan sehat..." rows="4" className="w-full px-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-2">Siapa target pasar utama Anda?</label>
+                                    <textarea name="targetPasar" value={mulaiProyekForm.targetPasar} onChange={handleMulaiProyekChange} placeholder="Gen Z, usia 18-25 tahun, menyukai gaya hidup modern..." rows="2" className="w-full px-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-2">Referensi Gaya Visual (Link URL atau deskripsi)</label>
+                                    <input type="text" name="referensi" value={mulaiProyekForm.referensi} onChange={handleMulaiProyekChange} placeholder="Suka gaya minimalis elegan seperti brand Apple atau link Pinterest..." className="w-full px-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm bg-white" />
                                 </div>
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-4">Target Timeline</label>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                    {['Santai (> 14 Hari)', 'Normal (7 - 14 Hari)', 'Urgent (< 7 Hari)'].map(time => (
-                                        <div 
-                                            key={time} 
-                                            onClick={() => setMulaiProyekForm(prev => ({ ...prev, timeline: time }))}
-                                            className={`cursor-pointer border-2 rounded-xl p-4 text-center transition-all ${mulaiProyekForm.timeline === time ? 'border-black bg-black text-white font-bold shadow-md' : 'border-gray-200 bg-white text-slate-600 font-medium hover:border-gray-300'}`}
-                                        >
-                                            {time}
-                                        </div>
-                                    ))}
+                            <div className="flex justify-between mt-10">
+                                <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-white text-black border border-gray-200 font-bold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2"><ChevronLeft size={18}/> Kembali</button>
+                                <button onClick={nextMulaiProyekStep} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors flex items-center gap-2">Lanjut Budget <ArrowRight size={18}/></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Step 4: Budget & Timeline */}
+                    <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 4 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
+                        <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
+                            <h2 className="text-2xl font-bold mb-2">Timeline & Budget</h2>
+                            <p className="text-slate-500 mb-8">Mari selaraskan ekspektasi waktu dan investasi proyek.</p>
+                            
+                            <div className="space-y-10">
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-4">Estimasi Budget Tersedia</label>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                                        {['< Rp 2 Juta', 'Rp 2 - 5 Juta', 'Rp 5 - 10 Juta', '> Rp 10 Juta'].map(bud => (
+                                            <div 
+                                                key={bud} 
+                                                onClick={() => setMulaiProyekForm(prev => ({ ...prev, budget: bud }))}
+                                                className={`cursor-pointer border-2 rounded-xl p-4 text-center transition-all ${mulaiProyekForm.budget === bud ? 'border-black bg-black text-white font-bold shadow-md' : 'border-gray-200 bg-white text-slate-600 font-medium hover:border-gray-300'}`}
+                                            >
+                                                {bud}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-4">Target Timeline</label>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                        {['Santai (> 14 Hari)', 'Normal (7 - 14 Hari)', 'Urgent (< 7 Hari)'].map(time => (
+                                            <div 
+                                                key={time} 
+                                                onClick={() => setMulaiProyekForm(prev => ({ ...prev, timeline: time }))}
+                                                className={`cursor-pointer border-2 rounded-xl p-4 text-center transition-all ${mulaiProyekForm.timeline === time ? 'border-black bg-black text-white font-bold shadow-md' : 'border-gray-200 bg-white text-slate-600 font-medium hover:border-gray-300'}`}
+                                            >
+                                                {time}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="flex justify-between mt-12">
-                            <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-white text-black border border-gray-200 font-bold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2"><ChevronLeft size={18}/> Kembali</button>
-                            <button onClick={nextMulaiProyekStep} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors flex items-center gap-2">Review Form <ArrowRight size={18}/></button>
+                            <div className="flex justify-between mt-12">
+                                <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-white text-black border border-gray-200 font-bold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2"><ChevronLeft size={18}/> Kembali</button>
+                                <button onClick={nextMulaiProyekStep} className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors flex items-center gap-2">Review Form <ArrowRight size={18}/></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Step 5: Review & Submit */}
+                    <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 5 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
+                        <div className="bg-slate-900 text-white rounded-[2rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                            <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-500 rounded-full mix-blend-screen filter blur-[80px] opacity-20 pointer-events-none"></div>
+                            
+                            <div className="flex flex-col items-center text-center mb-10 relative z-10">
+                                <div className="w-20 h-20 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mb-6">
+                                    <Send size={32} />
+                                </div>
+                                <h2 className="text-3xl font-black mb-4">Siap Mengirim Brief?</h2>
+                                <p className="text-slate-400 max-w-lg">Semua informasi Anda telah direkap. Klik tombol di bawah untuk mengirim form ini langsung to WhatsApp saya agar kita bisa segera berdiskusi.</p>
+                            </div>
+
+                            <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 mb-10 relative z-10">
+                                <h4 className="text-lg font-bold mb-4 text-white border-b border-slate-700 pb-2">Summary</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                    <div><span className="text-slate-500 block">Nama / Brand</span><strong className="text-slate-200">{mulaiProyekForm.nama || '-'} / {mulaiProyekForm.brand || '-'}</strong></div>
+                                    <div><span className="text-slate-500 block">Layanan</span><strong className="text-slate-200">{mulaiProyekForm.layanan.length > 0 ? mulaiProyekForm.layanan.join(', ') : '-'}</strong></div>
+                                    <div><span className="text-slate-500 block">Budget</span><strong className="text-slate-200">{mulaiProyekForm.budget || '-'}</strong></div>
+                                    <div><span className="text-slate-500 block">Timeline</span><strong className="text-slate-200">{mulaiProyekForm.timeline || '-'}</strong></div>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
+                                <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-transparent border border-slate-600 text-slate-300 font-bold rounded-full hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"><ChevronLeft size={18}/> Edit Kembali</button>
+                                <button onClick={sendMulaiProyekWa} className="px-8 py-4 bg-green-500 text-white font-black rounded-full hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(34,197,94,0.4)] flex items-center justify-center gap-2">Kirim via WhatsApp <Send size={18}/></button>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                {/* Step 5: Review & Submit */}
-                <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 5 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
-                    <div className="bg-slate-900 text-white rounded-[2rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
-                        <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-500 rounded-full mix-blend-screen filter blur-[80px] opacity-20 pointer-events-none"></div>
-                        
-                        <div className="flex flex-col items-center text-center mb-10 relative z-10">
-                            <div className="w-20 h-20 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mb-6">
-                                <Send size={32} />
-                            </div>
-                            <h2 className="text-3xl font-black mb-4">Siap Mengirim Brief?</h2>
-                            <p className="text-slate-400 max-w-lg">Semua informasi Anda telah direkap. Klik tombol di bawah untuk mengirim form ini langsung to WhatsApp saya agar kita bisa segera berdiskusi.</p>
-                        </div>
-
-                        <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 mb-10 relative z-10">
-                            <h4 className="text-lg font-bold mb-4 text-white border-b border-slate-700 pb-2">Summary</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                <div><span className="text-slate-500 block">Nama / Brand</span><strong className="text-slate-200">{mulaiProyekForm.nama || '-'} / {mulaiProyekForm.brand || '-'}</strong></div>
-                                <div><span className="text-slate-500 block">Layanan</span><strong className="text-slate-200">{mulaiProyekForm.layanan.length > 0 ? mulaiProyekForm.layanan.join(', ') : '-'}</strong></div>
-                                <div><span className="text-slate-500 block">Budget</span><strong className="text-slate-200">{mulaiProyekForm.budget || '-'}</strong></div>
-                                <div><span className="text-slate-500 block">Timeline</span><strong className="text-slate-200">{mulaiProyekForm.timeline || '-'}</strong></div>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
-                            <button onClick={prevMulaiProyekStep} className="px-8 py-4 bg-transparent border border-slate-600 text-slate-300 font-bold rounded-full hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"><ChevronLeft size={18}/> Edit Kembali</button>
-                            <button onClick={sendMulaiProyekWa} className="px-8 py-4 bg-green-500 text-white font-black rounded-full hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(34,197,94,0.4)] flex items-center justify-center gap-2">Kirim via WhatsApp <Send size={18}/></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            )}
 
             {/* --- SHARED FOOTER --- */}
             <footer className="bg-slate-900 text-white pt-20 pb-10 px-6">
