@@ -6,7 +6,7 @@
     
     <!-- SEO Meta Tags -->
     <title>Fajar Jayadi | Solusi Desain Branding, Website & Gambar 3D</title>
-    <meta name="description" content="Solusi profesional untuk desain branding, identitas visual, pembuatan website modern, sistem aplikasi, hingga gambar 3D SketchUp dan perencanaan teknik yang presisi.">
+    <meta name="description" content="Solusi profesional untuk desain branding, identitas visual, pembuatan website modern, sistem digital, hingga gambar 3D SketchUp dan perencanaan teknik yang presisi.">
     <meta name="keywords" content="desain branding, logo brand, website professional, aplikasi web, company profile, branding UMKM, gambar 3d, desain bangunan, desain sketchup, gambar teknik, desain layout, perencanaan konstruksi, fajar jayadi">
     <meta name="author" content="Fajar Jayadi">
     <meta name="robots" content="index, follow">
@@ -335,7 +335,8 @@
           '/assets/img/portfolio/Flyer/flyer-ras.png',
           '/assets/img/portfolio/Flyer/flyer-smb.png',
           '/assets/img/portfolio/Flyer/flyer-soto.png',
-          '/assets/img/portfolio/Flyer/fwm-adh.png'
+          '/assets/img/portfolio/Flyer/fwm-adh.png',
+          '/assets/img/portfolio/Feed/feed-theta.png'
         ],
         website: [
           '/assets/img/portfolio/Book/book-tja.png'
@@ -367,12 +368,11 @@
           '/assets/img/portfolio/Banner/miecoet89.png',
           '/assets/img/portfolio/Banner/ppb-scs.png'
         ],
-        aplikasi: [
+        digital: [
           '/assets/img/portfolio/Feed/MP1.png',
           '/assets/img/portfolio/Feed/feed-buahhati.png',
           '/assets/img/portfolio/Feed/feed-hipno.png',
-          '/assets/img/portfolio/Feed/feed-madina.png',
-          '/assets/img/portfolio/Feed/feed-theta.png'
+          '/assets/img/portfolio/Feed/feed-madina.png'
         ],
         media_cetak: [
           '/assets/img/portfolio/Book/book-aw.png',
@@ -735,13 +735,13 @@
 
         const [portfolioFilter, setPortfolioFilter] = useState('all');
         const filterOptions = [
-            { id: 'all', label: 'Semua Karya' },
+            { id: 'all', label: 'all' },
             { id: 'logo', label: 'Logo' },
             { id: 'flyer', label: 'Flyer' },
             { id: 'website', label: 'Website' },
             { id: 'konstruksi', label: 'Gambar 3D' },
             { id: 'media_cetak', label: 'Media Cetak' },
-            { id: 'aplikasi', label: 'Digital' },
+            { id: 'digital', label: 'Digital' },
             { id: 'banner', label: 'Banner' }
         ];
         
@@ -1195,7 +1195,7 @@
                             <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer"><div className={getTileContentClass('website')}><h3 className="text-xl font-bold mb-1 text-white">Website Professional</h3><p className="text-slate-400 text-sm">Landing page yang dioptimalkan untuk performa, SEO, and konversi maksimal.</p><Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" /></div></div>
                             <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('konstruksi')}><h3 className="text-xl font-bold mb-1">Gambar 3D & Visualisasi</h3><p className="text-slate-500 text-sm">Desain food stall and modeling arsitektur 3D yang nyata and presisi.</p><Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" /></div></div>
                             <div onClick={(e) => openService(e, 'media_cetak')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('media_cetak')}><h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3><p className="text-slate-500 text-sm">Profil perusahaan, book design, and media cetak elegan.</p><Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" /></div></div>
-                            <div onClick={(e) => openService(e, 'aplikasi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('aplikasi')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
+                            <div onClick={(e) => openService(e, 'digital')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('digital')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
                             <div onClick={(e) => openService(e, 'banner')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('banner')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
                           </div>
                         </div>
@@ -1307,7 +1307,7 @@
                     
                     <Reveal direction="up" className="text-center mb-10">
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Eksplorasi & Karya</h1>
-                        <p className="text-slate-500 font-medium max-w-2xl mx-auto">Koleksi desain kreatif, perencanaan visual, dan pengembangan digital yang pernah Saya kerjakan.</p>
+                        <p className="text-slate-500 font-medium max-w-2xl mx-auto">Koleksi desain branding, website, dan sketch up 3D yang pernah Saya kerjakan.</p>
                     </Reveal>
 
                     <Reveal delay={150} direction="up" className="flex flex-wrap justify-center gap-2 mb-12">
@@ -1498,7 +1498,7 @@
                                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
                                     <Monitor className="w-10 h-10 text-green-400 mb-4"/>
                                     <h4 className="text-lg font-bold mb-2">Teknologi</h4>
-                                    <p className="text-sm text-slate-400">Paham arsitektur digital, optimalisasi kinerja web modern, integrasi SEO, and logika UX/UI yang berbasis sistem.</p>
+                                    <p className="text-sm text-slate-400">Paham arsitektur website, optimalisasi kinerja web modern, integrasi SEO, and logika UX/UI yang berbasis sistem.</p>
                                 </div>
                                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
                                     <PenTool className="w-10 h-10 text-orange-400 mb-4"/>
