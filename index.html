@@ -563,6 +563,7 @@
         const [animatingHearts, setAnimatingHearts] = useState({}); // { [src]: true }
         const [lightboxList, setLightboxList] = useState([]); // List of current active images for navigation slideshow
         const [lightboxIndex, setLightboxIndex] = useState(-1); // Active modal view index
+        const [lightboxTransitioning, setLightboxTransitioning] = useState(false); // Seamless switching animation trigger state
         
         const lastTapMap = useRef({});
         const tapTimeoutMap = useRef({});
@@ -585,14 +586,23 @@
 
         const closeLightbox = () => {
           setLightboxIndex(-1);
+          setLightboxTransitioning(false);
         };
 
         const navigateLightbox = (direction) => {
-          if (lightboxList.length === 0) return;
-          setLightboxIndex(prev => {
-            const nextIdx = (prev + direction + lightboxList.length) % lightboxList.length;
-            return nextIdx;
-          });
+          if (lightboxList.length === 0 || lightboxTransitioning) return;
+          
+          // Trigger the fade-out/shrink exit transition first
+          setLightboxTransitioning(true);
+          
+          setTimeout(() => {
+            setLightboxIndex(prev => {
+              const nextIdx = (prev + direction + lightboxList.length) % lightboxList.length;
+              return nextIdx;
+            });
+            // Let the new slide fade back in cleanly
+            setLightboxTransitioning(false);
+          }, 250); // Matches the switching duration perfectly
         };
 
         const toggleLike = (src) => {
@@ -1858,7 +1868,7 @@
                     {/* Step 5: Review & Submit */}
                     <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 5 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
                         <div className="bg-slate-900 text-white rounded-[2rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
-                            <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-500 rounded-full mix-blend-screen filter blur-[80px] opacity-20 pointer-events-none"></div>
+                            <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-500/20 rounded-full mix-blend-screen filter blur-[80px] opacity-20 pointer-events-none"></div>
                             
                             <div className="flex flex-col items-center text-center mb-10 relative z-10">
                                 <div className="w-20 h-20 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mb-6">
@@ -1908,89 +1918,129 @@
             {/* --- LIGHTBOX MODAL PREVIEW --- */}
             {lightboxIndex !== -1 && lightboxList[lightboxIndex] && (
               <div 
-                className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[9999] flex flex-col items-center justify-center p-4 md:p-8 select-none"
+                className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-[9999] flex flex-col items-center justify-center p-4 md:p-8 select-none"
                 onClick={closeLightbox}
               >
                 {/* Close Button */}
                 <button 
                   onClick={closeLightbox}
-                  className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-[10000]"
+                  className="absolute top-6 right-6 text-white/50 hover:text-white hover:rotate-90 transition-all duration-300 z-[10000] p-1 bg-white/5 hover:bg-white/15 rounded-full"
                 >
-                  <XCircle size={36} />
+                  <XCircle size={32} />
                 </button>
 
-                {/* Main Lightbox Frame */}
+                {/* Main Lightbox Flex Layout wrapper containing the side strip previews */}
                 <div 
-                  className="relative w-full max-w-4xl flex flex-col items-center justify-center"
+                  className="w-full max-w-6xl flex items-center justify-center gap-2 md:gap-6"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {/* Previous Button */}
-                  <button 
-                    onClick={() => navigateLightbox(-1)}
-                    className="absolute left-0 md:-left-16 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full transition-all backdrop-blur-sm z-[9999]"
-                  >
-                    <ChevronLeft size={24} />
-                  </button>
-
-                  {/* Image Screen */}
-                  <div 
-                    className="relative max-h-[70vh] md:max-h-[75vh] max-w-full overflow-hidden rounded-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.7)] border border-white/10"
-                    onClick={(e) => handleItemTap(e, lightboxList[lightboxIndex], lightboxList, lightboxIndex)}
-                  >
-                    <img 
-                      src={lightboxList[lightboxIndex].src} 
-                      alt="Lightbox Preview" 
-                      className="max-h-[70vh] md:max-h-[75vh] w-auto max-w-full object-contain pointer-events-none"
-                    />
-
-                    {/* Pop-up heart animation */}
-                    {animatingHearts[lightboxList[lightboxIndex].src] && (
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
-                        <svg className="w-28 h-28 text-red-500 fill-current animate-heart-pop drop-shadow-[0_15px_30px_rgba(239,68,68,0.5)]" viewBox="0 0 24 24">
-                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
+                  {/* --- LEFT PREVIEW STRIP (PREVIOUS IMAGE) --- */}
+                  {(() => {
+                    const prevIndex = (lightboxIndex - 1 + lightboxList.length) % lightboxList.length;
+                    const prevItem = lightboxList[prevIndex];
+                    return (
+                      <div 
+                        onClick={() => navigateLightbox(-1)}
+                        className="w-8 sm:w-16 md:w-20 aspect-[1/4] max-h-[50vh] md:max-h-[60vh] rounded-2xl overflow-hidden cursor-pointer opacity-30 hover:opacity-100 hover:scale-[1.03] active:scale-[0.98] transition-all duration-500 border border-white/10 hover:border-white/20 shrink-0 relative group select-none hidden sm:block"
+                      >
+                        <img 
+                          src={prevItem.src} 
+                          alt="Sebelumnya" 
+                          className="w-full h-full object-cover blur-[3px] opacity-70 group-hover:blur-0 group-hover:opacity-100 transition-all duration-500" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent group-hover:via-transparent transition-colors flex items-center justify-center">
+                          <svg className="w-6 h-6 text-white/50 group-hover:text-white transform group-hover:-translate-x-1 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <polyline points="15 18 9 12 15 6"/>
+                          </svg>
+                        </div>
                       </div>
-                    )}
-                  </div>
+                    );
+                  })()}
 
-                  {/* Next Button */}
-                  <button 
-                    onClick={() => navigateLightbox(1)}
-                    className="absolute right-0 md:-right-16 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full transition-all backdrop-blur-sm z-[9999]"
-                  >
-                    <ChevronRight size={24} />
-                  </button>
+                  {/* --- CENTER ACTIVE FRAME --- */}
+                  <div className="flex-1 max-w-2xl flex flex-col items-center justify-center">
+                    <div 
+                      className={`w-full aspect-[4/3] md:aspect-[16/10] bg-zinc-950/90 rounded-3xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] border border-white/15 relative transition-all duration-300 ease-out flex items-center justify-center ${lightboxTransitioning ? 'opacity-0 scale-95 blur-md translate-y-2' : 'opacity-100 scale-100 blur-0 translate-y-0'}`}
+                      onClick={(e) => handleItemTap(e, lightboxList[lightboxIndex], lightboxList, lightboxIndex)}
+                    >
+                      {/* Premium blurred projection background to perfectly uniform the size without clipping */}
+                      <img 
+                        src={lightboxList[lightboxIndex].src} 
+                        className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-30 pointer-events-none" 
+                      />
 
-                  {/* Image Metadata & Controls */}
-                  <div className="mt-6 flex flex-row items-center justify-between w-full max-w-2xl px-4 text-white">
-                    <div className="flex flex-col">
-                      <span className="text-xs uppercase font-bold tracking-widest text-slate-400">
-                        {lightboxList[lightboxIndex].category.replace('_', ' ')}
-                      </span>
-                      <span className="text-sm font-medium text-slate-300">
-                        Karya {lightboxIndex + 1} dari {lightboxList.length}
-                      </span>
+                      {/* Precise foreground high-definition rendering frame */}
+                      <img 
+                        src={lightboxList[lightboxIndex].src} 
+                        alt="Karya Detail" 
+                        className="max-w-full max-h-full object-contain relative z-10 pointer-events-none py-2 px-2"
+                      />
+
+                      {/* Pop-up heart animation */}
+                      {animatingHearts[lightboxList[lightboxIndex].src] && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
+                          <svg className="w-24 h-24 text-red-500 fill-current animate-heart-pop drop-shadow-[0_15px_30px_rgba(239,68,68,0.5)]" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                          </svg>
+                        </div>
+                      )}
                     </div>
 
-                    {/* Double-tap status indicator button */}
-                    <button 
-                      onClick={() => toggleLike(lightboxList[lightboxIndex].src)}
-                      className="flex items-center gap-2 bg-white/10 hover:bg-white/25 px-4 py-2 rounded-full border border-white/5 transition-colors"
-                    >
-                      <svg 
-                        className={`w-5 h-5 ${likedItems[lightboxList[lightboxIndex].src] ? 'text-red-500 fill-current scale-110' : 'text-white'} transition-all`} 
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
+                    {/* Metadata & Liked Control Area */}
+                    <div className="mt-5 flex flex-row items-center justify-between w-full px-4 text-white">
+                      <div className="flex flex-col">
+                        <span className="text-xs uppercase font-black tracking-widest text-slate-400 mb-0.5">
+                          {lightboxList[lightboxIndex].category.replace('_', ' ')}
+                        </span>
+                        <span className="text-sm font-semibold text-slate-300">
+                          Karya {lightboxIndex + 1} dari {lightboxList.length}
+                        </span>
+                      </div>
+
+                      {/* Double-tap status indicator button */}
+                      <button 
+                        onClick={() => toggleLike(lightboxList[lightboxIndex].src)}
+                        className="flex items-center gap-2 bg-white/5 hover:bg-white/15 px-4 py-2 rounded-full border border-white/5 transition-all text-xs font-bold"
                       >
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                      </svg>
-                      <span className="text-xs font-bold tracking-tight">
-                        {likedItems[lightboxList[lightboxIndex].src] ? 'Tersimpan' : 'Sukai (Ketuk 2x)'}
-                      </span>
-                    </button>
+                        <svg 
+                          className={`w-4 h-4 ${likedItems[lightboxList[lightboxIndex].src] ? 'text-red-500 fill-current scale-110' : 'text-white'} transition-all duration-300`} 
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                        >
+                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        <span className="tracking-tight text-slate-200">
+                          {likedItems[lightboxList[lightboxIndex].src] ? 'Tersimpan' : 'Sukai (Ketuk 2x)'}
+                        </span>
+                      </button>
+                    </div>
                   </div>
+
+                  {/* --- RIGHT PREVIEW STRIP (NEXT IMAGE) --- */}
+                  {(() => {
+                    const nextIndex = (lightboxIndex + 1) % lightboxList.length;
+                    const nextItem = lightboxList[nextIndex];
+                    return (
+                      <div 
+                        onClick={() => navigateLightbox(1)}
+                        className="w-8 sm:w-16 md:w-20 aspect-[1/4] max-h-[50vh] md:max-h-[60vh] rounded-2xl overflow-hidden cursor-pointer opacity-30 hover:opacity-100 hover:scale-[1.03] active:scale-[0.98] transition-all duration-500 border border-white/10 hover:border-white/20 shrink-0 relative group select-none hidden sm:block"
+                      >
+                        <img 
+                          src={nextItem.src} 
+                          alt="Berikutnya" 
+                          className="w-full h-full object-cover blur-[3px] opacity-70 group-hover:blur-0 group-hover:opacity-100 transition-all duration-500" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-black/40 to-transparent group-hover:via-transparent transition-colors flex items-center justify-center">
+                          <svg className="w-6 h-6 text-white/50 group-hover:text-white transform group-hover:translate-x-1 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <polyline points="9 18 15 12 9 6"/>
+                          </svg>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                 </div>
               </div>
             )}
