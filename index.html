@@ -37,6 +37,10 @@
     <!-- PDF.js Core Library for high-fidelity vector rendering of PDF portfolios -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 
+    <!-- jQuery & Turn.js for realistic HTML5 hardware-accelerated page flips -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=900&display=swap');
 
@@ -259,43 +263,17 @@
           animation: page-mount 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        /* 3D Flipbook Animations and perspective contexts */
+        /* Clean 3D turn.js layout overrides */
         .book-container {
-            perspective: 2500px;
-        }
-        .page-flip-left {
-            transform-origin: right center;
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
-        }
-        .page-flip-right {
-            transform-origin: left center;
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .shadow-book {
-            box-shadow: 0 30px 70px -10px rgba(0,0,0,0.4), 0 10px 20px -5px rgba(0,0,0,0.25);
+            box-shadow: 0 30px 75px -12px rgba(0,0,0,0.5), 0 10px 25px -8px rgba(0,0,0,0.35);
         }
 
-        /* Hardware-Accelerated mechanical 180 degree page folding animations */
-        @keyframes page-settle-left {
-          0% { transform: rotateY(180deg); z-index: 40; }
-          100% { transform: rotateY(0deg); z-index: 10; }
-        }
-        @keyframes page-settle-right {
-          0% { transform: rotateY(-180deg); z-index: 40; }
-          100% { transform: rotateY(0deg); z-index: 10; }
-        }
-        .animate-settle-left {
-          animation: page-settle-left 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-          transform-style: preserve-3d;
-        }
-        .animate-settle-right {
-          animation: page-settle-right 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-          transform-style: preserve-3d;
-        }
-
-        /* Premium sliding and pulsing guiding arrow keyframes on hover */
+        /* Sliding and pulsing guiding arrow keyframes on hover */
         @keyframes slide-left-pulse {
           0% { transform: translateX(12px); opacity: 0.3; }
           50% { transform: translateX(-4px); opacity: 1; }
@@ -701,25 +679,108 @@
         const [currentPage, setCurrentPage] = useState(1);
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState(null);
-        const [scale] = useState(1.0); // Strict clean 1.0 minimal design
+        const [dimensions, setDimensions] = useState({ width: 0, height: 0, singleWidth: 0, singleHeight: 0 });
         const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
         
-        const [flipClassLeft, setFlipClassLeft] = useState("");
-        const [flipClassRight, setFlipClassRight] = useState("");
-
-        const canvasLeftRef = useRef(null);
-        const canvasRightRef = useRef(null);
+        const flipbookRef = useRef(null);
         const containerRef = useRef(null);
-        const [touchStart, setTouchStart] = useState(null);
+        const canvasesRef = useRef({});
 
-        useEffect(() => {
-            const handleResize = () => {
-                setIsDesktop(window.innerWidth >= 1024);
-            };
-            window.addEventListener('resize', handleResize);
-            return () => window.removeEventListener('resize', handleResize);
-        }, []);
+        // Master function to initialize or recalculate Turn.js layout alongside crisp PDF rendering
+        const buildFlipbookLayout = async (pdf, isResize = false) => {
+            if (!pdf || !containerRef.current) return;
 
+            try {
+                const firstPage = await pdf.getPage(1);
+                const viewport = firstPage.getViewport({ scale: 1.0 });
+                const ratio = viewport.width / viewport.height;
+
+                const parentWidth = containerRef.current.clientWidth;
+                const containerMaxHeight = window.innerHeight * 0.70;
+                const isDesktopView = window.innerWidth >= 1024;
+
+                setIsDesktop(isDesktopView);
+
+                let singleWidth = parentWidth * (isDesktopView ? 0.46 : 0.82);
+                let singleHeight = singleWidth / ratio;
+
+                if (singleHeight > containerMaxHeight) {
+                    singleHeight = containerMaxHeight;
+                    singleWidth = singleHeight * ratio;
+                }
+
+                const bookWidth = isDesktopView ? singleWidth * 2 : singleWidth;
+                const bookHeight = singleHeight;
+
+                setDimensions({ width: bookWidth, height: bookHeight, singleWidth, singleHeight });
+
+                // Render each page with offscreen high-fidelity double buffering
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const canvas = canvasesRef.current[i];
+                    if (!canvas) continue;
+
+                    const page = await pdf.getPage(i);
+                    const pixelRatio = window.devicePixelRatio || 1;
+                    const pageViewport = page.getViewport({ scale: singleWidth / page.getViewport({ scale: 1.0 }).width });
+
+                    // offscreen buffer rendering to eradicate any physical flicker or black voids during flips
+                    const offscreenCanvas = document.createElement('canvas');
+                    offscreenCanvas.width = pageViewport.width * pixelRatio;
+                    offscreenCanvas.height = pageViewport.height * pixelRatio;
+                    
+                    const offCtx = offscreenCanvas.getContext('2d');
+                    offCtx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+                    await page.render({ canvasContext: offCtx, viewport: pageViewport }).promise;
+
+                    // swap buffer content
+                    canvas.width = offscreenCanvas.width;
+                    canvas.height = offscreenCanvas.height;
+                    canvas.style.width = `${pageViewport.width}px`;
+                    canvas.style.height = `${pageViewport.height}px`;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(offscreenCanvas, 0, 0);
+                }
+
+                if (flipbookRef.current) {
+                    const $el = $(flipbookRef.current);
+                    if (isResize) {
+                        // Dynamically update existing Turn.js instance dimensions instantly
+                        $el.turn('size', bookWidth, bookHeight);
+                        $el.turn('display', isDesktopView ? 'double' : 'single');
+                    } else {
+                        // Destroy previous Turn.js instances to avoid memory leaks
+                        try {
+                            $el.turn('destroy');
+                        } catch (e) {}
+
+                        // Initialize Turn.js 3D Engine with perfect parameters
+                        $el.turn({
+                            width: bookWidth,
+                            height: bookHeight,
+                            autoCenter: true,
+                            display: isDesktopView ? 'double' : 'single',
+                            acceleration: true,
+                            elevation: 50,
+                            gradients: true,
+                            duration: 700,
+                            when: {
+                                turning: function(event, page) {
+                                    setCurrentPage(page);
+                                }
+                            }
+                        });
+                    }
+                }
+                setLoading(false);
+            } catch (err) {
+                console.error("Flipbook initialization failure:", err);
+                setError("Gagal memuat atau memformat lembaran portofolio.");
+                setLoading(false);
+            }
+        };
+
+        // Load PDF and setup initial Flipbook trigger
         useEffect(() => {
             if (!window.pdfjsLib) {
                 setError("Mesin PDF tidak termuat.");
@@ -737,160 +798,55 @@
                 setPdfDoc(pdf);
                 setNumPages(pdf.numPages);
                 setCurrentPage(1);
-                setLoading(false);
+                
+                // Allow state DOM to mount before rendering Turn.js components
+                setTimeout(() => {
+                    buildFlipbookLayout(pdf, false);
+                }, 100);
             }).catch(err => {
                 console.error("PDF.js loading error: ", err);
                 setError("Gagal memuat dokumen PDF.");
                 setLoading(false);
             });
-        }, [src]);
-
-        useEffect(() => {
-            if (!pdfDoc) return;
-
-            let isCurrent = true;
-
-            // Cache Warming: Pre-load the adjacent pages in PDF.js memory pool to make subsequent swops instantaneous
-            const nextPageNum = isDesktop ? currentPage + 2 : currentPage + 1;
-            if (nextPageNum <= numPages) {
-                pdfDoc.getPage(nextPageNum).catch(() => {});
-            }
-            const prevPageNum = isDesktop ? currentPage - 2 : currentPage - 1;
-            if (prevPageNum >= 1) {
-                pdfDoc.getPage(prevPageNum).catch(() => {});
-            }
-
-            const renderPageToCanvas = (pageNum, canvasEl) => {
-                if (!canvasEl) return Promise.resolve();
-                return pdfDoc.getPage(pageNum).then(page => {
-                    if (!isCurrent) return;
-
-                    const parentWidth = containerRef.current ? containerRef.current.clientWidth : 800;
-                    const containerMaxHeight = window.innerHeight * 0.70;
-                    
-                    const targetWidthFactor = isDesktop && pageNum > 1 ? 0.46 : 0.82;
-                    let calculatedScale = (parentWidth * targetWidthFactor) / page.getViewport({ scale: 1.0 }).width;
-                    calculatedScale *= scale; 
-
-                    const tempViewport = page.getViewport({ scale: calculatedScale });
-                    if (tempViewport.height > containerMaxHeight) {
-                        calculatedScale *= (containerMaxHeight / tempViewport.height);
-                    }
-
-                    const viewport = page.getViewport({ scale: calculatedScale });
-                    const pixelRatio = window.devicePixelRatio || 1;
-
-                    // DOUBLE BUFFERING: Create an offscreen memory canvas first to render the page quietly
-                    const offscreenCanvas = document.createElement('canvas');
-                    offscreenCanvas.width = viewport.width * pixelRatio;
-                    offscreenCanvas.height = viewport.height * pixelRatio;
-                    const offscreenContext = offscreenCanvas.getContext('2d');
-                    offscreenContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-
-                    const renderContext = {
-                        canvasContext: offscreenContext,
-                        viewport: viewport
-                    };
-                    return page.render(renderContext).promise.then(() => {
-                        if (!isCurrent) return;
-                        // Swap buffer: Paint instantaneously on the active visible viewport
-                        canvasEl.width = offscreenCanvas.width;
-                        canvasEl.height = offscreenCanvas.height;
-                        canvasEl.style.width = `${viewport.width}px`;
-                        canvasEl.style.height = `${viewport.height}px`;
-                        const ctx = canvasEl.getContext('2d');
-                        ctx.drawImage(offscreenCanvas, 0, 0);
-                    });
-                });
-            };
-
-            if (isDesktop) {
-                if (currentPage === 1) {
-                    renderPageToCanvas(1, canvasLeftRef.current);
-                } else {
-                    const leftPageNum = currentPage;
-                    const rightPageNum = currentPage + 1;
-
-                    renderPageToCanvas(leftPageNum, canvasLeftRef.current);
-                    if (rightPageNum <= numPages) {
-                        renderPageToCanvas(rightPageNum, canvasRightRef.current);
-                    }
-                }
-            } else {
-                renderPageToCanvas(currentPage, canvasLeftRef.current);
-            }
 
             return () => {
-                isCurrent = false;
+                if (flipbookRef.current) {
+                    try {
+                        $(flipbookRef.current).turn('destroy');
+                    } catch(e) {}
+                }
             };
-        }, [pdfDoc, currentPage, scale, isDesktop]);
+        }, [src]);
+
+        // Clean debounce resizing handler
+        useEffect(() => {
+            let resizeTimeout;
+            const handleResize = () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    if (pdfDoc) {
+                        buildFlipbookLayout(pdfDoc, true);
+                    }
+                }, 150);
+            };
+
+            window.addEventListener('resize', handleResize);
+            return () => {
+                clearTimeout(resizeTimeout);
+                window.removeEventListener('resize', handleResize);
+            };
+        }, [pdfDoc]);
 
         const nextPage = () => {
-            if (!pdfDoc) return;
-            if (isDesktop) {
-                if (currentPage === 1) {
-                    setFlipClassLeft("animate-settle-left");
-                    setTimeout(() => setFlipClassLeft(""), 700);
-                    setCurrentPage(2);
-                } else if (currentPage + 2 <= numPages) {
-                    setFlipClassLeft("animate-settle-left");
-                    setTimeout(() => setFlipClassLeft(""), 700);
-                    setCurrentPage(prev => prev + 2);
-                } else if (currentPage + 1 <= numPages) {
-                    setFlipClassLeft("animate-settle-left");
-                    setTimeout(() => setFlipClassLeft(""), 700);
-                    setCurrentPage(numPages); 
-                }
-            } else {
-                if (currentPage < numPages) {
-                    setFlipClassLeft("animate-settle-left");
-                    setTimeout(() => setFlipClassLeft(""), 700);
-                    setCurrentPage(prev => prev + 1);
-                }
+            if (flipbookRef.current) {
+                $(flipbookRef.current).turn('next');
             }
         };
 
         const prevPage = () => {
-            if (!pdfDoc) return;
-            if (isDesktop) {
-                if (currentPage === 2) {
-                    setFlipClassRight("animate-settle-right");
-                    setTimeout(() => setFlipClassRight(""), 700);
-                    setCurrentPage(1);
-                } else if (currentPage - 2 >= 2) {
-                    setFlipClassRight("animate-settle-right");
-                    setTimeout(() => setFlipClassRight(""), 700);
-                    setCurrentPage(prev => prev - 2);
-                }
-            } else {
-                if (currentPage > 1) {
-                    setFlipClassRight("animate-settle-right");
-                    setTimeout(() => setFlipClassRight(""), 700);
-                    setCurrentPage(prev => prev - 1);
-                }
+            if (flipbookRef.current) {
+                $(flipbookRef.current).turn('previous');
             }
-        };
-
-        const handleTouchStart = (e) => {
-            setTouchStart(e.targetTouches[0].clientX);
-        };
-
-        const handleTouchMove = (e) => {
-            if (!touchStart) return;
-            const currentX = e.targetTouches[0].clientX;
-            const diff = touchStart - currentX;
-            if (Math.abs(diff) > 55) {
-                if (diff > 0) {
-                    nextPage();
-                } else {
-                    prevPage();
-                }
-                setTouchStart(null);
-            }
-        };
-
-        const handleTouchEnd = () => {
-            setTouchStart(null);
         };
 
         return (
@@ -912,90 +868,74 @@
                     </div>
                 )}
 
-                {}
-                <div 
-                    className="w-full max-w-5xl flex-grow flex items-center justify-center relative touch-none py-4 select-none min-h-[50vh]"
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={handleTouchEnd}
-                >
-                    <div className="flex items-center justify-center gap-0 book-container w-full h-full relative">
-                        {currentPage > 1 && (
-                            <div 
-                                onClick={prevPage}
-                                className="absolute left-0 top-0 bottom-0 w-1/2 z-30 cursor-pointer group flex items-center justify-start pl-6 md:pl-12"
-                            >
-                                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                                    <div className="bg-slate-950/80 backdrop-blur-md text-white p-3 md:p-4 rounded-full border border-white/10 shadow-2xl flex items-center gap-2 animate-guide-right">
-                                        <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            <polyline points="12 5 19 12 12 19"></polyline>
-                                        </svg>
-                                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider">Sebelumnya</span>
-                                    </div>
+                {/* Flipbook Container Layer */}
+                <div className="w-full max-w-5xl flex-grow flex items-center justify-center relative py-4 select-none min-h-[50vh]">
+                    
+                    {/* LEFT Hover Zone (Wipe action: pointing Right -> back inside) */}
+                    {currentPage > 1 && (
+                        <div 
+                            onClick={prevPage}
+                            className="absolute left-0 top-0 bottom-0 w-[15vw] max-w-[200px] z-30 cursor-pointer group flex items-center justify-start pl-4 md:pl-10"
+                        >
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                <div className="bg-slate-950/80 backdrop-blur-md text-white p-3 md:p-4 rounded-full border border-white/10 shadow-2xl flex items-center gap-2 animate-guide-right">
+                                    <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider">Sebelumnya</span>
                                 </div>
                             </div>
-                        )}
+                        </div>
+                    )}
 
-                        {((isDesktop && currentPage + 1 <= numPages) || (!isDesktop && currentPage < numPages) || (isDesktop && currentPage === 1)) && (
-                            <div 
-                                onClick={nextPage}
-                                className="absolute right-0 top-0 bottom-0 w-1/2 z-30 cursor-pointer group flex items-center justify-end pr-6 md:pr-12"
-                            >
-                                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                                    <div className="bg-slate-950/80 backdrop-blur-md text-white p-3 md:p-4 rounded-full border border-white/10 shadow-2xl flex items-center gap-2 animate-guide-left">
-                                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider">Berikutnya</span>
-                                        <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                                            <line x1="19" y1="12" x2="5" y2="12"></line>
-                                            <polyline points="12 19 5 12 12 5"></polyline>
-                                        </svg>
-                                    </div>
+                    {/* RIGHT Hover Zone (Wipe action: pointing Left <- turn forward) */}
+                    {currentPage < numPages && (
+                        <div 
+                            onClick={nextPage}
+                            className="absolute right-0 top-0 bottom-0 w-[15vw] max-w-[200px] z-30 cursor-pointer group flex items-center justify-end pr-4 md:pr-10"
+                        >
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                <div className="bg-slate-950/80 backdrop-blur-md text-white p-3 md:p-4 rounded-full border border-white/10 shadow-2xl flex items-center gap-2 animate-guide-left">
+                                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider">Berikutnya</span>
+                                    <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                                        <polyline points="12 19 5 12 12 5"></polyline>
+                                    </svg>
                                 </div>
                             </div>
-                        )}
+                        </div>
+                    )}
 
-                        {}
-                        <div className="relative flex gap-0 shadow-book rounded-none overflow-hidden bg-slate-950 select-none">
-                            {isDesktop && currentPage > 1 && (
-                                <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-4 bg-gradient-to-r from-black/25 via-black/10 to-black/25 z-20 pointer-events-none border-l border-r border-white/[0.03]"></div>
-                            )}
-
-                            <div className={`relative z-10 transition-transform page-flip-left ${flipClassLeft} flex justify-end`}>
-                                <canvas 
-                                    ref={canvasLeftRef} 
-                                    className="rounded-none bg-slate-900 max-w-full block"
-                                    style={{ display: pdfDoc ? 'block' : 'none' }}
-                                />
-                            </div>
-
-                            {isDesktop && currentPage > 1 && (
-                                <div className={`relative z-10 transition-transform page-flip-right ${flipClassRight} flex justify-start`}>
-                                    <canvas 
-                                        ref={canvasRightRef} 
-                                        className="rounded-none bg-slate-900 max-w-full block"
-                                        style={{ 
-                                            display: currentPage + 1 <= numPages ? 'block' : 'none',
-                                            borderLeft: '1px solid rgba(255,255,255,0.02)'
-                                        }}
-                                    />
-                                    {currentPage + 1 > numPages && (
-                                        <div 
-                                            style={{ 
-                                                width: canvasLeftRef.current ? canvasLeftRef.current.style.width : '0px',
-                                                height: canvasLeftRef.current ? canvasLeftRef.current.style.height : '0px'
-                                            }}
-                                            className="rounded-none bg-zinc-950 flex items-center justify-center text-slate-700 font-bold border-l border-white/5"
-                                        >
-                                            {/* Selesai block left clean and empty for aesthetics */}
+                    {/* Turn.js stable DOM Mount Node */}
+                    <div className="book-container w-full h-full">
+                        <div 
+                            ref={flipbookRef} 
+                            className="shadow-book bg-slate-950 rounded-none overflow-visible"
+                            style={{ 
+                                width: dimensions.width || '800px', 
+                                height: dimensions.height || '500px',
+                                display: loading ? 'none' : 'block'
+                            }}
+                        >
+                            {Array.from({ length: numPages }).map((_, index) => {
+                                const pageNum = index + 1;
+                                return (
+                                    <div key={pageNum} className="overflow-hidden bg-slate-950 rounded-none">
+                                        <div className="w-full h-full flex items-center justify-center bg-slate-950">
+                                            <canvas 
+                                                ref={el => canvasesRef.current[pageNum] = el} 
+                                                className="w-full h-full block rounded-none"
+                                            />
                                         </div>
-                                    )}
-                                </div>
-                            )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
 
-                {}
+                {/* Overlaid Controller Pill (No zoom, no counters, pure clean interface) */}
                 {!loading && !error && (
                     <div className="flex items-center justify-end w-full max-w-5xl px-4 mt-2 mb-4 shrink-0 text-white z-20">
                         <button 
@@ -1556,7 +1496,6 @@
                 ></div>
             )}
 
-            {}
             <header className={`fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl z-50 transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-12'}`}>
               <div ref={headerWrapperRef} className={`bg-white/80 backdrop-blur-xl border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 overflow-hidden rounded-[2rem] relative`}>
                 <span className="absolute top-0 left-0 bg-green-500 rounded-full pointer-events-none z-50 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] w-[5px] h-[5px]" style={{ transform: `translate(${dotStyle.x}px, ${dotStyle.y}px)`, opacity: dotStyle.opacity }}></span>
@@ -1587,7 +1526,6 @@
             {/* --- HOMEPAGE VIEW --- */}
             {currentPage === 'home' && (
                 <div className="animate-page-mount">
-                    {}
                     <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
                       <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
                         {["Jasa", "Desain", "Grafis,"].map((word, i) => (
@@ -1634,14 +1572,12 @@
                       </Reveal>
                     </section>
 
-                    {}
                     <section className="pt-20 pb-4 px-6 max-w-6xl mx-auto flex flex-col items-center relative">
                       <RevealCircle />
                       <Reveal delay={100} direction="up"><div className="flex items-center gap-2 mb-6"><div className="w-6 h-6 bg-black rounded text-white flex items-center justify-center text-[0.625rem] font-bold">F</div><span className="font-bold text-sm tracking-widest uppercase text-slate-400">Fajar Jayadi</span></div></Reveal>
                       <Reveal delay={200} direction="up"><p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">Membantu merealisasikan ide bisnis Anda secara <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">{bouncyWords.map((word, i) => (<span key={i} className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`} style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}>{word}</span>))}</span> Mengeksekusi setiap detail dengan cermat agar visi Anda terwujud tanpa celah and memberikan hasil yang bisa diandalkan.</p></Reveal>
                     </section>
 
-                    {}
                     <section className="pt-10 pb-24 px-6 relative z-0">
                       <RevealGrid 
                         className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-30"
@@ -1661,7 +1597,6 @@
                           </div>
                         </div>
 
-                        {}
                         <div onClick={closeService} className={`col-start-1 col-end-1 row-start-1 row-end-1 z-40 ${activeServiceContent === 'website' ? 'bg-slate-900' : 'bg-[#F5F5F7]'} rounded-[2rem] w-full cursor-pointer overflow-hidden`} style={{ clipPath: expandedService ? clipPathStyle : initialClipRef.current, pointerEvents: expandedService && !isClosing ? 'auto' : 'none', visibility: activeServiceContent ? 'visible' : 'hidden', opacity: isClosing ? 0 : 1, transition: isClosing ? 'opacity 0.2s ease-out' : (isTransitioning ? 'clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in' : 'none') }}>
                             {activeServiceContent && (
                                 <div className="relative pb-16 pt-8 px-6 h-full overflow-y-auto hide-scrollbar">
@@ -1709,7 +1644,6 @@
                       </div>
                     </section>
 
-                    {}
                     <section className="py-20 border-y border-gray-100 overflow-hidden relative z-0">
                       <RevealGrid 
                         className="absolute inset-0 pointer-events-none opacity-30"
@@ -1723,7 +1657,6 @@
                       </Reveal>
                     </section>
 
-                    {}
                     <section className="py-24 px-6 max-w-4xl mx-auto">
                       <Reveal direction="up">
                         <div className="w-full relative testi-container min-h-[350px] md:min-h-[300px]">
@@ -1741,7 +1674,6 @@
                       </Reveal>
                     </section>
 
-                    {}
                     <section className="py-24 px-6 border-b border-gray-100 relative z-0">
                       <RevealGrid 
                         className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-30"
@@ -1791,7 +1723,6 @@
                         ))}
                     </Reveal>
 
-                    {}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {filteredPortfolio.map((item, idx) => (
                             <Reveal 
@@ -1869,7 +1800,6 @@
                         <p className="text-slate-500 font-medium max-w-3xl mx-auto text-lg">Bukan sekadar biro jasa biasa. Saya membawa dedikasi personal, value maksimal, dan kedalaman pengetahuan untuk memastikan karya Anda berada di level tertinggi.</p>
                     </Reveal>
 
-                    {}
                     <section className="pb-24 flex flex-col items-center relative z-10">
                       <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[24rem] md:h-[28rem] flex justify-center items-end group mx-auto mt-6 md:mt-10">
                         <div className="relative z-10 w-full flex justify-center h-full items-end pb-0">
@@ -1994,7 +1924,6 @@
                         </Reveal>
                     </div>
 
-                    {}
                     <Reveal delay={300} direction="up" className="bg-slate-900 text-white rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
                         <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
@@ -2369,7 +2298,6 @@
                 </div>
             )}
 
-            {}
             <footer className="bg-slate-900 text-white pt-20 pb-10 px-6">
               <Reveal direction="up" className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-16 mb-16">
                 <div className="max-w-sm">
