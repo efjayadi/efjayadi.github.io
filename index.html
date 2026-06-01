@@ -384,69 +384,6 @@
         ]
       };
 
-      const avatars = {
-        default: { img: 'me-default-netral.png', bgImg: 'bg-netral.png', label: 'Eksplorasi' },
-        desain: { img: 'me-desain-grafis.png', bgImg: 'bg-desain.png', label: 'Desain Branding' },
-        website: { img: 'me-website.png', bgImg: 'bg-website.png', label: 'Website Professional' },
-        konstruksi: { img: 'me-konstruksi.png', bgImg: 'bg-konstruksi.png', label: 'Gambar 3D' }
-      };
-
-      const testimonials = [
-        { name: "Budi Santoso", role: "CEO, TechNusa", text: "Karya desain branding and website dari Fajar membuat brand kami terlihat sangat eksklusif and modern." },
-        { name: "Siti Aminah", role: "Owner, Kopi Senja", text: "Identitas brand saya naik level! Dari filosofi logo sampai kemasan, semuanya dieksekusi with presisi and estetika tinggi." },
-        { name: "Andi Wijaya", role: "Direktur, PT Bangun Karya", text: "Gambar 3D and teknisnya sangat akurat. Sangat membantu tim konstruksi kami melihat detail proyek tanpa miskomunikasi." },
-        { name: "Rina Melati", role: "Founder, BeautyGlow", text: "Website professional yang dibuatkan Fajar benar-benar mempercepat operasional kasir and manajemen stok kami." }
-      ];
-
-      const bouncyWords = ["mulus,", "presisi,", "dan", "profesional."];
-
-      const filterOptions = [
-        { id: 'all', label: 'Semua Karya' },
-        { id: 'desain', label: 'Desain Branding' },
-        { id: 'website', label: 'Website' },
-        { id: 'konstruksi', label: 'Gambar 3D' },
-        { id: 'company_profile', label: 'Media Cetak' },
-        { id: 'aplikasi', label: 'Digital' },
-        { id: 'layout', label: 'Layout' }
-      ];
-
-      const pricingCategories = [
-        {
-          id: 'desain', title: 'Desain Grafis', icon: () => <PenTool size={18}/>, color: 'text-blue-500', bg: 'bg-blue-100',
-          items: [
-            { id: 'd-logo', name: 'Logo', price: 1500000 },
-            { id: 'd-banner', name: 'Banner', price: 300000 },
-            { id: 'd-flyer', name: 'Flyer', price: 300000 },
-            { id: 'd-pack', name: 'Packaging', price: 1000000 },
-            { id: 'd-cp', name: 'Company Profile', price: 2000000 }
-          ]
-        },
-        {
-          id: 'website', title: 'Website', icon: () => <Monitor size={18}/>, color: 'text-purple-500', bg: 'bg-purple-100',
-          items: [
-            { id: 'w-toko', name: 'Toko Online', price: 5000000 },
-            { id: 'w-cp', name: 'Company Profile', price: 3000000 },
-            { id: 'w-lp', name: 'Landing Page', price: 1500000 },
-            { id: 'w-link', name: 'Link Tree Custom', price: 500000 }
-          ]
-        },
-        {
-          id: 'konstruksi', title: 'Konstruksi', icon: () => <HardHat size={18}/>, color: 'text-orange-500', bg: 'bg-orange-100',
-          items: [
-            { id: 'k-3d', name: 'Sketchup 3D', price: 2000000 },
-            { id: 'k-teknik', name: 'Gambar Teknik', price: 1500000 },
-            { id: 'k-render', name: 'Render Realistis', price: 1000000 }
-          ]
-        }
-      ];
-
-      const baseClientLogos = [1, 2, 3, 4, 5, 6, 7, 8];
-      const displayLogos = [...baseClientLogos, ...baseClientLogos, ...baseClientLogos];
-
-      const formatRupiah = (number) => {
-        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
-      };
-
       const ArrowRight = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>;
       const Play = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>;
       const PenTool = ({ size = 24, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>;
@@ -629,9 +566,6 @@
         const [lightboxIndex, setLightboxIndex] = useState(-1); // Active modal preview index
         const [lightboxTransition, setLightboxTransition] = useState(false); // Controls transition state
         
-        // --- Bento Overlay Grid Specific State ---
-        const [activeBentoItems, setActiveBentoItems] = useState([]);
-
         const lastTapMap = useRef({});
         const tapTimeoutMap = useRef({});
 
@@ -675,7 +609,7 @@
           setTimeout(() => {
             setLightboxIndex(prev => (prev + direction + lightboxList.length) % lightboxList.length);
             setLightboxTransition(false);
-          }, 200); // 200ms slide transition delay
+          }, 200); // 200ms buttery smooth slide transition delay
         };
 
         const toggleLike = (src) => {
@@ -765,6 +699,43 @@
             }, 1150);
         };
 
+        // --- Screenshot Protection for Portfolio ---
+        useEffect(() => {
+            const handleScreenshotAttempt = (e) => {
+                if (currentPage !== 'portfolio') return;
+
+                const isMacScreenshot = e.metaKey && e.shiftKey && ['3', '4', '5', 's', 'S'].includes(e.key);
+                const isWinScreenshot = e.key === 'PrintScreen';
+
+                if (isMacScreenshot || isWinScreenshot) {
+                    // Try to overwrite clipboard data
+                    try {
+                        navigator.clipboard.writeText('Screenshots are disabled for portfolio items.');
+                    } catch (err) {}
+
+                    // Display "nonow.." in the middle of the screen
+                    const el = document.createElement('div');
+                    el.textContent = 'nonow..';
+                    el.className = 'nonow-text';
+                    const rot = Math.random() * 50 - 25;
+                    el.style.setProperty('--rot', `${rot}deg`);
+                    el.style.left = `50%`;
+                    el.style.top = `50%`;
+                    el.style.position = 'fixed';
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), 1000);
+                }
+            };
+
+            window.addEventListener('keyup', handleScreenshotAttempt);
+            window.addEventListener('keydown', handleScreenshotAttempt);
+
+            return () => {
+                window.removeEventListener('keyup', handleScreenshotAttempt);
+                window.removeEventListener('keydown', handleScreenshotAttempt);
+            };
+        }, [currentPage]);
+
         const [isLoaded, setIsLoaded] = useState(false);
         useEffect(() => setIsLoaded(true), []);
         const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -789,6 +760,7 @@
 
         const [wordsRef, wordsTriggered] = useScrollTrigger({ threshold: 0.8 });
         const [rocketRef, rocketTriggered] = useScrollTrigger({ threshold: 0.5 });
+        const bouncyWords = ["mulus,", "presisi,", "dan", "profesional."];
         const bentoSectionRef = useRef(null);
         const [expandedService, setExpandedService] = useState(null);
         const [activeServiceContent, setActiveServiceContent] = useState(null);
@@ -799,6 +771,15 @@
 
         // --- Portfolio Page Logic ---
         const [portfolioFilter, setPortfolioFilter] = useState('all');
+        const filterOptions = [
+            { id: 'all', label: 'Semua Karya' },
+            { id: 'desain', label: 'Desain Branding' },
+            { id: 'website', label: 'Website' },
+            { id: 'konstruksi', label: 'Gambar 3D' },
+            { id: 'company_profile', label: 'Media Cetak' },
+            { id: 'aplikasi', label: 'Digital' },
+            { id: 'layout', label: 'Layout' }
+        ];
         
         const allPortfolioItems = useMemo(() => {
             const items = Object.entries(portfolioData).flatMap(([category, items]) => 
@@ -873,6 +854,36 @@
         }, [isLoaded, allPortfolioItems]);
 
         // --- Estimasi Page Logic ---
+        const pricingCategories = [
+            {
+                id: 'desain', title: 'Desain Grafis', icon: PenTool, color: 'text-blue-500', bg: 'bg-blue-100',
+                items: [
+                    { id: 'd-logo', name: 'Logo', price: 1500000 },
+                    { id: 'd-banner', name: 'Banner', price: 300000 },
+                    { id: 'd-flyer', name: 'Flyer', price: 300000 },
+                    { id: 'd-pack', name: 'Packaging', price: 1000000 },
+                    { id: 'd-cp', name: 'Company Profile', price: 2000000 }
+                ]
+            },
+            {
+                id: 'website', title: 'Website', icon: Monitor, color: 'text-purple-500', bg: 'bg-purple-100',
+                items: [
+                    { id: 'w-toko', name: 'Toko Online', price: 5000000 },
+                    { id: 'w-cp', name: 'Company Profile', price: 3000000 },
+                    { id: 'w-lp', name: 'Landing Page', price: 1500000 },
+                    { id: 'w-link', name: 'Link Tree Custom', price: 500000 }
+                ]
+            },
+            {
+                id: 'konstruksi', title: 'Konstruksi', icon: HardHat, color: 'text-orange-500', bg: 'bg-orange-100',
+                items: [
+                    { id: 'k-3d', name: 'Sketchup 3D', price: 2000000 },
+                    { id: 'k-teknik', name: 'Gambar Teknik', price: 1500000 },
+                    { id: 'k-render', name: 'Render Realistis', price: 1000000 }
+                ]
+            }
+        ];
+
         const [estimasiExpandedCat, setEstimasiExpandedCat] = useState(null);
         const [estimasiSelectedItems, setEstimasiSelectedItems] = useState({}); 
         const [estimasiDeadline, setEstimasiDeadline] = useState(7); 
@@ -909,6 +920,10 @@
 
             return baseTotal * multiplier;
         }, [estimasiSelectedItems, estimasiDeadline]);
+
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+        };
 
         // --- Mulai Proyek Page Logic ---
         const [mulaiProyekStep, setMulaiProyekStep] = useState(1);
@@ -976,6 +991,16 @@
           return { transformOrigin, transitionDelay };
         };
 
+        const testimonials = [
+          { name: "Budi Santoso", role: "CEO, TechNusa", text: "Karya desain branding and website dari Fajar membuat brand kami terlihat sangat eksklusif and modern." },
+          { name: "Siti Aminah", role: "Owner, Kopi Senja", text: "Identitas brand saya naik level! Dari filosofi logo sampai kemasan, semuanya dieksekusi with presisi and estetika tinggi." },
+          { name: "Andi Wijaya", role: "Direktur, PT Bangun Karya", text: "Gambar 3D and teknisnya sangat akurat. Sangat membantu tim konstruksi kami melihat detail proyek tanpa miskomunikasi." },
+          { name: "Rina Melati", role: "Founder, BeautyGlow", text: "Website professional yang dibuatkan Fajar benar-benar mempercepat operasional kasir and manajemen stok kami." }
+        ];
+
+        // --- Bento Service Clip Transition ---
+        const [activeBentoItems, setActiveBentoItems] = useState([]);
+
         const openService = (e, serviceId) => {
           const card = e.currentTarget;
           const container = bentoSectionRef.current;
@@ -990,7 +1015,7 @@
           initialClipRef.current = startClip;
           setClipPathStyle(startClip);
 
-          // Standardize flat service paths into structured lists of images
+          // Standardize flat service string paths into unified lightbox models
           const itemsList = portfolioData[serviceId]?.map(path => ({
              category: serviceId,
              src: path
@@ -1045,6 +1070,22 @@
           return () => { clearTimeout(timeoutId); cancelAnimationFrame(animationId); };
         }, [isDragging]);
 
+        const baseClientLogos = [1, 2, 3, 4, 5, 6, 7, 8];
+        const displayLogos = [...baseClientLogos, ...baseClientLogos, ...baseClientLogos];
+        const avatars = {
+          default: { img: 'me-default-netral.png', bgImg: 'bg-netral.png', label: 'Eksplorasi' },
+          desain: { img: 'me-desain-grafis.png', bgImg: 'bg-desain.png', label: 'Desain Branding' },
+          website: { img: 'me-website.png', bgImg: 'bg-website.png', label: 'Website Professional' },
+          konstruksi: { img: 'me-konstruksi.png', bgImg: 'bg-konstruksi.png', label: 'Gambar 3D' }
+        };
+
+        const getTileContentClass = (id) => {
+          const base = "transition-opacity w-full h-full";
+          if (expandedService !== id) return `${base} opacity-100`;
+          return isClosing ? `${base} opacity-100 duration-200` : `${base} opacity-0 duration-300`;
+        };
+
+        // Pre-calculating adjacent slideshow image paths to support fluid next/previous carousel layouts
         const prevIndex = lightboxIndex !== -1 && lightboxList.length > 0 ? (lightboxIndex - 1 + lightboxList.length) % lightboxList.length : 0;
         const nextIndex = lightboxIndex !== -1 && lightboxList.length > 0 ? (lightboxIndex + 1) % lightboxList.length : 0;
 
@@ -1138,7 +1179,7 @@
                               </Reveal>
                             );
                         })}
-                      </h1>
+                      </Reveal>
                     </section>
 
                     <section className="pt-20 pb-4 px-6 max-w-6xl mx-auto flex flex-col items-center relative">
@@ -1194,7 +1235,7 @@
                             <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer"><div className={getTileContentClass('website')}><h3 className="text-xl font-bold mb-1 text-white">Website Professional</h3><p className="text-slate-400 text-sm">Landing page yang dioptimalkan untuk performa, SEO, and konversi maksimal.</p><Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" /></div></div>
                             <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('konstruksi')}><h3 className="text-xl font-bold mb-1">Gambar 3D & Visualisasi</h3><p className="text-slate-500 text-sm">Desain food stall and modeling arsitektur 3D yang nyata and presisi.</p><Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" /></div></div>
                             <div onClick={(e) => openService(e, 'company_profile')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('company_profile')}><h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3><p className="text-slate-500 text-sm">Profil perusahaan, book design, and media cetak elegan.</p><Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" /></div></div>
-                            <div onClick={(e) => openService(e, 'aplikasi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('aplikasi')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk opreational bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
+                            <div onClick={(e) => openService(e, 'aplikasi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('aplikasi')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
                             <div onClick={(e) => openService(e, 'layout')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('layout')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
                           </div>
                         </div>
@@ -1361,6 +1402,7 @@
                                       </div>
                                     )}
 
+                                    {/* Hover gradient overlay has pointer-events-none so it doesn't block card clicks */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6 justify-between pointer-events-none">
                                         <span className="text-white font-bold capitalize bg-black/30 backdrop-blur-md px-4 py-1.5 rounded-full text-xs shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                                             {item.category.replace('_', ' ')}
@@ -1388,7 +1430,7 @@
 
                     <Reveal direction="up" className="text-center mb-16">
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-6 text-slate-900">Kenapa Mending ke Fajar?</h1>
-                        <p className="text-slate-500 font-medium max-w-3xl mx-auto text-lg">Bukan sekadar biro jasa biasa. Saya membawa dedikasi personal, value maksimal, and kedalaman pengetahuan untuk memastikan karya Anda berada di level tertinggi.</p>
+                        <p className="text-slate-500 font-medium max-w-3xl mx-auto text-lg">Bukan sekadar biro jasa biasa. Saya membawa dedikasi personal, value maksimal, dan kedalaman pengetahuan untuk memastikan karya Anda berada di level tertinggi.</p>
                     </Reveal>
 
                     <div className="space-y-12 mb-16">
@@ -1431,7 +1473,7 @@
                                             </div>
                                             <div className="flex items-start gap-4">
                                                 <CheckCircle2 className="text-green-500 mt-1 shrink-0"/>
-                                                <p className="text-slate-800">Komunikasi langsung tanpa perantara, visi Anda didengar and langsung dieksekusi oleh ahlinya.</p>
+                                                <p className="text-slate-800">Komunikasi langsung tanpa perantara, visi Anda didengar dan langsung dieksekusi oleh ahlinya.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1510,7 +1552,7 @@
                                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
                                     <Monitor className="w-10 h-10 text-green-400 mb-4"/>
                                     <h4 className="text-lg font-bold mb-2">Teknologi</h4>
-                                    <p className="text-sm text-slate-400">Paham arsitektur digital, opreationalisasi kinerja web modern, integrasi SEO, and logika UX/UI yang berbasis sistem.</p>
+                                    <p className="text-sm text-slate-400">Paham arsitektur digital, optimalisasi kinerja web modern, integrasi SEO, and logika UX/UI yang berbasis sistem.</p>
                                 </div>
                                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
                                     <PenTool className="w-10 h-10 text-orange-400 mb-4"/>
@@ -1553,7 +1595,7 @@
                                             >
                                                 <div className="flex items-center gap-4">
                                                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${category.bg} ${category.color}`}>
-                                                        {category.icon()}
+                                                        <category.icon size={18} />
                                                     </div>
                                                     <span className="font-bold text-slate-800 text-lg">{category.title}</span>
                                                 </div>
@@ -1613,7 +1655,7 @@
 
                         </div>
 
-                        {/* Right Column: Summary Box */}
+                        {/* Right Column: Sticky Summary */}
                         <Reveal delay={300} direction="left" className="w-full lg:w-1/3 sticky top-32">
                             <div className="bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
                                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-500 rounded-full mix-blend-screen filter blur-[40px] opacity-20 pointer-events-none"></div>
@@ -1993,7 +2035,6 @@
           </div>
         );
       }
-
       const root = ReactDOM.createRoot(document.getElementById('root'));
       root.render(<App />);
     </script>
