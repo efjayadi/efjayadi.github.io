@@ -92,6 +92,19 @@
         }
         .animate-rocket-fly { animation: fly-away 5s ease-in 1s forwards; }
 
+        /* Immersive heart popping keyframes */
+        @keyframes heart-pop {
+          0% { transform: scale(0); opacity: 0; }
+          15% { transform: scale(1.4); opacity: 0.95; }
+          30% { transform: scale(0.9); opacity: 0.95; }
+          45% { transform: scale(1.1); opacity: 0.95; }
+          80% { transform: scale(1); opacity: 0.95; }
+          100% { transform: scale(0); opacity: 0; }
+        }
+        .animate-heart-pop {
+          animation: heart-pop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
         .bg-circle-pattern {
           background: repeating-radial-gradient(circle at center, #ffffff 0px, #eef1f5 60px);
         }
@@ -545,9 +558,84 @@
         // --- Navigation State ---
         const [currentPage, setCurrentPage] = useState('home');
         
+        // --- Double Tap & Lightbox States ---
+        const [likedItems, setLikedItems] = useState({}); // { [src]: true }
+        const [animatingHearts, setAnimatingHearts] = useState({}); // { [src]: true }
+        const [lightboxList, setLightboxList] = useState([]); // List of current active images for navigation slideshow
+        const [lightboxIndex, setLightboxIndex] = useState(-1); // Active modal view index
+        
+        const lastTapMap = useRef({});
+        const tapTimeoutMap = useRef({});
+
         useEffect(() => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, [currentPage]);
+
+        // --- Keyboard Navigation for Lightbox ---
+        useEffect(() => {
+          const handleKeyDown = (e) => {
+            if (lightboxIndex === -1) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') navigateLightbox(1);
+            if (e.key === 'ArrowLeft') navigateLightbox(-1);
+          };
+          window.addEventListener('keydown', handleKeyDown);
+          return () => window.removeEventListener('keydown', handleKeyDown);
+        }, [lightboxIndex, lightboxList]);
+
+        const closeLightbox = () => {
+          setLightboxIndex(-1);
+        };
+
+        const navigateLightbox = (direction) => {
+          if (lightboxList.length === 0) return;
+          setLightboxIndex(prev => {
+            const nextIdx = (prev + direction + lightboxList.length) % lightboxList.length;
+            return nextIdx;
+          });
+        };
+
+        const toggleLike = (src) => {
+          setLikedItems(prev => ({
+            ...prev,
+            [src]: !prev[src]
+          }));
+          // Trigger double tap heart explosion animation
+          setAnimatingHearts(prev => ({ ...prev, [src]: true }));
+          setTimeout(() => {
+            setAnimatingHearts(prev => {
+              const next = { ...prev };
+              delete next[src];
+              return next;
+            });
+          }, 800);
+        };
+
+        // --- High Performance Tap / Double-Tap Handler ---
+        const handleItemTap = (e, item, list, index) => {
+          e.stopPropagation();
+          const now = Date.now();
+          const DOUBLE_PRESS_DELAY = 300;
+          const src = item.src;
+          const lastTap = lastTapMap.current[src] || 0;
+
+          if (now - lastTap < DOUBLE_PRESS_DELAY) {
+            // DOUBLE TAP detected: Like item
+            if (tapTimeoutMap.current[src]) {
+              clearTimeout(tapTimeoutMap.current[src]);
+              delete tapTimeoutMap.current[src];
+            }
+            toggleLike(src);
+          } else {
+            // SINGLE TAP schedule: Open Lightbox
+            tapTimeoutMap.current[src] = setTimeout(() => {
+              setLightboxList(list);
+              setLightboxIndex(index);
+              delete tapTimeoutMap.current[src];
+            }, DOUBLE_PRESS_DELAY);
+          }
+          lastTapMap.current[src] = now;
+        };
 
         // --- Ripple Transition State & Logic ---
         const [pageRipple, setPageRipple] = useState({ active: false, x: 0, y: 0, expanding: false, fading: false });
@@ -850,6 +938,7 @@
             window.open(`https://wa.me/6283192054797?text=${encodeURIComponent(msg)}`, '_blank');
         };
 
+        // --- Testimonial Carousel ---
         const [testiIdx, setTestiIdx] = useState(0);
         const [slideDir, setSlideDir] = useState('next');
         const nextTesti = () => { setSlideDir('next'); setTestiIdx((prev) => (prev + 1) % testimonials.length); };
@@ -882,6 +971,9 @@
           { name: "Rina Melati", role: "Founder, BeautyGlow", text: "Website professional yang dibuatkan Fajar benar-benar mempercepat operasional kasir and manajemen stok kami." }
         ];
 
+        // --- Bento Service Clip Transition ---
+        const [activeBentoItems, setActiveBentoItems] = useState([]);
+
         const openService = (e, serviceId) => {
           const card = e.currentTarget;
           const container = bentoSectionRef.current;
@@ -895,6 +987,14 @@
           const startClip = `inset(${top}px ${right}px ${bottom}px ${left}px round 2rem)`;
           initialClipRef.current = startClip;
           setClipPathStyle(startClip);
+
+          // Standardize flat service string paths into unified lightbox models
+          const itemsList = portfolioData[serviceId]?.map(path => ({
+             category: serviceId,
+             src: path
+          })) || [];
+          setActiveBentoItems(itemsList);
+
           setActiveServiceContent(serviceId);
           setExpandedService(serviceId);
           setIsClosing(false);
@@ -910,6 +1010,7 @@
             setIsClosing(false); 
             setActiveServiceContent(null); 
             setIsTransitioning(false);
+            setActiveBentoItems([]);
           }, 200); 
         };
 
@@ -1113,21 +1214,41 @@
                           </div>
                         </div>
 
+                        {}
                         <div onClick={closeService} className={`col-start-1 col-end-1 row-start-1 row-end-1 z-40 ${activeServiceContent === 'website' ? 'bg-slate-900' : 'bg-[#F5F5F7]'} rounded-[2rem] w-full cursor-pointer overflow-hidden`} style={{ clipPath: expandedService ? clipPathStyle : initialClipRef.current, pointerEvents: expandedService && !isClosing ? 'auto' : 'none', visibility: activeServiceContent ? 'visible' : 'hidden', opacity: isClosing ? 0 : 1, transition: isClosing ? 'opacity 0.2s ease-out' : (isTransitioning ? 'clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in' : 'none') }}>
                             {activeServiceContent && (
                                 <div className="relative pb-16 pt-8 px-6 h-full overflow-y-auto hide-scrollbar">
                                     <div onClick={(e) => e.stopPropagation()} className="max-w-5xl mx-auto cursor-default w-full">
                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                          {portfolioData[activeServiceContent]?.map((path, itemIdx) => (
+                                          {activeBentoItems.map((item, itemIdx) => (
                                              <div 
                                                 key={itemIdx} 
-                                                className={`aspect-square rounded-3xl overflow-hidden relative cursor-pointer group border ${activeServiceContent === 'website' ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200/50'}`}
+                                                onClick={(e) => handleItemTap(e, item, activeBentoItems, itemIdx)}
+                                                className={`aspect-square rounded-3xl overflow-hidden relative cursor-pointer group border select-none ${activeServiceContent === 'website' ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200/50'}`}
                                               >
                                                 <div 
-                                                  className={`w-full h-full transition-all duration-300 ease-out hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center ${expandedService && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+                                                  className={`w-full h-full transition-all duration-300 ease-out hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center relative ${expandedService && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
                                                   style={{ transitionDelay: (expandedService && !isClosing && !isTransitioning) ? `${400 + (itemIdx * 80)}ms` : '0ms' }}
                                                 >
-                                                  <DynamicImage src={path} alt={`Portfolio ${itemIdx}`} minimalFallback={true} className="w-full h-full object-cover" shimmerDelay={true} />
+                                                  <DynamicImage src={item.src} alt={`Portfolio ${itemIdx}`} minimalFallback={true} className="w-full h-full object-cover" shimmerDelay={true} />
+                                                  
+                                                  {/* Instagram-style heart pop overlay */}
+                                                  {animatingHearts[item.src] && (
+                                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
+                                                      <svg className="w-20 h-20 text-red-500 fill-current animate-heart-pop drop-shadow-[0_10px_20px_rgba(239,68,68,0.4)]" viewBox="0 0 24 24">
+                                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                      </svg>
+                                                    </div>
+                                                  )}
+
+                                                  {/* Persistent corner heart liked-badge */}
+                                                  {likedItems[item.src] && (
+                                                    <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md p-1.5 rounded-full shadow-md z-20">
+                                                      <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                      </svg>
+                                                    </div>
+                                                  )}
                                                 </div>
                                              </div>
                                           ))}
@@ -1193,6 +1314,7 @@
             )}
 
             {/* --- PORTFOLIO VIEW --- */}
+            {}
             {currentPage === 'portfolio' && (
                 <div className="pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen relative z-0 animate-page-mount">
                     <RevealGrid 
@@ -1224,7 +1346,8 @@
                                 key={`${item.src}-${idx}-${portfolioFilter}`} 
                                 delay={(idx % 6) * 100} 
                                 direction="up" 
-                                className="aspect-square rounded-3xl overflow-hidden bg-gray-50 border border-gray-100 group relative cursor-pointer"
+                                className="aspect-square rounded-3xl overflow-hidden bg-gray-50 border border-gray-100 group relative cursor-pointer select-none"
+                                onClick={(e) => handleItemTap(e, item, filteredPortfolio, idx)}
                             >
                                 <DynamicImage 
                                     src={item.src} 
@@ -1234,7 +1357,26 @@
                                     minimalFallback={true} 
                                     shimmerDelay={true}
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+
+                                {/* Pop heart animation */}
+                                {animatingHearts[item.src] && (
+                                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
+                                    <svg className="w-20 h-20 text-red-500 fill-current animate-heart-pop drop-shadow-[0_10px_20px_rgba(239,68,68,0.4)]" viewBox="0 0 24 24">
+                                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                  </div>
+                                )}
+
+                                {/* Persistent Heart badge */}
+                                {likedItems[item.src] && (
+                                  <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md p-1.5 rounded-full shadow-md z-20">
+                                    <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                  </div>
+                                )}
+
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6 justify-between">
                                     <span className="text-white font-bold capitalize bg-black/30 backdrop-blur-md px-4 py-1.5 rounded-full text-xs shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                                         {item.category.replace('_', ' ')}
                                     </span>
@@ -1406,7 +1548,7 @@
 
                     <Reveal direction="up" className="text-center mb-12">
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Kalkulator Estimasi</h1>
-                        <p className="text-slate-500 font-medium max-w-2xl mx-auto">Sesuaikan kebutuhan project dan deadline yang Anda inginkan. Perhitungan ini transparan untuk membantu Anda mengambil keputusan terbaik.</p>
+                        <p className="text-slate-500 font-medium max-w-2xl mx-auto">Sesuaikan kebutuhan project and deadline yang Anda inginkan. Perhitungan ini transparan untuk membantu Anda mengambil keputusan terbaik.</p>
                     </Reveal>
 
                     <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -1523,7 +1665,7 @@
 
                                 <div className="bg-slate-800/50 rounded-xl p-4 text-xs text-slate-400 leading-relaxed border border-slate-700/50">
                                     <strong className="text-slate-300 block mb-1">Catatan Penting:</strong>
-                                    Angka ini hanya <em>estimasi</em> untuk memberikan gambaran budget. Angka aktual tergantung nanti seberapa rumit dan spesifik pekerjaannya setelah kita berdiskusi lebih lanjut.
+                                    Angka ini hanya <em>estimasi</em> untuk memberikan gambaran budget. Angka aktual tergantung nanti seberapa rumit and spesifik pekerjaannya setelah kita berdiskusi lebih lanjut.
                                 </div>
                             </div>
                         </Reveal>
@@ -1542,7 +1684,7 @@
 
                     <Reveal direction="up" className="text-center mb-10">
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Mulai Proyek Baru</h1>
-                        <p className="text-slate-500 font-medium max-w-2xl mx-auto text-lg">Ceritakan visi Anda. Formulir progresif ini dirancang untuk menggali kebutuhan dan ekspektasi Anda agar hasil akhir bisa melampaui standar.</p>
+                        <p className="text-slate-500 font-medium max-w-2xl mx-auto text-lg">Ceritakan visi Anda. Formulir progresif ini dirancang untuk menggali kebutuhan and ekspektasi Anda agar hasil akhir bisa melampaui standar.</p>
                     </Reveal>
 
                     {/* Progress Indicator */}
@@ -1670,7 +1812,7 @@
                     <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 4 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
                         <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
                             <h2 className="text-2xl font-bold mb-2">Timeline & Budget</h2>
-                            <p className="text-slate-500 mb-8">Mari selaraskan ekspektasi waktu dan investasi proyek.</p>
+                            <p className="text-slate-500 mb-8">Mari selaraskan ekspektasi waktu and investasi proyek.</p>
                             
                             <div className="space-y-10">
                                 <div>
@@ -1760,6 +1902,98 @@
               </Reveal>
               <Reveal delay={200} direction="up" className="max-w-6xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium"><p>© 2026 Fajar Jayadi. Dedicated to Value-Driven Excellence.</p><div className="flex gap-4"><a href="#" className="hover:text-white transition-colors">Instagram</a><a href="#" className="hover:text-white transition-colors">LinkedIn</a><a href="#" className="hover:text-white transition-colors">Behance</a></div></Reveal>
             </footer>
+
+            {/* --- LIGHTBOX MODAL PREVIEW --- */}
+            {}
+            {lightboxIndex !== -1 && lightboxList[lightboxIndex] && (
+              <div 
+                className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[9999] flex flex-col items-center justify-center p-4 md:p-8 select-none"
+                onClick={closeLightbox}
+              >
+                {/* Close Button */}
+                <button 
+                  onClick={closeLightbox}
+                  className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-[10000]"
+                >
+                  <XCircle size={36} />
+                </button>
+
+                {/* Main Lightbox Frame */}
+                <div 
+                  className="relative w-full max-w-4xl flex flex-col items-center justify-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Previous Button */}
+                  <button 
+                    onClick={() => navigateLightbox(-1)}
+                    className="absolute left-0 md:-left-16 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full transition-all backdrop-blur-sm z-[9999]"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+
+                  {/* Image Screen */}
+                  <div 
+                    className="relative max-h-[70vh] md:max-h-[75vh] max-w-full overflow-hidden rounded-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.7)] border border-white/10"
+                    onClick={(e) => handleItemTap(e, lightboxList[lightboxIndex], lightboxList, lightboxIndex)}
+                  >
+                    <img 
+                      src={lightboxList[lightboxIndex].src} 
+                      alt="Lightbox Preview" 
+                      className="max-h-[70vh] md:max-h-[75vh] w-auto max-w-full object-contain pointer-events-none"
+                    />
+
+                    {/* Pop-up heart animation */}
+                    {animatingHearts[lightboxList[lightboxIndex].src] && (
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
+                        <svg className="w-28 h-28 text-red-500 fill-current animate-heart-pop drop-shadow-[0_15px_30px_rgba(239,68,68,0.5)]" viewBox="0 0 24 24">
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Next Button */}
+                  <button 
+                    onClick={() => navigateLightbox(1)}
+                    className="absolute right-0 md:-right-16 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full transition-all backdrop-blur-sm z-[9999]"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+
+                  {/* Image Metadata & Controls */}
+                  <div className="mt-6 flex flex-row items-center justify-between w-full max-w-2xl px-4 text-white">
+                    <div className="flex flex-col">
+                      <span className="text-xs uppercase font-bold tracking-widest text-slate-400">
+                        {lightboxList[lightboxIndex].category.replace('_', ' ')}
+                      </span>
+                      <span className="text-sm font-medium text-slate-300">
+                        Karya {lightboxIndex + 1} dari {lightboxList.length}
+                      </span>
+                    </div>
+
+                    {/* Double-tap status indicator button */}
+                    <button 
+                      onClick={() => toggleLike(lightboxList[lightboxIndex].src)}
+                      className="flex items-center gap-2 bg-white/10 hover:bg-white/25 px-4 py-2 rounded-full border border-white/5 transition-colors"
+                    >
+                      <svg 
+                        className={`w-5 h-5 ${likedItems[lightboxList[lightboxIndex].src] ? 'text-red-500 fill-current scale-110' : 'text-white'} transition-all`} 
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                      </svg>
+                      <span className="text-xs font-bold tracking-tight">
+                        {likedItems[lightboxList[lightboxIndex].src] ? 'Tersimpan' : 'Sukai (Ketuk 2x)'}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
         );
       }
