@@ -293,9 +293,8 @@
     <script type="text/babel">
       const { useState, useEffect, useRef, useMemo } = React;
 
-      // --- Portfolio Media Source Arrays ---
       const portfolioData = {
-        desain: [
+        logo: [
           '/assets/img/portfolio/Logo/ayamdjagoan.png',
           '/assets/img/portfolio/Logo/baksokusuki.png',
           '/assets/img/portfolio/Logo/bebekkelana.png',
@@ -316,7 +315,9 @@
           '/assets/img/portfolio/Logo/satelemoh.png',
           '/assets/img/portfolio/Logo/tagawadjogja.png',
           '/assets/img/portfolio/Logo/tgg.png',
-          '/assets/img/portfolio/Logo/tja.png',
+          '/assets/img/portfolio/Logo/tja.png'
+        ],
+        flyer: [
           '/assets/img/portfolio/Flyer/cobekflyer.png',
           '/assets/img/portfolio/Flyer/cwm-hp.png',
           '/assets/img/portfolio/Flyer/cwp-btas.png',
@@ -353,7 +354,7 @@
           '/assets/img/portfolio/foodstal/foodstal-ras3.png',
           '/assets/img/portfolio/foodstal/foodstal-ruanglaktasi.png'
         ],
-        layout: [
+        banner: [
           '/assets/img/portfolio/Banner/banner-cobek89.png',
           '/assets/img/portfolio/Banner/banner-dkriuk.png',
           '/assets/img/portfolio/Banner/banner-mietagawa.png',
@@ -373,14 +374,12 @@
           '/assets/img/portfolio/Feed/feed-madina.png',
           '/assets/img/portfolio/Feed/feed-theta.png'
         ],
-        company_profile: [
+        media_cetak: [
           '/assets/img/portfolio/Book/book-aw.png',
           '/assets/img/portfolio/Book/book-idjji.png',
           '/assets/img/portfolio/Book/book-jji.png',
           '/assets/img/portfolio/Book/book-psj.png',
           '/assets/img/portfolio/Book/book-tja.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/cp-psj.png',
-          '/assets/img/portfolio/Proposal/p-aw.png'
         ]
       };
 
@@ -464,7 +463,7 @@
           if (shimmerDelay) {
             const timer = setTimeout(() => {
               setShimmering(false);
-            }, 400); // 400ms high-fidelity shimmer duration
+            }, 400); 
             return () => clearTimeout(timer);
           } else {
             setShimmering(false);
@@ -496,7 +495,6 @@
           <div className={`relative overflow-hidden ${className}`}>
              {showShimmer && (
                <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden z-20 animate-shimmer">
-                  {/* Subtle design indicator watermark */}
                   <div className="relative z-10 flex flex-col items-center gap-1 opacity-25">
                      <svg className="w-8 h-8 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
@@ -555,15 +553,13 @@
       };
 
       function App() {
-        // --- Navigation State ---
         const [currentPage, setCurrentPage] = useState('home');
         
-        // --- Double Tap & Lightbox States ---
-        const [likedItems, setLikedItems] = useState({}); // { [src]: true }
-        const [animatingHearts, setAnimatingHearts] = useState({}); // { [src]: true }
-        const [lightboxList, setLightboxList] = useState([]); // List of current active images for navigation slideshow
-        const [lightboxIndex, setLightboxIndex] = useState(-1); // Active modal view index
-        const [lightboxTransitioning, setLightboxTransitioning] = useState(false); // Seamless switching animation trigger state
+        const [likedItems, setLikedItems] = useState({}); 
+        const [animatingHearts, setAnimatingHearts] = useState({}); 
+        const [lightboxList, setLightboxList] = useState([]); 
+        const [lightboxIndex, setLightboxIndex] = useState(-1); 
+        const [lightboxTransitioning, setLightboxTransitioning] = useState(false); 
         
         const lastTapMap = useRef({});
         const tapTimeoutMap = useRef({});
@@ -572,7 +568,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, [currentPage]);
 
-        // --- Keyboard Navigation for Lightbox ---
         useEffect(() => {
           const handleKeyDown = (e) => {
             if (lightboxIndex === -1) return;
@@ -592,7 +587,6 @@
         const navigateLightbox = (direction) => {
           if (lightboxList.length === 0 || lightboxTransitioning) return;
           
-          // Trigger the fade-out/shrink exit transition first
           setLightboxTransitioning(true);
           
           setTimeout(() => {
@@ -600,9 +594,8 @@
               const nextIdx = (prev + direction + lightboxList.length) % lightboxList.length;
               return nextIdx;
             });
-            // Let the new slide fade back in cleanly
             setLightboxTransitioning(false);
-          }, 250); // Matches the switching duration perfectly
+          }, 250); 
         };
 
         const toggleLike = (src) => {
@@ -610,7 +603,6 @@
             ...prev,
             [src]: !prev[src]
           }));
-          // Trigger double tap heart explosion animation
           setAnimatingHearts(prev => ({ ...prev, [src]: true }));
           setTimeout(() => {
             setAnimatingHearts(prev => {
@@ -621,7 +613,6 @@
           }, 800);
         };
 
-        // --- High Performance Tap / Double-Tap Handler ---
         const handleItemTap = (e, item, list, index) => {
           e.stopPropagation();
           const now = Date.now();
@@ -630,14 +621,12 @@
           const lastTap = lastTapMap.current[src] || 0;
 
           if (now - lastTap < DOUBLE_PRESS_DELAY) {
-            // DOUBLE TAP detected: Like item
             if (tapTimeoutMap.current[src]) {
               clearTimeout(tapTimeoutMap.current[src]);
               delete tapTimeoutMap.current[src];
             }
             toggleLike(src);
           } else {
-            // SINGLE TAP schedule: Open Lightbox
             tapTimeoutMap.current[src] = setTimeout(() => {
               setLightboxList(list);
               setLightboxIndex(index);
@@ -647,7 +636,6 @@
           lastTapMap.current[src] = now;
         };
 
-        // --- Ripple Transition State & Logic ---
         const [pageRipple, setPageRipple] = useState({ active: false, x: 0, y: 0, expanding: false, fading: false });
 
         const handleMulaiProyekClick = (e) => {
@@ -661,28 +649,23 @@
             setIsMenuOpen(false);
             setPageRipple({ active: true, x, y, expanding: false, fading: false });
 
-            // Start expanding ripple
             setTimeout(() => {
                 setPageRipple(prev => ({ ...prev, expanding: true }));
             }, 10);
 
-            // Change page when screen is covered
             setTimeout(() => {
                 setCurrentPage('mulai-proyek');
             }, 600);
 
-            // Start fading out ripple
             setTimeout(() => {
                 setPageRipple(prev => ({ ...prev, fading: true }));
             }, 650);
 
-            // Cleanup
             setTimeout(() => {
                 setPageRipple({ active: false, x: 0, y: 0, expanding: false, fading: false });
             }, 1150);
         };
 
-        // --- Screenshot Protection for Portfolio ---
         useEffect(() => {
             const handleScreenshotAttempt = (e) => {
                 if (currentPage !== 'portfolio') return;
@@ -691,12 +674,10 @@
                 const isWinScreenshot = e.key === 'PrintScreen';
 
                 if (isMacScreenshot || isWinScreenshot) {
-                    // Try to overwrite clipboard data
                     try {
                         navigator.clipboard.writeText('Screenshots are disabled for portfolio items.');
                     } catch (err) {}
 
-                    // Display "nonow.." in the middle of the screen
                     const el = document.createElement('div');
                     el.textContent = 'nonow..';
                     el.className = 'nonow-text';
@@ -752,16 +733,16 @@
         const initialClipRef = useRef('inset(0px 0px 0px 0px round 2rem)');
         const [clipPathStyle, setClipPathStyle] = useState('inset(0px 0px 0px 0px round 2rem)');
 
-        // --- Portfolio Page Logic ---
         const [portfolioFilter, setPortfolioFilter] = useState('all');
         const filterOptions = [
             { id: 'all', label: 'Semua Karya' },
-            { id: 'desain', label: 'Desain Branding' },
+            { id: 'logo', label: 'Logo' },
+            { id: 'flyer', label: 'Flyer' },
             { id: 'website', label: 'Website' },
             { id: 'konstruksi', label: 'Gambar 3D' },
-            { id: 'company_profile', label: 'Media Cetak' },
+            { id: 'media_cetak', label: 'Media Cetak' },
             { id: 'aplikasi', label: 'Digital' },
-            { id: 'layout', label: 'Layout' }
+            { id: 'banner', label: 'Banner' }
         ];
         
         const allPortfolioItems = useMemo(() => {
@@ -769,7 +750,6 @@
                 items.map(src => ({ category, src }))
             );
             
-            // Stable Fisher-Yates Shuffle to mix categories beautifully
             const shuffled = [...items];
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -783,7 +763,6 @@
             return allPortfolioItems.filter(item => item.category === portfolioFilter);
         }, [portfolioFilter, allPortfolioItems]);
 
-        // --- ORDERED HIGH-PERFORMANCE PRELOAD MANAGER ---
         useEffect(() => {
           if (!isLoaded) return;
           
@@ -795,7 +774,6 @@
           ];
 
           const preloadPipeline = async () => {
-            // STEP 1: Preload hover avatars first to ensure buttery smooth interactive experiences
             await Promise.all(
               avatarImages.map(src => {
                 return new Promise((resolve) => {
@@ -807,7 +785,6 @@
               })
             );
 
-            // STEP 2: Stagger the preload of downstream portfolio assets to avoid network thread bottlenecks
             const triggerStaggeredPreload = () => {
               const portfolioArray = allPortfolioItems;
               let currentIndex = 0;
@@ -836,7 +813,6 @@
           preloadPipeline();
         }, [isLoaded, allPortfolioItems]);
 
-        // --- Estimasi Page Logic ---
         const pricingCategories = [
             {
                 id: 'desain', title: 'Desain Grafis', icon: PenTool, color: 'text-blue-500', bg: 'bg-blue-100',
@@ -908,7 +884,6 @@
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
         };
 
-        // --- Mulai Proyek Page Logic ---
         const [mulaiProyekStep, setMulaiProyekStep] = useState(1);
         const [mulaiProyekForm, setMulaiProyekForm] = useState({
             nama: '', brand: '', whatsapp: '', layanan: [], deskripsi: '', targetPasar: '', referensi: '', budget: '', timeline: ''
@@ -948,7 +923,6 @@
             window.open(`https://wa.me/6283192054797?text=${encodeURIComponent(msg)}`, '_blank');
         };
 
-        // --- Testimonial Carousel ---
         const [testiIdx, setTestiIdx] = useState(0);
         const [slideDir, setSlideDir] = useState('next');
         const nextTesti = () => { setSlideDir('next'); setTestiIdx((prev) => (prev + 1) % testimonials.length); };
@@ -981,7 +955,6 @@
           { name: "Rina Melati", role: "Founder, BeautyGlow", text: "Website professional yang dibuatkan Fajar benar-benar mempercepat operasional kasir and manajemen stok kami." }
         ];
 
-        // --- Bento Service Clip Transition ---
         const [activeBentoItems, setActiveBentoItems] = useState([]);
 
         const openService = (e, serviceId) => {
@@ -998,11 +971,17 @@
           initialClipRef.current = startClip;
           setClipPathStyle(startClip);
 
-          // Standardize flat service string paths into unified lightbox models
-          const itemsList = portfolioData[serviceId]?.map(path => ({
-             category: serviceId,
-             src: path
-          })) || [];
+          let itemsList = [];
+          if (serviceId === 'desain') {
+             const logos = portfolioData.logo?.map(path => ({ category: 'logo', src: path })) || [];
+             const flyers = portfolioData.flyer?.map(path => ({ category: 'flyer', src: path })) || [];
+             itemsList = [...logos, ...flyers];
+          } else {
+             itemsList = portfolioData[serviceId]?.map(path => ({
+                category: serviceId,
+                src: path
+             })) || [];
+          }
           setActiveBentoItems(itemsList);
 
           setActiveServiceContent(serviceId);
@@ -1071,7 +1050,6 @@
         return (
           <div className="w-full min-h-[100dvh] overflow-x-clip bg-white text-slate-900 selection:bg-black selection:text-white relative z-0">
             
-            {/* --- SUBTLE DEPTH GRID --- */}
             <RevealGrid 
                 className="absolute top-0 left-0 w-full h-[120vh] pointer-events-none opacity-50"
                 animationClass="animate-grid-top"
@@ -1081,7 +1059,6 @@
                 }}
             />
 
-            {/* --- RIPPLE OVERLAY --- */}
             {pageRipple.active && (
                 <div 
                     className={`page-ripple ${pageRipple.expanding ? 'expanding' : ''} ${pageRipple.fading ? 'fading' : ''}`}
@@ -1089,7 +1066,6 @@
                 ></div>
             )}
 
-            {/* --- SHARED HEADER --- */}
             <header className={`fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl z-50 transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-12'}`}>
               <div ref={headerWrapperRef} className={`bg-white/80 backdrop-blur-xl border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 overflow-hidden rounded-[2rem] relative`}>
                 <span className="absolute top-0 left-0 bg-green-500 rounded-full pointer-events-none z-50 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] w-[5px] h-[5px]" style={{ transform: `translate(${dotStyle.x}px, ${dotStyle.y}px)`, opacity: dotStyle.opacity }}></span>
@@ -1218,9 +1194,9 @@
                             <div onClick={(e) => openService(e, 'desain')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('desain')}><h3 className="text-xl font-bold mb-1">Identitas & Branding Visual</h3><p className="text-slate-500 text-sm">Logo, flyer, and packaging premium untuk memperkuat karakter brand di mata pasar.</p><div className="absolute right-0 bottom-0 w-64 h-48 bg-gradient-to-tl from-blue-200 to-transparent rounded-tl-full opacity-50 translate-x-10 translate-y-10 group-hover:scale-110 transition-transform duration-500"></div><PenTool className="absolute bottom-8 right-12 text-blue-500 w-24 h-24 opacity-20 group-hover:opacity-40 transition-opacity" /></div></div>
                             <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer"><div className={getTileContentClass('website')}><h3 className="text-xl font-bold mb-1 text-white">Website Professional</h3><p className="text-slate-400 text-sm">Landing page yang dioptimalkan untuk performa, SEO, and konversi maksimal.</p><Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" /></div></div>
                             <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('konstruksi')}><h3 className="text-xl font-bold mb-1">Gambar 3D & Visualisasi</h3><p className="text-slate-500 text-sm">Desain food stall and modeling arsitektur 3D yang nyata and presisi.</p><Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" /></div></div>
-                            <div onClick={(e) => openService(e, 'company_profile')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('company_profile')}><h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3><p className="text-slate-500 text-sm">Profil perusahaan, book design, and media cetak elegan.</p><Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" /></div></div>
+                            <div onClick={(e) => openService(e, 'media_cetak')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('media_cetak')}><h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3><p className="text-slate-500 text-sm">Profil perusahaan, book design, and media cetak elegan.</p><Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" /></div></div>
                             <div onClick={(e) => openService(e, 'aplikasi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('aplikasi')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
-                            <div onClick={(e) => openService(e, 'layout')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('layout')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
+                            <div onClick={(e) => openService(e, 'banner')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('banner')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
                           </div>
                         </div>
 
@@ -1241,7 +1217,6 @@
                                                 >
                                                   <DynamicImage src={item.src} alt={`Portfolio ${itemIdx}`} minimalFallback={true} className="w-full h-full object-cover" shimmerDelay={true} />
                                                   
-                                                  {/* Instagram-style heart pop overlay */}
                                                   {animatingHearts[item.src] && (
                                                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
                                                       <svg className="w-20 h-20 text-red-500 fill-current animate-heart-pop drop-shadow-[0_10px_20px_rgba(239,68,68,0.4)]" viewBox="0 0 24 24">
@@ -1250,7 +1225,6 @@
                                                     </div>
                                                   )}
 
-                                                  {/* Persistent corner heart liked-badge */}
                                                   {likedItems[item.src] && (
                                                     <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md p-1.5 rounded-full shadow-md z-20">
                                                       <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
@@ -1333,7 +1307,7 @@
                     
                     <Reveal direction="up" className="text-center mb-10">
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Eksplorasi & Karya</h1>
-                        <p className="text-slate-500 font-medium max-w-2xl mx-auto">Koleksi desain kreatif, perencanaan visual, dan pengembangan digital yang pernah kami kerjakan.</p>
+                        <p className="text-slate-500 font-medium max-w-2xl mx-auto">Koleksi desain kreatif, perencanaan visual, dan pengembangan digital yang pernah Saya kerjakan.</p>
                     </Reveal>
 
                     <Reveal delay={150} direction="up" className="flex flex-wrap justify-center gap-2 mb-12">
@@ -1368,7 +1342,6 @@
                                         shimmerDelay={true}
                                     />
 
-                                    {/* Pop heart animation */}
                                     {animatingHearts[item.src] && (
                                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
                                         <svg className="w-20 h-20 text-red-500 fill-current animate-heart-pop drop-shadow-[0_10px_20px_rgba(239,68,68,0.4)]" viewBox="0 0 24 24">
@@ -1377,7 +1350,6 @@
                                       </div>
                                     )}
 
-                                    {/* Persistent Heart badge */}
                                     {likedItems[item.src] && (
                                       <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md p-1.5 rounded-full shadow-md z-20 pointer-events-none">
                                         <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
@@ -1386,7 +1358,6 @@
                                       </div>
                                     )}
 
-                                    {/* Hover gradient overlay has pointer-events-none so it doesn't block card clicks */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6 justify-between pointer-events-none">
                                         <span className="text-white font-bold capitalize bg-black/30 backdrop-blur-md px-4 py-1.5 rounded-full text-xs shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                                             {item.category.replace('_', ' ')}
@@ -1418,10 +1389,8 @@
                     </Reveal>
 
                     <div className="space-y-12 mb-16">
-                        {/* Agency vs Fajar (Horizontal Split Card) */}
                         <Reveal delay={100} direction="up" className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 relative items-stretch">
-                                {/* Left Side: Competitor */}
                                 <div className="flex flex-col justify-between">
                                     <div>
                                         <h3 className="text-2xl font-bold mb-6 flex items-center gap-3 text-slate-400"><Monitor className="text-slate-400"/> Design Agency</h3>
@@ -1438,7 +1407,6 @@
                                     </div>
                                 </div>
 
-                                {/* Premium Center Divider */}
                                 <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-gray-300/40 -translate-x-1/2">
                                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] py-2 px-1 text-[10px] font-black text-slate-400 tracking-widest uppercase">VS</div>
                                 </div>
@@ -1446,7 +1414,6 @@
                                     <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] px-4 text-[10px] font-black text-slate-400 tracking-widest uppercase">VS</span>
                                 </div>
 
-                                {/* Right Side: Fajar Jayadi */}
                                 <div className="flex flex-col justify-between md:pl-8">
                                     <div>
                                         <h3 className="text-2xl font-bold mb-6 flex items-center gap-3 text-black"><CheckCircle2 className="text-green-500"/> Fajar Jayadi</h3>
@@ -1465,10 +1432,8 @@
                             </div>
                         </Reveal>
 
-                        {/* Famous Freelancer vs Fajar (Horizontal Split Card) */}
                         <Reveal delay={200} direction="up" className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 relative items-stretch">
-                                {/* Left Side: Competitor */}
                                 <div className="flex flex-col justify-between">
                                     <div>
                                         <h3 className="text-2xl font-bold mb-6 flex items-center gap-3 text-slate-400"><Star className="text-slate-400"/> "Famous" Freelancer</h3>
@@ -1485,7 +1450,6 @@
                                     </div>
                                 </div>
 
-                                {/* Premium Center Divider */}
                                 <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-gray-300/40 -translate-x-1/2">
                                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] py-2 px-1 text-[10px] font-black text-slate-400 tracking-widest uppercase">VS</div>
                                 </div>
@@ -1493,7 +1457,6 @@
                                     <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] px-4 text-[10px] font-black text-slate-400 tracking-widest uppercase">VS</span>
                                 </div>
 
-                                {/* Right Side: Fajar Jayadi */}
                                 <div className="flex flex-col justify-between md:pl-8">
                                     <div>
                                         <h3 className="text-2xl font-bold mb-6 flex items-center gap-3 text-black"><CheckCircle2 className="text-green-500"/> Fajar Jayadi</h3>
@@ -1513,7 +1476,6 @@
                         </Reveal>
                     </div>
 
-                    {/* Multi-talent Edge */}
                     <Reveal delay={300} direction="up" className="bg-slate-900 text-white rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
                         <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
@@ -1564,7 +1526,6 @@
                     </Reveal>
 
                     <div className="flex flex-col lg:flex-row gap-8 items-start">
-                        {/* Left Column: Form / Inputs */}
                         <div className="w-full lg:w-2/3 flex flex-col gap-6">
                             
                             <Reveal delay={100} direction="right" className="bg-[#F5F5F7] rounded-[2rem] p-6 md:p-8 border border-gray-200/50">
@@ -1586,7 +1547,6 @@
                                                 <ChevronDown size={20} className={`text-slate-400 transition-transform duration-300 ${estimasiExpandedCat === category.id ? 'rotate-180' : ''}`} />
                                             </button>
                                             
-                                            {/* Dropdown Content */}
                                             <div className={`transition-all duration-500 ease-in-out bg-slate-50 border-t border-gray-100 ${estimasiExpandedCat === category.id ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
                                                 <div className="p-5 flex flex-col gap-3">
                                                     {category.items.map(item => {
@@ -1639,7 +1599,6 @@
 
                         </div>
 
-                        {/* Right Column: Sticky Summary */}
                         <Reveal delay={300} direction="left" className="w-full lg:w-1/3 sticky top-32">
                             <div className="bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
                                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-500 rounded-full mix-blend-screen filter blur-[40px] opacity-20 pointer-events-none"></div>
@@ -1699,7 +1658,6 @@
                         <p className="text-slate-500 font-medium max-w-2xl mx-auto text-lg">Ceritakan visi Anda. Formulir progresif ini dirancang untuk menggali kebutuhan and ekspektasi Anda agar hasil akhir bisa melampaui standar.</p>
                     </Reveal>
 
-                    {/* Progress Indicator */}
                     <Reveal delay={150} direction="up" className="mb-12">
                         <div className="flex justify-between items-center relative max-w-2xl mx-auto">
                             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 -z-10 rounded-full"></div>
@@ -1720,7 +1678,6 @@
                         </div>
                     </Reveal>
 
-                    {/* Step 1: Identitas */}
                     <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 1 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
                         <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
                             <h2 className="text-2xl font-bold mb-8">Informasi Dasar</h2>
@@ -1753,7 +1710,6 @@
                         </div>
                     </div>
 
-                    {/* Step 2: Layanan */}
                     <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 2 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
                         <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
                             <h2 className="text-2xl font-bold mb-2">Kebutuhan Proyek</h2>
@@ -1792,7 +1748,6 @@
                         </div>
                     </div>
 
-                    {/* Step 3: Brief */}
                     <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 3 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
                         <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
                             <h2 className="text-2xl font-bold mb-2">Brief Singkat</h2>
@@ -1820,7 +1775,6 @@
                         </div>
                     </div>
 
-                    {/* Step 4: Budget & Timeline */}
                     <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 4 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
                         <div className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50 shadow-sm">
                             <h2 className="text-2xl font-bold mb-2">Timeline & Budget</h2>
@@ -1865,7 +1819,6 @@
                         </div>
                     </div>
 
-                    {/* Step 5: Review & Submit */}
                     <div className={`transition-all duration-500 ease-in-out ${mulaiProyekStep === 5 ? 'opacity-100 transform-none block' : 'opacity-0 translate-x-10 hidden'}`}>
                         <div className="bg-slate-900 text-white rounded-[2rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
                             <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-500/20 rounded-full mix-blend-screen filter blur-[80px] opacity-20 pointer-events-none"></div>
@@ -1897,22 +1850,21 @@
                 </div>
             )}
 
-            {/* --- SHARED FOOTER --- */}
             <footer className="bg-slate-900 text-white pt-20 pb-10 px-6">
               <Reveal direction="up" className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-16 mb-16">
                 <div className="max-w-sm">
-                  <h3 className="text-2xl font-bold mb-6 text-white">Mari berkolaborasi and diskusikan potensi Anda.</h3>
+                  <h3 className="text-2xl font-bold mb-6 text-white">Mari eksekusi dan realisasikan ide brilian Anda.</h3>
                   <button 
                     onClick={() => window.open(`https://wa.me/6283192054797?text=${encodeURIComponent("Halo Fajar, saya berkunjung ke website portofolio Anda dan ingin berdiskusi tentang peluang kerja sama!")}`, '_blank')} 
                     className="w-full flex items-center justify-center gap-2 bg-[#128C7E] hover:bg-[#25D366] text-white py-4 px-6 rounded-full text-sm font-bold transition-colors shadow-lg shadow-green-900/30"
                   >
                     Hubungi via WhatsApp
                   </button>
-                  <p className="text-xs text-slate-400 mt-4 opacity-80">Respon cepat untuk setiap id brilian Anda.</p>
+                  <p className="text-xs text-slate-400 mt-4 opacity-80">Respon cepat, Available 24 Jam.</p>
                 </div>
                 <div><h4 className="font-bold mb-4 text-white">Solusi</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" className="hover:text-green-400 transition-colors">Desain Branding</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Website Professional</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Gambar 3D</a></li><li><a href="#" className="hover:text-green-400 transition-colors">Konsultasi Digital</a></li></ul></div><div><h4 className="font-bold mb-4 text-white">Profil</h4><ul className="space-y-3 text-sm text-slate-400"><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); }} className="hover:text-green-400 transition-colors">Tentang Fajar</a></li><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('portfolio'); }} className="hover:text-green-400 transition-colors">Portofolio</a></li><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('estimasi'); }} className="hover:text-green-400 transition-colors">Estimasi Biaya</a></li><li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('why-fajar'); }} className="hover:text-green-400 transition-colors">Kenapa ke Fajar?</a></li></ul></div>
               </Reveal>
-              <Reveal delay={200} direction="up" className="max-w-6xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium"><p>© 2026 Fajar Jayadi. Dedicated to Value-Driven Excellence.</p><div className="flex gap-4"><a href="#" className="hover:text-white transition-colors">Instagram</a><a href="#" className="hover:text-white transition-colors">LinkedIn</a><a href="#" className="hover:text-white transition-colors">Behance</a></div></Reveal>
+              <Reveal delay={200} direction="up" className="max-w-6xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium"><p>© 2026 Fajar Jayadi. Dedicated to Value-Driven Excellence.</p><div className="flex gap-4"><a href="https://www.instagram.com/efjayadi" className="hover:text-white transition-colors">Instagram</a><a href="https://id.linkedin.com/in/fajar-jayadi-21a39b184" className="hover:text-white transition-colors">LinkedIn</a><a href="https://www.chess.com/member/fajar-jayadi" className="hover:text-white transition-colors">Chess</a></div></Reveal>
             </footer>
 
             {/* --- LIGHTBOX MODAL PREVIEW --- */}
@@ -1921,7 +1873,6 @@
                 className="fixed inset-0 z-[9999] flex flex-col items-center justify-center p-4 md:p-8 select-none overflow-hidden bg-black/90"
                 onClick={closeLightbox}
               >
-                {/* Immersive full-screen background blur projection */}
                 <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden transition-all duration-500">
                   <img 
                     src={lightboxList[lightboxIndex].src} 
@@ -1930,7 +1881,6 @@
                   <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/45 to-black/85"></div>
                 </div>
 
-                {/* Close Button */}
                 <button 
                   onClick={closeLightbox}
                   className="absolute top-6 right-6 text-white/50 hover:text-white hover:rotate-90 transition-all duration-300 z-[10000] p-1.5 bg-white/5 hover:bg-white/15 rounded-full"
@@ -1938,12 +1888,10 @@
                   <XCircle size={32} />
                 </button>
 
-                {/* Main Lightbox Flex Layout wrapper containing the side strip previews */}
                 <div 
                   className="w-full max-w-5xl flex items-center justify-center gap-3 md:gap-8 relative z-10"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {/* --- LEFT PREVIEW STRIP (PREVIOUS IMAGE) --- */}
                   {(() => {
                     const prevIndex = (lightboxIndex - 1 + lightboxList.length) % lightboxList.length;
                     const prevItem = lightboxList[prevIndex];
@@ -1966,20 +1914,18 @@
                     );
                   })()}
 
-                                  {/* --- CENTER ACTIVE FRAME (PERFECT 1:1 SQUARE) --- */}
+                  {/* --- CENTER ACTIVE FRAME (1:1 FULL COVER WITH NO PADDING) --- */}
                   <div className="flex-1 max-w-md md:max-w-lg flex flex-col items-center justify-center">
                     <div 
                       className={`w-full aspect-square bg-zinc-950/80 rounded-3xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] border border-white/15 relative transition-all duration-300 ease-out flex items-center justify-center ${lightboxTransitioning ? 'opacity-0 scale-95 blur-md translate-y-2' : 'opacity-100 scale-100 blur-0 translate-y-0'}`}
                       onClick={(e) => handleItemTap(e, lightboxList[lightboxIndex], lightboxList, lightboxIndex)}
                     >
-                      {}
                       <img 
                         src={lightboxList[lightboxIndex].src} 
                         alt="Karya Detail" 
                         className="w-full h-full object-cover relative z-10 pointer-events-none"
                       />
 
-                      {/* Pop-up heart animation */}
                       {animatingHearts[lightboxList[lightboxIndex].src] && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
                           <svg className="w-24 h-24 text-red-500 fill-current animate-heart-pop drop-shadow-[0_15px_30px_rgba(239,68,68,0.5)]" viewBox="0 0 24 24">
@@ -1989,7 +1935,6 @@
                       )}
                     </div>
 
-                    {/* Metadata & Liked Control Area */}
                     <div className="mt-5 flex flex-row items-center justify-between w-full px-2 text-white">
                       <div className="flex flex-col">
                         <span className="text-xs uppercase font-black tracking-widest text-slate-400 mb-0.5">
@@ -2000,7 +1945,6 @@
                         </span>
                       </div>
 
-                      {/* Double-tap status indicator button */}
                       <button 
                         onClick={() => toggleLike(lightboxList[lightboxIndex].src)}
                         className="flex items-center gap-2 bg-white/5 hover:bg-white/15 px-4 py-2 rounded-full border border-white/5 transition-all text-xs font-bold"
@@ -2021,7 +1965,6 @@
                     </div>
                   </div>
 
-                  {/* --- RIGHT PREVIEW STRIP (NEXT IMAGE) --- */}
                   {(() => {
                     const nextIndex = (lightboxIndex + 1) % lightboxList.length;
                     const nextItem = lightboxList[nextIndex];
