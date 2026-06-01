@@ -358,39 +358,7 @@
           '/assets/img/portfolio/Book/book-psj.png',
           '/assets/img/portfolio/Book/book-tja.png',
           '/assets/img/portfolio/Book/CompanyProfile/PSJ/cp-psj.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/1.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/2.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/3.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/4.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/5.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/6.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/7.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/8.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/9.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/10.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/11.png',
-          '/assets/img/portfolio/Book/CompanyProfile/PSJ/12.png',
-          '/assets/img/portfolio/Proposal/p-aw.png',
-          '/assets/img/portfolio/Proposal/1.png',
-          '/assets/img/portfolio/Proposal/2.png',
-          '/assets/img/portfolio/Proposal/3.png',
-          '/assets/img/portfolio/Proposal/4.png',
-          '/assets/img/portfolio/Proposal/5.png',
-          '/assets/img/portfolio/Proposal/6.png',
-          '/assets/img/portfolio/Proposal/7.png',
-          '/assets/img/portfolio/Proposal/8.png',
-          '/assets/img/portfolio/Proposal/9.png',
-          '/assets/img/portfolio/Proposal/10.png',
-          '/assets/img/portfolio/Proposal/11.png',
-          '/assets/img/portfolio/Proposal/12.png',
-          '/assets/img/portfolio/Proposal/13.png',
-          '/assets/img/portfolio/Proposal/14.png',
-          '/assets/img/portfolio/Proposal/15.png',
-          '/assets/img/portfolio/Proposal/16.png',
-          '/assets/img/portfolio/Proposal/17.png',
-          '/assets/img/portfolio/Proposal/18.png',
-          '/assets/img/portfolio/Proposal/19.png',
-          '/assets/img/portfolio/Proposal/20.png'
+          '/assets/img/portfolio/Proposal/p-aw.png'
         ]
       };
 
@@ -507,7 +475,7 @@
                loading={priority === 'high' ? 'eager' : 'lazy'}
                fetchpriority={priority}
                decoding="async"
-               className={`w-full h-full ${objectFit} transition-all duration-700 ease-out ${isLoaded ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-95 blur-md'} relative z-10`} 
+               className={`w-full h-full ${objectFit} transition-all duration-700 ease-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} 
              />
           </div>
         );
@@ -708,7 +676,7 @@
                   const img = new Image();
                   img.src = src;
                   img.onload = resolve;
-                  img.onerror = resolve; // Gracefully continue if some images fail
+                  img.onerror = resolve; 
                 });
               })
             );
@@ -717,7 +685,7 @@
             const triggerStaggeredPreload = () => {
               const portfolioArray = allPortfolioItems;
               let currentIndex = 0;
-              const batchSize = 3; // Stagger in batches to keep connection channels free
+              const batchSize = 3; 
 
               const queueNextBatch = () => {
                 if (currentIndex >= portfolioArray.length) return;
@@ -727,12 +695,11 @@
                   img.src = item.src;
                 });
                 currentIndex += batchSize;
-                setTimeout(queueNextBatch, 150); // Stagger by 150ms
+                setTimeout(queueNextBatch, 150); 
               };
               queueNextBatch();
             };
 
-            // Use requestIdleCallback if supported to fully prioritize rendering thread
             if ('requestIdleCallback' in window) {
               window.requestIdleCallback(() => triggerStaggeredPreload());
             } else {
@@ -775,8 +742,8 @@
         ];
 
         const [estimasiExpandedCat, setEstimasiExpandedCat] = useState(null);
-        const [estimasiSelectedItems, setEstimasiSelectedItems] = useState({}); // { itemId: true }
-        const [estimasiDeadline, setEstimasiDeadline] = useState(7); // Days
+        const [estimasiSelectedItems, setEstimasiSelectedItems] = useState({}); 
+        const [estimasiDeadline, setEstimasiDeadline] = useState(7); 
 
         const toggleEstimasiCategory = (catId) => {
             setEstimasiExpandedCat(prev => prev === catId ? null : catId);
@@ -800,14 +767,13 @@
                 });
             });
 
-            // Deadline multiplier logic
             let multiplier = 1.0;
             if (estimasiDeadline === 1) multiplier = 2.0;
             else if (estimasiDeadline === 2) multiplier = 1.8;
             else if (estimasiDeadline === 3) multiplier = 1.5;
             else if (estimasiDeadline === 4) multiplier = 1.3;
             else if (estimasiDeadline <= 6) multiplier = 1.1;
-            else multiplier = 1.0; // 7+ days
+            else multiplier = 1.0; 
 
             return baseTotal * multiplier;
         }, [estimasiSelectedItems, estimasiDeadline]);
@@ -855,7 +821,6 @@
             const msg = `Halo Fajar, saya tertarik untuk mulai proyek!\n\n*1. Identitas*\nNama: ${mulaiProyekForm.nama}\nBrand/Perusahaan: ${mulaiProyekForm.brand}\nWhatsApp: ${mulaiProyekForm.whatsapp}\n\n*2. Layanan*\nKebutuhan: ${mulaiProyekForm.layanan.length > 0 ? mulaiProyekForm.layanan.join(', ') : '-'}\n\n*3. Brief Singkat*\nDeskripsi Bisnis: ${mulaiProyekForm.deskripsi || '-'}\nTarget Pasar: ${mulaiProyekForm.targetPasar || '-'}\nReferensi Visual: ${mulaiProyekForm.referensi || '-'}\n\n*4. Timeline & Budget*\nTimeline: ${mulaiProyekForm.timeline || '-'}\nEstimasi Budget: ${mulaiProyekForm.budget || '-'}`;
             window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`, '_blank');
         };
-        // -------------------------
 
         const [testiIdx, setTestiIdx] = useState(0);
         const [slideDir, setSlideDir] = useState('next');
@@ -898,7 +863,7 @@
           const top = cardRect.top - containerRect.top;
           const left = cardRect.left - containerRect.left;
           const right = containerRect.right - cardRect.right;
-          const bottom = containerRect.bottom - cardRect.bottom;
+          const bottom = containerRect.bottom - containerRect.bottom;
           const startClip = `inset(${top}px ${right}px ${bottom}px ${left}px round 2rem)`;
           initialClipRef.current = startClip;
           setClipPathStyle(startClip);
@@ -1652,7 +1617,7 @@
                                 <Send size={32} />
                             </div>
                             <h2 className="text-3xl font-black mb-4">Siap Mengirim Brief?</h2>
-                            <p className="text-slate-400 max-w-lg">Semua informasi Anda telah direkap. Klik tombol di bawah untuk mengirim form ini langsung ke WhatsApp saya agar kita bisa segera berdiskusi.</p>
+                            <p className="text-slate-400 max-w-lg">Semua informasi Anda telah direkap. Klik tombol di bawah untuk mengirim form ini langsung to WhatsApp saya agar kita bisa segera berdiskusi.</p>
                         </div>
 
                         <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 mb-10 relative z-10">
