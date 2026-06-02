@@ -299,7 +299,7 @@
             box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.03);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
-            min-height: 160px; /* Cut half from previous 280px */
+            height: 160px; /* Set exact height to 160px */
         }
         .movie-light-card:hover {
             transform: translateY(-4px) scale(1.005);
@@ -413,7 +413,7 @@
                 flex-direction: row; /* Keep horizontal flex on mobile for half height layout */
                 align-items: stretch;
                 padding: 0;
-                min-height: 130px;
+                height: 130px; /* Set exact mobile height to 130px */
             }
             .movie-light-poster {
                 flex: 0 0 80px;
