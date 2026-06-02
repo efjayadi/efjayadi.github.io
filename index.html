@@ -888,13 +888,13 @@
                     )}
 
                     <div className="book-container w-full h-full">
-                        <div ref={flipbookRef} className="shadow-book bg-slate-950 rounded-none overflow-visible" style={{ width: dimensions.width || '800px', height: dimensions.height || '500px', display: loading ? 'none' : 'block' }}>
+                        <div ref={flipbookRef} className="shadow-book bg-transparent rounded-none overflow-visible" style={{ width: dimensions.width || '800px', height: dimensions.height || '500px', display: loading ? 'none' : 'block' }}>
                             {Array.from({ length: numPages }).map((_, index) => {
                                 const pageNum = index + 1;
                                 return (
-                                    <div key={pageNum} className="overflow-hidden bg-slate-950 rounded-none">
-                                        <div className="w-full h-full flex items-center justify-center bg-slate-950">
-                                            <canvas ref={el => canvasesRef.current[pageNum] = el} className="w-full h-full block rounded-none" />
+                                    <div key={pageNum} className="overflow-hidden bg-transparent rounded-none">
+                                        <div className="w-full h-full flex items-center justify-center bg-transparent">
+                                            <canvas ref={el => canvasesRef.current[pageNum] = el} className="w-full h-full block rounded-none shadow-lg" />
                                         </div>
                                     </div>
                                 );
@@ -1265,6 +1265,9 @@
              const logos = portfolioData.logo?.map(path => ({ category: 'logo', src: path, isIframe: false })) || [];
              const flyers = portfolioData.flyer?.map(path => ({ category: 'flyer', src: path, isIframe: false })) || [];
              itemsList = [...logos, ...flyers];
+          } else if (serviceId === 'konstruksi') {
+             // Correctly populating empty sketchup items portfolio mapping
+             itemsList = portfolioData.sketchup?.map(path => ({ category: 'sketchup', src: path, isIframe: false })) || [];
           } else {
              itemsList = portfolioData[serviceId]?.map(item => {
                 if (typeof item === 'string') {
@@ -1358,7 +1361,6 @@
                 ></div>
             )}
 
-            {}
             <header className={`fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl z-50 transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-12'}`}>
               <div ref={headerWrapperRef} className={`bg-white/80 backdrop-blur-xl border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 overflow-hidden rounded-[2rem] relative`}>
                 <span className="absolute top-0 left-0 bg-green-500 rounded-full pointer-events-none z-50 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] w-[5px] h-[5px]" style={{ transform: `translate(${dotStyle.x}px, ${dotStyle.y}px)`, opacity: dotStyle.opacity }}></span>
@@ -1389,7 +1391,6 @@
             {/* --- HOMEPAGE VIEW --- */}
             {currentPage === 'home' && (
                 <div className="animate-page-mount">
-                    {}
                     <section className="pt-40 pb-20 px-6 flex flex-col items-center text-center relative max-w-5xl mx-auto">
                       <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
                         {["Jasa", "Desain", "Grafis,"].map((word, i) => (
@@ -1442,7 +1443,6 @@
                       <Reveal delay={200} direction="up"><p className="text-2xl md:text-3xl font-semibold text-center max-w-3xl leading-snug mb-10 md:mb-16 text-slate-900">Membantu merealisasikan ide bisnis Anda secara <span ref={wordsRef} className="inline-flex gap-x-2 flex-wrap justify-center font-bold text-gray-400 mx-2">{bouncyWords.map((word, i) => (<span key={i} className={`inline-block ${wordsTriggered ? 'animate-bounce-color' : ''}`} style={{ animationDelay: `${i * 0.15}s`, animationFillMode: 'forwards' }}>{word}</span>))}</span> Mengeksekusi setiap detail dengan cermat agar visi Anda terwujud tanpa celah and memberikan hasil yang bisa diandalkan.</p></Reveal>
                     </section>
 
-                    {}
                     <section className="pt-10 pb-24 px-6 relative z-0">
                       <RevealGrid 
                         className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-full pointer-events-none opacity-30"
@@ -1453,12 +1453,73 @@
                       <div ref={bentoSectionRef} className="max-w-6xl mx-auto grid grid-cols-1 grid-rows-1 relative">
                         <div className="col-start-1 col-end-1 row-start-1 row-end-1 w-full">
                           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[15rem]">
-                            <div onClick={(e) => openService(e, 'desain')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('desain')}><h3 className="text-xl font-bold mb-1">Identitas & Branding Visual</h3><p className="text-slate-500 text-sm">Logo, flyer, and packaging premium untuk memperkuat karakter brand di mata pasar.</p><div className="absolute right-0 bottom-0 w-64 h-48 bg-gradient-to-tl from-blue-200 to-transparent rounded-tl-full opacity-50 translate-x-10 translate-y-10 group-hover:scale-110 transition-transform duration-500"></div><PenTool className="absolute bottom-8 right-12 text-blue-500 w-24 h-24 opacity-20 group-hover:opacity-40 transition-opacity" /></div></div>
-                            <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer"><div className={getTileContentClass('website')}><h3 className="text-xl font-bold mb-1 text-white">Website Professional</h3><p className="text-slate-400 text-sm">Landing page yang dioptimalkan untuk performa, SEO, and konversi maksimal.</p><Layout className="absolute bottom-8 right-8 text-green-400 w-16 h-16 opacity-50 group-hover:scale-110 transition-transform" /></div></div>
-                            <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('konstruksi')}><h3 className="text-xl font-bold mb-1">Gambar 3D & Visualisasi</h3><p className="text-slate-500 text-sm">Desain food stall and modeling arsitektur 3D yang nyata and presisi.</p><Box className="absolute bottom-8 right-8 text-orange-500 w-16 h-16 opacity-30 group-hover:rotate-12 transition-transform" /></div></div>
-                            <div onClick={(e) => openService(e, 'media_cetak')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('media_cetak')}><h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3><p className="text-slate-500 text-sm">Profil perusahaan, book design, and media cetak elegan.</p><Smartphone className="absolute bottom-8 right-8 text-purple-500 w-16 h-16 opacity-30 group-hover:-rotate-12 transition-transform" /></div></div>
-                            <div onClick={(e) => openService(e, 'digital')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer"><div className={getTileContentClass('digital')}><h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3><p className="text-slate-500 text-sm">Custom social media feed and visual sistem untuk operasional bisnis.</p><div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-20 h-40 bg-blue-100 rounded-[1.25rem] border-4 border-white shadow-lg flex flex-col p-2 gap-2 group-hover:-translate-y-4 transition-transform duration-500"><div className="w-full h-4 bg-blue-200 rounded-full"></div><div className="w-full flex-grow bg-blue-50 rounded-lg"></div></div></div></div>
-                            <div onClick={(e) => openService(e, 'banner')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer"><div className={`${getTileContentClass('banner')} flex flex-col justify-center`}><h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3><p className="text-slate-500 text-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p><div className="mt-6 flex gap-2 items-end h-16">{[40, 70, 45, 90, 60, 80, 50, 100].map((h, i) => (<div key={i} className="w-full bg-slate-300 rounded-t-sm transition-all duration-500 group-hover:bg-slate-400" style={{ height: `${h}%` }}></div>))}</div></div></div>
+                            
+                            {/* BLOCK 1: Desain Branding (210x100 Aspect Ratio) */}
+                            <div onClick={(e) => openService(e, 'desain')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer">
+                              <div className={getTileContentClass('desain')}>
+                                <h3 className="text-xl font-bold mb-1">Identitas & Branding Visual</h3>
+                                <p className="text-slate-500 text-sm max-w-xs md:max-w-sm">Logo, flyer, and packaging premium untuk memperkuat karakter brand di mata pasar.</p>
+                                <div className="absolute right-0 bottom-0 w-[210px] h-[100px] md:w-[252px] md:h-[120px] rounded-tl-2xl overflow-hidden shadow-sm border-l border-t border-gray-200/40">
+                                  <DynamicImage src="/assets/img/bento/desain.png" alt="Desain Branding" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" minimalFallback={true} />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* BLOCK 2: Website (90x100 Aspect Ratio) */}
+                            <div onClick={(e) => openService(e, 'website')} className="h-full bg-slate-900 text-white rounded-[2rem] p-8 relative overflow-hidden group border border-slate-800 cursor-pointer">
+                              <div className={getTileContentClass('website')}>
+                                <h3 className="text-xl font-bold mb-1 text-white">Website Professional</h3>
+                                <p className="text-slate-400 text-sm max-w-[180px]">Landing page yang dioptimalkan untuk performa, SEO, and konversi maksimal.</p>
+                                <div className="absolute right-4 bottom-0 w-[90px] h-[100px] md:w-[108px] md:h-[120px] rounded-t-xl overflow-hidden shadow-sm border-l border-t border-slate-800">
+                                  <DynamicImage src="/assets/img/bento/website.png" alt="Website" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" minimalFallback={true} />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* BLOCK 3: Gambar 3D (90x100 Aspect Ratio) */}
+                            <div onClick={(e) => openService(e, 'konstruksi')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer">
+                              <div className={getTileContentClass('konstruksi')}>
+                                <h3 className="text-xl font-bold mb-1">Gambar 3D & Visualisasi</h3>
+                                <p className="text-slate-500 text-sm max-w-[180px]">Desain food stall and modeling arsitektur 3D yang nyata and presisi.</p>
+                                <div className="absolute right-4 bottom-0 w-[90px] h-[100px] md:w-[108px] md:h-[120px] rounded-t-xl overflow-hidden shadow-sm border-l border-t border-gray-200/40">
+                                  <DynamicImage src="/assets/img/bento/konstruksi.png" alt="Gambar 3D" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" minimalFallback={true} />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* BLOCK 4: Media Cetak (90x100 Aspect Ratio) */}
+                            <div onClick={(e) => openService(e, 'media_cetak')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer">
+                              <div className={getTileContentClass('media_cetak')}>
+                                <h3 className="text-xl font-bold mb-1">Media Cetak & Buku</h3>
+                                <p className="text-slate-500 text-sm max-w-[180px]">Profil perusahaan, book design, and media cetak elegan.</p>
+                                <div className="absolute right-4 bottom-0 w-[90px] h-[100px] md:w-[108px] md:h-[120px] rounded-t-xl overflow-hidden shadow-sm border-l border-t border-gray-200/40">
+                                  <DynamicImage src="/assets/img/bento/media_cetak.png" alt="Media Cetak" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" minimalFallback={true} />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* BLOCK 5: Ekosistem Digital (90x100 Aspect Ratio) */}
+                            <div onClick={(e) => openService(e, 'digital')} className="h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 cursor-pointer">
+                              <div className={getTileContentClass('digital')}>
+                                <h3 className="text-xl font-bold mb-1">Ekosistem Digital</h3>
+                                <p className="text-slate-500 text-sm max-w-[180px]">Custom social media feed and visual sistem untuk operasional bisnis.</p>
+                                <div className="absolute right-4 bottom-0 w-[90px] h-[100px] md:w-[108px] md:h-[120px] rounded-t-xl overflow-hidden shadow-sm border-l border-t border-gray-200/40">
+                                  <DynamicImage src="/assets/img/bento/digital.png" alt="Digital" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" minimalFallback={true} />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* BLOCK 6: Banner & Gambar Teknik (210x100 Aspect Ratio) */}
+                            <div onClick={(e) => openService(e, 'banner')} className="md:col-span-2 lg:col-span-2 h-full bg-[#F5F5F7] rounded-[2rem] p-8 relative overflow-hidden group hover:bg-[#EFEFF1] transition-colors border border-gray-200/50 flex flex-col justify-center cursor-pointer">
+                              <div className={`${getTileContentClass('banner')} flex flex-col justify-center`}>
+                                <h3 className="text-xl font-bold mb-1">Banner & Gambar Teknik</h3>
+                                <p className="text-slate-500 text-sm max-w-xs md:max-w-sm">Banner, X-Banner, and layout fungsional yang siap diimplementasikan.</p>
+                                <div className="absolute right-0 bottom-0 w-[210px] h-[100px] md:w-[252px] md:h-[120px] rounded-tl-2xl overflow-hidden shadow-sm border-l border-t border-gray-200/40">
+                                  <DynamicImage src="/assets/img/bento/banner.png" alt="Banner" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" minimalFallback={true} />
+                                </div>
+                              </div>
+                            </div>
+
                           </div>
                         </div>
 
@@ -1665,7 +1726,6 @@
                         <p className="text-slate-500 font-medium max-w-3xl mx-auto text-lg">Bukan sekadar biro jasa biasa. Saya membawa dedikasi personal, value maksimal, dan kedalaman pengetahuan untuk memastikan karya Anda berada di level tertinggi.</p>
                     </Reveal>
 
-                    {}
                     <section className="pb-24 flex flex-col items-center relative z-10">
                       <Reveal delay={300} direction="up" className="relative w-full max-w-3xl h-[24rem] md:h-[28rem] flex justify-center items-end group mx-auto mt-6 md:mt-10">
                         <div className="relative z-10 w-full flex justify-center h-full items-end pb-0">
@@ -1702,7 +1762,6 @@
                       </Reveal>
                     </section>
 
-                    {/* Comparison layout tables */}
                     <div className="space-y-12 mb-16">
                         <Reveal delay={100} direction="up" className="bg-[#F5F5F7] rounded-[2rem] p-8 md:p-12 border border-gray-200/50">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 relative items-stretch">
@@ -1827,7 +1886,6 @@
             )}
 
             {/* --- ESTIMASI VIEW --- */}
-            {}
             {currentPage === 'estimasi' && (
                 <div className="pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen relative z-0 animate-page-mount">
                     <RevealGrid 
@@ -1961,7 +2019,6 @@
             )}
 
             {/* --- MULAI PROYEK VIEW --- */}
-            {}
             {currentPage === 'mulai-proyek' && (
                 <div className="pt-40 pb-24 px-6 max-w-4xl mx-auto min-h-screen relative z-0 animate-page-mount">
                     <RevealGrid 
@@ -2099,7 +2156,7 @@
                             
                             <div className="space-y-10">
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-700 mb-4">Estimasi Budget Tersedia</label>
+                                    <label className="block text-sm font-bold text-slate-700 mb-4">Estimasi Budget Tersenda</label>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                                         {['< Rp 2 Juta', 'Rp 2 - 5 Juta', 'Rp 5 - 10 Juta', '> Rp 10 Juta'].map(bud => (
                                             <div 
@@ -2191,11 +2248,11 @@
                 onClick={closeLightbox}
               >
                 <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden transition-all duration-500">
-                  {lightboxList[lightboxIndex].isIframe || lightboxList[lightboxIndex].isBook ? (
+                  {lightboxList[lightboxIndex].isIframe ? (
                      <div className="absolute inset-0 bg-slate-950"></div>
                   ) : (
                      <img 
-                       src={lightboxList[lightboxIndex].src} 
+                       src={lightboxList[lightboxIndex].thumbnail || lightboxList[lightboxIndex].src} 
                        className="w-full h-full object-cover blur-3xl scale-110 opacity-45" 
                      />
                   )}
@@ -2424,7 +2481,6 @@
               </div>
             )}
 
-            {}
             <div className="fixed bottom-6 right-6 z-[999] flex flex-col gap-3 items-center">
                 {/* Scroll to Top Button */}
                 <button 
@@ -2443,10 +2499,7 @@
                   className="p-4 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-[0_12px_24px_rgba(34,197,94,0.4)] transition-all duration-300 transform hover:scale-110 active:scale-95 group relative flex items-center justify-center"
                   title="Hubungi Fajar via WhatsApp"
                 >
-                  {/* Floating Pulsing Ring Animation */}
                   <div className="absolute inset-0 bg-green-500 rounded-full animate-pulse-ripple -z-10 opacity-75"></div>
-                  
-                  {/* WhatsApp Custom Clean SVG Icon */}
                   <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.665.988 3.3 1.488 5.35 1.489 5.424 0 9.835-4.407 9.838-9.836.002-2.628-1.02-5.1-2.873-6.957C17.256 1.993 14.812.97 12.016.97c-5.432 0-9.843 4.41-9.846 9.84-.001 2.079.547 4.11 1.587 5.92l-.1.171L2.047 22l5.228-1.372-.628-.352-.002-.122zm11.366-7.1c-.29-.146-1.727-.853-1.993-.95-.267-.097-.461-.146-.656.146-.195.29-.755.95-.925 1.143-.171.194-.341.219-.632.073-1.712-.857-2.732-1.278-3.818-3.147-.29-.498.29-.463.829-1.536.09-.18.044-.341-.023-.487-.066-.146-.656-1.583-.9-2.17-.238-.574-.48-.495-.656-.504-.17-.008-.365-.01-.56-.01-.195 0-.511.073-.779.365-.268.29-1.022.999-1.022 2.435 0 1.437 1.047 2.825 1.193 3.019.146.195 2.06 3.146 4.991 4.414.697.302 1.242.483 1.666.617.7.223 1.338.192 1.843.117.562-.083 1.727-.706 1.971-1.388.243-.682.243-1.266.171-1.388-.073-.122-.268-.195-.56-.341z" />
                   </svg>
