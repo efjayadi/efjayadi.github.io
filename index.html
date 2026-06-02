@@ -284,7 +284,7 @@
         .animate-guide-left { animation: slide-left-pulse 1.3s infinite ease-in-out; }
         .animate-guide-right { animation: slide-right-pulse 1.3s infinite ease-in-out; }
 
-        /* Light Theme Movie Collection Styles - Height set to half (approx 150px) */
+        /* Light Theme Movie Collection Styles - Height set to 240px */
         .movie-light-card {
             background-color: #f8fafc;
             color: #0f172a;
@@ -299,7 +299,7 @@
             box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.03);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
-            height: 160px; /* Set exact height to 160px */
+            height: 240px; /* Set exact height to 240px */
         }
         .movie-light-card:hover {
             transform: translateY(-4px) scale(1.005);
@@ -307,15 +307,15 @@
             border-color: rgba(203, 213, 225, 0.9);
         }
         .movie-light-poster {
-            flex: 0 0 110px; /* Scaled down width */
-            margin: 12px 0 12px 12px; /* Equalized padding layout within card */
+            flex: 0 0 150px; /* Scaled up width for 240px height */
+            margin: 16px 0 16px 16px; /* Equalized padding layout within card */
             object-fit: cover;
             border-radius: 0.75rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.06);
             z-index: 10;
         }
         .movie-light-info {
-            padding: 12px 20px; /* Symmetrical padding */
+            padding: 16px 24px; /* Symmetrical padding */
             flex-grow: 1;
             max-width: 60%;
             z-index: 10;
@@ -324,17 +324,17 @@
             justify-content: center;
         }
         .movie-light-info h3 {
-            font-size: 1.3rem; /* Scaled down title size */
-            margin: 0 0 4px 0;
+            font-size: 1.4rem; /* Scaled down title size */
+            margin: 0 0 6px 0;
             font-weight: 850;
             color: #0f172a;
             letter-spacing: -0.025em;
             line-height: 1.1;
         }
         .movie-light-info p {
-            margin: 2px 0;
+            margin: 4px 0;
             color: #475569;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             line-height: 1.4;
         }
         .movie-light-info .release-date {
@@ -368,20 +368,20 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            opacity: 0.32; /* Richly visible */
+            opacity: 1.0; /* 100% opacity backdrop */
             pointer-events: none;
             z-index: 1;
             /* Static background backdrop without animation shimmer to prevent moving */
-            mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+            mask-image: linear-gradient(to left, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
             -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
         }
         .movie-light-buttons {
-            margin-top: 8px; /* Symmetrical reduction */
+            margin-top: 12px; /* Symmetrical reduction */
             display: flex;
             gap: 10px;
         }
         .movie-light-buttons a {
-            padding: 6px 16px;
+            padding: 8px 20px;
             font-weight: 700;
             font-size: 0.75rem;
             text-decoration: none;
@@ -413,32 +413,32 @@
                 flex-direction: row; /* Keep horizontal flex on mobile for half height layout */
                 align-items: stretch;
                 padding: 0;
-                height: 130px; /* Set exact mobile height to 130px */
+                height: 180px; /* Exact mobile height */
             }
             .movie-light-poster {
-                flex: 0 0 80px;
-                margin: 8px 0 8px 8px;
+                flex: 0 0 100px;
+                margin: 12px 0 12px 12px;
                 border-radius: 0.5rem;
             }
             .movie-light-info {
                 max-width: 100%;
-                padding: 8px 12px;
+                padding: 12px 16px;
             }
             .movie-light-info h3 {
-                font-size: 1.1rem;
+                font-size: 1.15rem;
             }
             .movie-light-info p.overview {
-                display: none; /* Hide overview on mobile to match half height space constraints */
+                display: none; /* Hide overview on mobile to match space constraints */
             }
             .movie-light-cover-fade {
                 display: none; /* Hide cover overlay on small portrait viewports */
             }
             .movie-light-buttons {
-                margin-top: 6px;
+                margin-top: 10px;
                 gap: 8px;
             }
             .movie-light-buttons a {
-                padding: 4px 12px;
+                padding: 6px 14px;
                 font-size: 0.7rem;
             }
         }
@@ -1160,7 +1160,7 @@
                                     <span className="runtime">{runtimeHours} Minutes</span>
                                     <span className="genre">{movieGenres}</span>
                                 </div>
-                                <p className="mt-2 line-clamp-2 text-slate-500 text-xs md:text-sm leading-relaxed max-w-xl overview">{movie.overview}</p>
+                                <p className="mt-2 line-clamp-3 text-slate-500 text-xs md:text-sm leading-relaxed max-w-xl overview">{movie.overview}</p>
                                 <div className="movie-light-buttons">
                                     <a href={movie.trailer} target="_blank" rel="noreferrer" className="btn-trailer">Trailer</a>
                                     <a href={movie.download} target="_blank" rel="noreferrer" className="btn-download">Download</a>
@@ -2737,7 +2737,7 @@
                             </div>
                             <button 
                                 onClick={() => toggleLike(lightboxList[lightboxIndex].src)}
-                                className="flex items-center gap-2 bg-white/5 hover:bg-white/15 px-4 py-2 rounded-full border border-white/5 transition-all text-xs font-bold"
+                                className="flex items-center gap-2 bg-white/5 hover:bg-white/15 px-4 py-2 rounded-full border border-white/10 transition-all text-xs font-bold"
                             >
                                 <svg 
                                   className={`w-4 h-4 ${likedItems[lightboxList[lightboxIndex].src] ? 'text-red-500 fill-current scale-110' : 'text-white'} transition-all duration-300`} 
