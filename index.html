@@ -3,547 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO Meta Tags -->
     <title>Fajar Jayadi | Solusi Desain Branding, Website & Gambar 3D</title>
-    <meta name="description" content="Solusi profesional untuk desain branding, identitas visual, pembuatan website modern, sistem digital, hingga gambar 3D SketchUp dan perencanaan teknik yang presisi.">
-    <meta name="keywords" content="desain branding, logo brand, website professional, aplikasi web, company profile, branding UMKM, gambar 3d, desain bangunan, desain sketchup, gambar teknik, desain layout, perencanaan konstruksi, fajar jayadi">
-    <meta name="author" content="Fajar Jayadi">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Google Search Console Verification -->
-    <meta name="google-site-verification" content="yD1XAp4N4sttlIz0MEWMFtwaUp0zRt7Pe0Z-GOPX1as" />
-    
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://efjayadi.github.io/">
-    <meta property="og:title" content="Solusi Kreatif Desain Branding, Web & Gambar 3D | Fajar Jayadi">
-    <meta property="og:description" content="Membantu bisnis Anda tampil lebih profesional. Dari identitas brand hingga gambar 3D presisi.">
-    
-    <!-- PRIORITY 1: Browser Level Preload -->
-    <link rel="preload" href="me-default-netral.png" as="image" fetchpriority="high">
-    <link rel="preload" href="bg-netral.png" as="image" fetchpriority="high">
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- React & ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    
-    <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- PDF.js Core Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-
-    <!-- jQuery & Turn.js -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=900&display=swap');
-
-        body { 
-          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
-          -webkit-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-        }
-        
+        body { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-user-select: none; user-select: none; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        html { font-size: 16px; }
-        @media (min-width: 1024px) { html { font-size: 18px; } }
-        @media (min-width: 1280px) { html { font-size: 20px; } }
-        @media (min-width: 1536px) { html { font-size: 21px; } }
-        
-        @keyframes float-1 {
-          0%, 100% { transform: translateY(0) rotate(-10deg); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-          50% { transform: translateY(-15px) rotate(-10deg); box-shadow: 0 25px 25px rgba(0,0,0,0.15); }
-        }
-        @keyframes float-2 {
-          0%, 100% { transform: translateY(0) rotate(12deg); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-          50% { transform: translateY(-12px) rotate(12deg); box-shadow: 0 20px 20px rgba(0,0,0,0.15); }
-        }
-        .animate-float-1 { animation: float-1 4s ease-in-out infinite; }
-        .animate-float-2 { animation: float-2 3.5s ease-in-out infinite; }
-
-        @keyframes ripple-out {
-          0% { transform: scale(1); opacity: 0.8; }
-          100% { transform: scale(2.8); opacity: 0; border-width: 1px; }
-        }
-        .group:hover .ripple-element { animation: ripple-out 1.2s infinite ease-out; }
-
-        @keyframes pulse-ripple {
-          0% { transform: scale(0.9); opacity: 0.6; }
-          100% { transform: scale(1.6); opacity: 0; }
-        }
-        .animate-pulse-ripple { animation: pulse-ripple 2s infinite cubic-bezier(0.4, 0, 0.2, 1); }
-
-        @keyframes bounce-green {
-          0% { transform: translateY(0); color: #9ca3af; } 
-          30% { transform: translateY(-15px) scale(1.1); color: #22c55e; } 
-          50% { transform: translateY(5px) scale(1.05); color: #22c55e; }
-          70% { transform: translateY(-3px) scale(1); color: #22c55e; }
-          100% { transform: translateY(0); color: #22c55e; } 
-        }
-        .animate-bounce-color { animation: bounce-green 0.7s cubic-bezier(0.28, 0.84, 0.42, 1) forwards; }
-
-        @keyframes fly-away {
-          0% { transform: translate(0, 0) scale(1); opacity: 1; }
-          15% { transform: translate(-3px, 3px) rotate(-5deg) scale(0.9); opacity: 1; } 
-          100% { transform: translate(200vw, -120vh) rotate(35deg) scale(4); opacity: 0; } 
-        }
-        .animate-rocket-fly { animation: fly-away 5s ease-in 1s forwards; }
-
-        @keyframes heart-pop {
-          0% { transform: scale(0); opacity: 0; }
-          15% { transform: scale(1.4); opacity: 0.95; }
-          30% { transform: scale(0.9); opacity: 0.95; }
-          45% { transform: scale(1.1); opacity: 0.95; }
-          80% { transform: scale(1); opacity: 0.95; }
-          100% { transform: scale(0); opacity: 0; }
-        }
-        .animate-heart-pop {
-          animation: heart-pop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        .bg-circle-pattern {
-          background: repeating-radial-gradient(circle at center, #ffffff 0px, #eef1f5 60px);
-        }
-
-        .testi-container { perspective: 2000px; transform-style: preserve-3d; }
-        .testi-card {
-          transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease;
-          backface-visibility: hidden;
-          width: 100%;
-        }
-        .testi-active { transform: translateX(0) translateZ(0) rotateY(0deg) scale(1); opacity: 1; pointer-events: auto; position: relative; z-index: 10; }
-        .testi-prev { transform: translateX(-8%) translateZ(40px) rotateY(60deg) scale(0.95); opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; z-index: 0; }
-        .testi-next { transform: translateX(8%) translateZ(40px) rotateY(-60deg) scale(0.95); opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; z-index: 0; }
-        .testi-hidden { transform: rotateY(0deg) scale(0.8); opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; z-index: -1; }
-
-        .mask-fade-bottom {
-          -webkit-mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
-          mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
-        }
-
-        .nonow-text {
-          position: fixed;
-          pointer-events: none;
-          font-family: 'Nunito', 'Comic Sans MS', 'Chalkboard SE', cursive;
-          font-weight: 900;
-          font-size: 2rem;
-          color: #ff4757;
-          text-shadow: 3px 3px 0 #fff, -3px -3px 0 #fff, 3px -3px 0 #fff, -3px 3px 0 #fff, 0 8px 15px rgba(0,0,0,0.2);
-          z-index: 999999;
-          animation: nonowAnim 1s ease-in-out forwards;
-          transform-origin: center;
-        }
-
-        @keyframes nonowAnim {
-          0% { opacity: 0; transform: translate(-50%, 0px) rotate(var(--rot)) scale(0.5); }
-          25% { opacity: 1; transform: translate(calc(-50% - 15px), -20px) rotate(calc(var(--rot) - 8deg)) scale(1.1); }
-          50% { transform: translate(calc(-50% + 15px), -40px) rotate(calc(var(--rot) + 8deg)) scale(1); }
-          75% { opacity: 1; transform: translate(calc(-50% - 10px), -60px) rotate(calc(var(--rot) - 4deg)) scale(1); }
-          100% { opacity: 0; transform: translate(-50%, -80px) rotate(var(--rot)) scale(0.9); }
-        }
-
-        .hover-3d-text {
-          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-          display: inline-block;
-          transform-style: preserve-3d;
-          perspective: 1000px;
-        }
-        .hover-3d-text:hover {
-          transform: translate(6px, -6px) rotateX(15deg) rotateY(15deg);
-          text-shadow: 
-            -1px 1px 0px #3b82f6,
-            -2px 2px 0px #3b82f6,
-            -3px 3px 0px #3b82f6,
-            -4px 4px 0px #2563eb,
-            -5px 5px 0px #2563eb,
-            -6px 6px 0px #2563eb,
-            -7px 7px 0px #1d4ed8,
-            -8px 8px 0px #1d4ed8,
-            -12px 12px 20px rgba(0,0,0,0.15);
-          color: #000000;
-        }
-        
-        input[type=range]::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background: #0f172a;
-          cursor: pointer;
-          border: 4px solid #fff;
-          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-        input[type=range]::-moz-range-thumb {
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background: #0f172a;
-          cursor: pointer;
-          border: 4px solid #fff;
-          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-
-        .page-ripple {
-          position: fixed;
-          width: 40px;
-          height: 40px;
-          background-color: #4ade80; 
-          border-radius: 50%;
-          transform: translate(-50%, -50%) scale(0);
-          pointer-events: none;
-          z-index: 9999999;
-          transition: transform 0.6s cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        .page-ripple.expanding {
-          transform: translate(-50%, -50%) scale(150); 
-        }
-        .page-ripple.fading {
-          transition: opacity 0.5s ease-out;
-          opacity: 0;
-        }
-
-        .bg-grid-pattern-main {
-          background-image: 
-            linear-gradient(to right, rgba(15, 23, 42, 0.1) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(15, 23, 42, 0.1) 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-
-        .animate-grid-top { animation: grid-spread-top 2s cubic-bezier(0.25, 1, 0.3, 1) forwards; }
-        @keyframes grid-spread-top {
-          0% { clip-path: circle(0% at 50% 0%); opacity: 0; }
-          100% { clip-path: circle(150% at 50% 0%); opacity: 1; }
-        }
-
-        .animate-grid-center { animation: grid-spread-center 2s cubic-bezier(0.25, 1, 0.3, 1) forwards; }
-        @keyframes grid-spread-center {
-          0% { clip-path: circle(0% at 50% 50%); opacity: 0; }
-          100% { clip-path: circle(150% at 50% 50%); opacity: 1; }
-        }
-
-        .animate-grid-portfolio { animation: grid-spread-portfolio 2s cubic-bezier(0.25, 1, 0.3, 1) forwards; }
-        @keyframes grid-spread-portfolio {
-          0% { clip-path: circle(0% at 50% 40%); opacity: 0; }
-          100% { clip-path: circle(150% at 50% 40%); opacity: 1; }
-        }
-
-        @keyframes circle-spread {
-          0% { clip-path: circle(0% at 50% 50%); opacity: 0; }
-          100% { clip-path: circle(100% at 50% 50%); opacity: 1; }
-        }
-        .animate-circle-spread {
-          animation: circle-spread 2.5s cubic-bezier(0.25, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes shimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-        .animate-shimmer {
-          background: linear-gradient(90deg, #f8fafc 25%, #f1f5f9 50%, #f8fafc 75%);
-          background-size: 200% 100%;
-          animation: shimmer 1.6s infinite linear;
-        }
-
-        @keyframes page-mount {
-          0% { opacity: 0; transform: translateY(10px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        .animate-page-mount {
-          animation: page-mount 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
-
-        /* 3D Flipbook Animations */
-        .book-container {
-            perspective: 2500px;
-        }
-        .page-flip-left {
-            transform-origin: right center;
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
-        }
-        .page-flip-right {
-            transform-origin: left center;
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
-        }
-
-        @keyframes page-settle-left {
-          0% { transform: rotateY(180deg); z-index: 40; }
-          100% { transform: rotateY(0deg); z-index: 10; }
-        }
-        @keyframes page-settle-right {
-          0% { transform: rotateY(-180deg); z-index: 40; }
-          100% { transform: rotateY(0deg); z-index: 10; }
-        }
-        .animate-settle-left {
-          animation: page-settle-left 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-          transform-style: preserve-3d;
-        }
-        .animate-settle-right {
-          animation: page-settle-right 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-          transform-style: preserve-3d;
-        }
-
-        /* Movie Light Theme Collection */
-        .movie-light-card {
-            background-color: #f8fafc;
-            color: #0f172a;
-            display: flex;
-            align-items: stretch;
-            border-radius: 1.5rem;
-            overflow: hidden;
-            max-width: 1152px;
-            width: 100%;
-            margin: 16px auto;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.03);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            height: 360px; /* Exact height */
-        }
-        .movie-light-card:hover {
-            transform: translateY(-4px) scale(1.005);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
-            border-color: rgba(203, 213, 225, 0.9);
-        }
-        .movie-light-poster {
-            flex: 0 0 220px; 
-            margin: 24px 0 24px 24px;
-            object-fit: cover;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-            z-index: 10;
-        }
-        .movie-light-info {
-            padding: 32px 32px;
-            flex-grow: 1;
-            max-width: 60%;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .movie-light-info h3 {
-            font-size: 1.8rem;
-            margin: 0 0 10px 0;
-            font-weight: 850;
-            color: #0f172a;
-            letter-spacing: -0.025em;
-            line-height: 1.1;
-        }
-        .movie-light-info p {
-            margin: 6px 0;
-            color: #475569;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-        .movie-light-info .release-date {
-            color: #64748b;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .movie-light-info .runtime {
-            padding: 4px 8px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            display: inline-block;
-            font-weight: 700;
-            margin-top: 4px;
-            font-size: 0.8rem;
-            color: #334155;
-            background: #ffffff;
-        }
-        .movie-light-info .genre {
-            margin-left: 12px;
-            color: #64748b;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .movie-light-cover-fade {
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 55%;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 1.0; 
-            pointer-events: none;
-            z-index: 1;
-            mask-image: linear-gradient(to left, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
-            -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
-        }
-        .movie-light-buttons {
-            margin-top: 20px;
-            display: flex;
-            gap: 12px;
-        }
-        .movie-light-buttons a {
-            padding: 10px 24px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-decoration: none;
-            border-radius: 9999px;
-            transition: all 0.3s ease;
-        }
-        .movie-light-buttons a.btn-trailer {
-            background-color: transparent;
-            color: #0f172a;
-            border: 1.5px solid #0f172a;
-        }
-        .movie-light-buttons a.btn-trailer:hover {
-            background-color: #0f172a;
-            color: #ffffff;
-        }
-        .movie-light-buttons a.btn-download {
-            background-color: #0f172a;
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
-        }
-        .movie-light-buttons a.btn-download:hover {
-            background-color: #1e293b;
-            transform: translateY(-1px);
-        }
-
-        @media screen and (max-width: 768px) {
-            .movie-light-card {
-                height: 260px;
-            }
-            .movie-light-poster {
-                flex: 0 0 130px;
-                margin: 16px 0 16px 16px;
-            }
-            .movie-light-info {
-                max-width: 100%;
-                padding: 16px 20px;
-            }
-            .movie-light-info h3 { font-size: 1.3rem; }
-            .movie-light-info p.overview { display: none; }
-            .movie-light-cover-fade { display: none; }
-        }
+        .book-container { perspective: 2500px; }
+        .shadow-book { box-shadow: 0 30px 75px -12px rgba(0,0,0,0.5); }
+        .movie-light-card { height: 360px; background-color: #f8fafc; border-radius: 1.5rem; overflow: hidden; border: 1px solid rgba(226,232,240,0.8); display: flex; align-items: stretch; margin: 16px auto; width: 100%; max-width: 1080px; transition: all 0.4s ease; position: relative; }
+        .movie-light-card:hover { transform: translateY(-4px) scale(1.005); border-color: rgba(203,213,225,0.9); }
+        .movie-poster { flex: 0 0 150px; margin: 24px; object-fit: cover; border-radius: 0.75rem; }
+        .movie-light-info { padding: 32px; flex-grow: 1; z-index: 10; display: flex; flex-direction: column; justify-content: center; }
+        .movie-light-cover-fade { position: absolute; right: 0; top: 0; bottom: 0; width: 55%; background-size: cover; background-position: center; opacity: 1.0; z-index: 1; mask-image: linear-gradient(to left, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%); }
+        .btn-trailer { border: 1.5px solid #0f172a; padding: 10px 24px; border-radius: 9999px; font-weight: 700; text-decoration: none; color: #0f172a; }
+        .btn-download { background-color: #0f172a; color: white; padding: 10px 24px; border-radius: 9999px; font-weight: 700; text-decoration: none; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
-    <script>
-        document.addEventListener('contextmenu', event => {
-            event.preventDefault();
-            const el = document.createElement('div');
-            el.className = 'nonow-text';
-            el.textContent = 'nonow..';
-            const rot = Math.random() * 50 - 25;
-            el.style.setProperty('--rot', `${rot}deg`);
-            el.style.left = `${event.clientX}px`;
-            el.style.top = `${event.clientY}px`;
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 1000);
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'F12' || e.keyCode === 123) e.preventDefault();
-        });
-    </script>
-
     <script type="text/babel">
-      const { useState, useEffect, useRef, useMemo } = React;
+      const { useState, useEffect, useRef } = React;
 
       const portfolioData = {
-        logo: ['/assets/img/portfolio/Logo/ayamdjagoan.png', '/assets/img/portfolio/Logo/baksokusuki.png', '/assets/img/portfolio/Logo/bebekkelana.png', '/assets/img/portfolio/Logo/buahhati.png', '/assets/img/portfolio/Logo/cobek89.png', '/assets/img/portfolio/Logo/cotorempah.png', '/assets/img/portfolio/Logo/discountjunction.png', '/assets/img/portfolio/Logo/djogjasteak.png', '/assets/img/portfolio/Logo/eq.png', '/assets/img/portfolio/Logo/jembar.png', '/assets/img/portfolio/Logo/madinachicken.png', '/assets/img/portfolio/Logo/mieayamcabeuleg.png', '/assets/img/portfolio/Logo/miecoet.png', '/assets/img/portfolio/Logo/miesapi.png', '/assets/img/portfolio/Logo/mugoramen.png', '/assets/img/portfolio/Logo/ollakitchen.png', '/assets/img/portfolio/Logo/pmg.png', '/assets/img/portfolio/Logo/satelemoh.png', '/assets/img/portfolio/Logo/tagawadjogja.png', '/assets/img/portfolio/Logo/tgg.png', '/assets/img/portfolio/Logo/tja.png'],
-        flyer: ['/assets/img/portfolio/Feed/feed-hipno.png', '/assets/img/portfolio/Flyer/cobekflyer.png', '/assets/img/portfolio/Flyer/cwm-hp.png', '/assets/img/portfolio/Flyer/cwp-btas.png', '/assets/img/portfolio/Flyer/cwp-btbapm.png', '/assets/img/portfolio/Flyer/cwp-btbc.png', '/assets/img/portfolio/Flyer/cwp-btma.png', '/assets/img/portfolio/Flyer/cwp-bw.png', '/assets/img/portfolio/Flyer/cwp-mcd.png', '/assets/img/portfolio/Flyer/cwp-mcm.png', '/assets/img/portfolio/Flyer/cwp-mcp.png', '/assets/img/portfolio/Flyer/cwp-mw.png', '/assets/img/portfolio/Flyer/flyer-memberras.png', '/assets/img/portfolio/Flyer/flyer-menumadina.png', '/assets/img/portfolio/Flyer/flyer-menusmb.png', '/assets/img/portfolio/Flyer/flyer-ras.png', '/assets/img/portfolio/Flyer/flyer-smb.png', '/assets/img/portfolio/Flyer/flyer-soto.png', '/assets/img/portfolio/Flyer/fwm-adh.png'],
-        website: [
-          { src: 'https://efjayadi.github.io/tja', thumbnail: '/assets/img/portfolio/web/web-tja.png', title: 'Tachinardi Jaya Abadi', desc: 'Company Profile & Logistik Domestik', color: 'from-blue-600 to-indigo-950', isIframe: true },
-          { src: 'https://efjayadi.github.io/tracker', thumbnail: '/assets/img/portfolio/web/web-tracker.png', title: 'YEN Online Tracker', desc: 'Dashboard Pelacakan Kiriman Real-Time', color: 'from-emerald-600 to-teal-950', isIframe: true },
-          { src: 'https://efjayadi.github.io/po', thumbnail: '/assets/img/portfolio/web/web-po.png', title: 'Purchase Order System', desc: 'Sistem Manajemen Invoicing & Order', color: 'from-slate-700 to-slate-950', isIframe: true },
-          { src: 'https://efjayadi.github.io/andanimurai', thumbnail: '/assets/img/portfolio/web/web-andanimurai.png', title: 'Andani Murai', desc: 'E-Commerce & Landing Page Penjualan Burung', color: 'from-amber-600 to-yellow-950', isIframe: true },
-          { src: 'https://efjayadi.github.io/caribarang', thumbnail: '/assets/img/portfolio/web/web-caribarang.png', title: 'CariBarang App', desc: 'Alat Cari Barang Online 3 Tempat Sekaligus', color: 'from-red-600 to-rose-950', isIframe: true },
-          { src: 'https://efjayadi.github.io/tjaglobal', thumbnail: '/assets/img/portfolio/web/web-tjaglobal.png', title: 'TJA Global', desc: 'Ekspor Rempah Internasional', color: 'from-cyan-600 to-blue-950', isIframe: true }
-        ],
-        sketchup: ['/assets/img/portfolio/foodstal/cwsu-bt.png', '/assets/img/portfolio/foodstal/cwsu-btg.png', '/assets/img/portfolio/foodstal/cwsu-ma.png', '/assets/img/portfolio/foodstal/cwsu-smt.png', '/assets/img/portfolio/foodstal/foodstal-akrilik.png', '/assets/img/portfolio/foodstal/foodstal-akrilik2.png', '/assets/img/portfolio/foodstal/foodstal-mejastainless.png', '/assets/img/portfolio/foodstal/foodstal-pintualu.png', '/assets/img/portfolio/foodstal/foodstal-ras1.png', '/assets/img/portfolio/foodstal/foodstal-ras2.png', '/assets/img/portfolio/foodstal/foodstal-ras3.png', '/assets/img/portfolio/foodstal/foodstal-ruanglaktasi.png'],
-        banner: ['/assets/img/portfolio/Banner/banner-cobek89.png', '/assets/img/portfolio/Banner/banner-dkriuk.png', '/assets/img/portfolio/Banner/banner-mietagawa.png', '/assets/img/portfolio/Banner/banner-smb.jpg', '/assets/img/portfolio/Banner/banner-smb.png', '/assets/img/portfolio/Banner/banner-smb2.png', '/assets/img/portfolio/Banner/cwb-lh.png', '/assets/img/portfolio/Banner/cwb-ma.png', '/assets/img/portfolio/Banner/cwb-maceh.png', '/assets/img/portfolio/Banner/miecoet89.png', '/assets/img/portfolio/Banner/ppb-scs.png'],
-        digital: ['/assets/img/portfolio/Feed/MP1.png', '/assets/img/portfolio/Feed/feed-buahhati.png', '/assets/img/portfolio/Feed/feed-madina.png', '/assets/img/portfolio/Feed/feed-theta.png'],
-        media_cetak: [
-          { thumbnail: '/assets/img/portfolio/Book/book-tgg.png', src: '/assets/img/portfolio/Book/tgg.pdf', title: 'PT. Tachinardi Global Group', desc: 'Lembar Company Profile Interaktif', isBook: true },
-          { thumbnail: '/assets/img/portfolio/Book/book-aw.png', src: '/assets/img/portfolio/Book/paw.pdf', title: 'PT. AW 1', desc: 'Lembar Profil Perusahaan AW 1', isBook: true },
-          { thumbnail: '/assets/img/portfolio/Book/book-pmg.png', src: '/assets/img/portfolio/Book/pmg.pdf', title: 'Catalogue Company Profile PMG 2025', desc: 'Katalog Profil Perusahaan PMG', isBook: true },
-          { thumbnail: '/assets/img/portfolio/Book/book-psj.png', src: '/assets/img/portfolio/Book/psj.pdf', title: 'PT PRIMA SEJATI JAYA 2024', desc: 'Lembar Profil Korporat PSJ', isBook: true },
-          { thumbnail: '/assets/img/portfolio/Book/book-tja.png', src: '/assets/img/portfolio/Book/tja.pdf', title: 'PT TACHINARDI JAYA ABADI 2023', desc: 'Lembar Profil Logistik TJA', isBook: true }
-        ]
+          logo: ['/assets/img/portfolio/Logo/ayamdjagoan.png'],
+          media_cetak: [
+              { thumbnail: '/assets/img/portfolio/Book/book-tgg.png', src: '/assets/img/portfolio/Book/tgg.pdf', title: 'PT. Tachinardi Global Group', desc: 'Company Profile', isBook: true }
+          ]
       };
 
-      // UI Components (Simplified for brevity)
-      const MoviesView = ({ likedItems, toggleLike }) => {
-        const [movies, setMovies] = useState([]);
-        const [loading, setLoading] = useState(true);
-        const apiKey = 'cac04f877c2c8ae78758f05b158d796d';
-        const movieTitles = ['Wolfs', 'Civil War', 'Flow', 'Bullet Train', 'A Man Called Otto', 'Old Dads'];
-        const trailerLinks = ['https://www.youtube.com/watch?v=wLJUPjiRbAM&t=2s', 'https://www.youtube.com/watch?v=aDyQxtg0V2w', 'https://www.youtube.com/watch?v=82WW9dVbglI', 'https://www.youtube.com/watch?v=0IOsk2Vlc4o&pp', 'https://www.youtube.com/watch?v=eFYUX9l-m5I', 'https://www.youtube.com/watch?v=mU01e6KjM2s'];
-        const downloadLinks = ['https://drive.google.com/file/d/1mHVVk1VzNyIFKh_SRZAM6bdfwa5KHz03/view?usp=sharing', 'https://drive.google.com/file/d/1LHyxj6ayYSmtkquL14puDVrKea_HPJO4/view?usp=sharing', 'https://drive.google.com/file/d/1rg1zE-52Ms6a-VTHdBtk37XC8HueNgt6/view?usp=sharing', 'https://drive.google.com/file/d/14HgGEkf8s219svgihQYSy0uAbOAtRwa1/view?usp=sharing', 'https://drive.google.com/file/d/1MTnqRvX-euneRArCKEv9kUrL9eVgMbsA/view?usp=sharing', 'https://drive.google.com/file/d/1OiM3KUjfRhVKHmXAac78jbyCQ8eaHvGd/view?usp=sharing'];
-
-        useEffect(() => {
-          const fetchAllMovies = async () => {
-            const loadedMovies = await Promise.all(movieTitles.map(async (title, idx) => {
-              const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(title)}`);
-              const data = await res.json();
-              if (data.results && data.results.length > 0) {
-                const id = data.results[0].id;
-                const dRes = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`);
-                const details = await dRes.json();
-                return { ...details, trailer: trailerLinks[idx], download: downloadLinks[idx] };
-              }
-              return null;
-            }));
-            setMovies(loadedMovies.filter(Boolean));
-            setLoading(false);
-          };
-          fetchAllMovies();
-        }, []);
-
-        if (loading) return <div className="py-24 text-center">Memuat koleksi film...</div>;
+      // Komponen Movie
+      const MoviesPage = () => {
+        const [movies, setMovies] = useState([
+            { id: 1, title: 'Wolfs', release: '2024', runtime: '108', genre: 'Comedy, Crime', desc: 'Two rival fixers cross paths...', poster: 'https://image.tmdb.org/t/p/w500/iH7F3h7e9u7N46f90d56.jpg', backdrop: 'https://image.tmdb.org/t/p/w780/h9YvU1XbO4iYqgT.jpg' }
+        ]);
         return (
-          <div className="flex flex-col gap-4 w-full max-w-6xl mx-auto px-6">
-            {movies.map((movie) => (
-              <div key={movie.id} className="movie-light-card">
-                <img className="movie-poster" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
-                <div className="movie-light-info">
-                  <h3>{movie.title}</h3>
-                  <p className="release-date">Release Date: {movie.release_date}</p>
-                  <div>
-                    <span className="runtime">{movie.runtime} Min</span>
-                    <span className="genre">{movie.genres.map(g => g.name).join(', ')}</span>
-                  </div>
-                  <p className="line-clamp-3 overview text-slate-500 mt-2">{movie.overview}</p>
-                  <div className="movie-light-buttons">
-                    <a href={movie.trailer} target="_blank" className="btn-trailer">Trailer</a>
-                    <a href={movie.download} target="_blank" className="btn-download">Download</a>
-                  </div>
-                </div>
-                <div className="movie-light-cover-fade" style={{ backgroundImage: `url('https://image.tmdb.org/t/p/w780${movie.backdrop_path}')` }}></div>
-              </div>
-            ))}
-          </div>
+            <div className="pt-40 pb-20 px-6">
+                <h2 className="text-center text-4xl font-black mb-12">Film Bagus</h2>
+                {movies.map(m => (
+                    <div key={m.id} className="movie-light-card">
+                        <img className="movie-poster" src={m.poster} alt={m.title} />
+                        <div className="movie-light-info">
+                            <h3 className="text-2xl font-bold">{m.title}</h3>
+                            <p className="text-sm">{m.release} • {m.runtime} Min • {m.genre}</p>
+                            <p className="text-xs line-clamp-3 mt-2 text-slate-500">{m.desc}</p>
+                            <div className="flex gap-3 mt-4">
+                                <a href="#" className="btn-trailer">Trailer</a>
+                                <a href="#" className="btn-download">Download</a>
+                            </div>
+                        </div>
+                        <div className="movie-light-cover-fade" style={{ backgroundImage: `url('${m.backdrop}')` }}></div>
+                    </div>
+                ))}
+            </div>
         );
       };
 
       function App() {
-        // ... (existing App logic preserved)
+        const [currentPage, setCurrentPage] = useState('home');
+        
         return (
-            <div className="w-full min-h-[100dvh] overflow-x-clip bg-white text-slate-900">
-               {/* Site content would go here */}
+            <div className="w-full min-h-screen bg-white">
+                <nav className="fixed w-full p-6 flex justify-between bg-white/80 backdrop-blur z-50">
+                    <span className="font-bold text-xl cursor-pointer" onClick={() => setCurrentPage('home')}>Fajar Jayadi</span>
+                    <div className="flex gap-4">
+                        <a href="#" onClick={() => setCurrentPage('home')}>Home</a>
+                        <a href="#" onClick={() => setCurrentPage('portfolio')}>Portofolio</a>
+                        <a href="#" onClick={() => setCurrentPage('movies')}>Film Bagus</a>
+                    </div>
+                </nav>
+
+                <main>
+                    {currentPage === 'home' && <div className="pt-40 text-center">Home Page Content</div>}
+                    {currentPage === 'portfolio' && <div className="pt-40 text-center">Portfolio Page Content</div>}
+                    {currentPage === 'movies' && <MoviesPage />}
+                </main>
+
+                <footer className="bg-slate-900 text-white p-10 mt-20">
+                    <div className="flex justify-around">
+                         <div><h4 className="font-bold">Sharing</h4><ul><li><a href="#" onClick={() => setCurrentPage('movies')}>Film Bagus</a></li></ul></div>
+                    </div>
+                </footer>
             </div>
         );
       }
+      
       const root = ReactDOM.createRoot(document.getElementById('root'));
       root.render(<App />);
     </script>
