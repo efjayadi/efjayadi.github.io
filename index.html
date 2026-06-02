@@ -289,12 +289,12 @@
             background-color: #f8fafc;
             color: #0f172a;
             display: flex;
-            align-items: center;
-            border-radius: 2rem;
+            align-items: stretch; /* Aligns both poster and content equally */
+            border-radius: 1.5rem; /* Corner radius matches portfolio images */
             overflow: hidden;
-            max-width: 1000px;
+            max-width: 1152px; /* Set to 6xl matching maximum content limit in footer */
             width: 100%;
-            margin: 20px auto;
+            margin: 16px auto; /* Reduced gap between cards from 20px */
             border: 1px solid rgba(226, 232, 240, 0.8);
             box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.03);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -302,17 +302,16 @@
             min-height: 280px;
         }
         .movie-light-card:hover {
-            transform: translateY(-4px) scale(1.01);
+            transform: translateY(-4px) scale(1.005);
             box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
             border-color: rgba(203, 213, 225, 0.9);
         }
         .movie-light-poster {
-            flex: 0 0 160px;
-            height: 240px;
+            flex: 0 0 180px;
+            margin: 24px 0 24px 24px; /* Equalized padding layout within card */
             object-fit: cover;
-            margin-left: 24px;
             border-radius: 1rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
             z-index: 10;
         }
         .movie-light-info {
@@ -320,6 +319,9 @@
             flex-grow: 1;
             max-width: 60%;
             z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .movie-light-info h3 {
             font-size: 1.8rem;
@@ -361,11 +363,11 @@
             right: 0;
             top: 0;
             bottom: 0;
-            width: 45%;
+            width: 55%; /* Increased from 45% to fill more space */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            opacity: 0.15;
+            opacity: 0.32; /* Increased from 0.15 to make backdrop much more visible */
             pointer-events: none;
             z-index: 1;
             mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
@@ -377,27 +379,31 @@
             gap: 12px;
         }
         .movie-light-buttons a {
-            background-color: #10b981;
-            color: #ffffff;
-            padding: 8px 20px;
+            padding: 8px 22px;
             font-weight: 700;
             font-size: 0.85rem;
             text-decoration: none;
             border-radius: 9999px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
-        .movie-light-buttons a:hover {
-            background-color: #059669;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(5, 150, 105, 0.3);
+        .movie-light-buttons a.btn-trailer {
+            background-color: transparent;
+            color: #0f172a;
+            border: 1.5px solid #0f172a;
+            box-shadow: none;
+        }
+        .movie-light-buttons a.btn-trailer:hover {
+            background-color: #0f172a;
+            color: #ffffff;
         }
         .movie-light-buttons a.btn-download {
             background-color: #0f172a;
+            color: #ffffff;
             box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
         }
         .movie-light-buttons a.btn-download:hover {
             background-color: #1e293b;
+            transform: translateY(-1px);
             box-shadow: 0 6px 16px rgba(30, 41, 59, 0.25);
         }
         @media screen and (max-width: 768px) {
@@ -471,7 +477,7 @@
           '/assets/img/portfolio/Logo/djogjasteak.png',
           '/assets/img/portfolio/Logo/eq.png',
           '/assets/img/portfolio/Logo/jembar.png',
-          '/assets/img/portfolio/Logo/madinach चिकन.png',
+          '/assets/img/portfolio/Logo/madinachicken.png',
           '/assets/img/portfolio/Logo/mieayamcabeuleg.png',
           '/assets/img/portfolio/Logo/miecoet.png',
           '/assets/img/portfolio/Logo/miesapi.png',
@@ -934,6 +940,7 @@
                 setNumPages(pdf.numPages);
                 setCurrentPage(1);
                 
+                // Allow state DOM to mount before rendering Turn.js components
                 setTimeout(() => {
                     buildFlipbookLayout(pdf, false);
                 }, 100);
@@ -1127,14 +1134,14 @@
         }
 
         return (
-            <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
+            <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto px-6">
                 {movies.map((movie) => {
                     const runtimeHours = typeof movie.runtime === 'number' ? movie.runtime : 'N/A';
                     const movieGenres = movie.genres ? movie.genres.map(g => g.name).join(', ') : 'N/A';
                     return (
                         <div key={movie.id} className="movie-light-card">
                             <img 
-                                className="movie-light-poster" 
+                                className="movie-light-poster animate-shimmer" 
                                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
                                 alt={movie.title} 
                                 onError={(e) => { e.target.src = 'https://placehold.co/160x240/f1f5f9/64748b?text=Movie+Poster'; }}
@@ -1142,16 +1149,18 @@
                             <div className="movie-light-info">
                                 <h3>{movie.title}</h3>
                                 <p className="release-date">Release Date: {movie.release_date}</p>
-                                <span className="runtime">{runtimeHours} Minutes</span>
-                                <span className="genre">{movieGenres}</span>
-                                <p className="mt-4 line-clamp-3 md:line-clamp-none text-slate-600 font-medium">{movie.overview}</p>
+                                <div className="flex items-center gap-2 mt-2">
+                                    <span className="runtime">{runtimeHours} Minutes</span>
+                                    <span className="genre">{movieGenres}</span>
+                                </div>
+                                <p className="mt-4 line-clamp-3 md:line-clamp-none text-slate-500 text-xs md:text-sm leading-relaxed max-w-xl overview">{movie.overview}</p>
                                 <div className="movie-light-buttons">
-                                    <a href={movie.trailer} target="_blank" rel="noreferrer">Watch Trailer</a>
-                                    <a href={movie.download} target="_blank" rel="noreferrer" className="btn-download">Download Movie</a>
+                                    <a href={movie.trailer} target="_blank" rel="noreferrer" className="btn-trailer">Trailer</a>
+                                    <a href={movie.download} target="_blank" rel="noreferrer" className="btn-download">Download</a>
                                 </div>
                             </div>
                             <div 
-                                className="movie-light-cover-fade" 
+                                className="movie-light-cover-fade animate-shimmer" 
                                 style={{ backgroundImage: `url('https://image.tmdb.org/t/p/w780${movie.backdrop_path}')` }}
                             ></div>
                         </div>
@@ -2453,7 +2462,7 @@
                             
                             <div className="space-y-10">
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-700 mb-4">Estimasi Budget Tersedia</label>
+                                    <label className="block text-sm font-bold text-slate-700 mb-4">Estimasi Budget Tersenda</label>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                                         {['< Rp 2 Juta', 'Rp 2 - 5 Juta', 'Rp 5 - 10 Juta', '> Rp 10 Juta'].map(bud => (
                                             <div 
@@ -2531,7 +2540,7 @@
                     />
 
                     <Reveal direction="up" className="text-center mb-16">
-                        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Koleksi Film Pilihan</h1>
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-slate-900">Film Bagus</h1>
                         <p className="text-slate-500 font-medium max-w-2xl mx-auto text-lg">Daftar rekomendasi film terbaik pilihan Fajar Jayadi yang dikemas dengan visualisasi Light Theme premium.</p>
                     </Reveal>
 
@@ -2567,7 +2576,12 @@
                     <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('portfolio'); }} className="hover:text-green-400 transition-colors">Portofolio</a></li>
                     <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('estimasi'); }} className="hover:text-green-400 transition-colors">Estimasi Biaya</a></li>
                     <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('why-fajar'); }} className="hover:text-green-400 transition-colors">Kenapa ke Fajar?</a></li>
-                    <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('movies'); }} className="hover:text-green-400 transition-colors font-bold text-emerald-400">Koleksi Film Pilihan</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold mb-4 text-white">Sharing</h4>
+                  <ul className="space-y-3 text-sm text-slate-400">
+                    <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('movies'); }} className="hover:text-green-400 transition-colors">Film Bagus</a></li>
                   </ul>
                 </div>
               </Reveal>
@@ -2581,7 +2595,7 @@
                 onClick={closeLightbox}
               >
                 <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden transition-all duration-500">
-                  {lightboxList[lightboxIndex].isIframe ? (
+                  {lightboxList[lightboxIndex].isIframe || lightboxList[lightboxIndex].isBook ? (
                      <div className="absolute inset-0 bg-slate-950"></div>
                   ) : (
                      <img 
