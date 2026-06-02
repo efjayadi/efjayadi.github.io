@@ -284,7 +284,7 @@
         .animate-guide-left { animation: slide-left-pulse 1.3s infinite ease-in-out; }
         .animate-guide-right { animation: slide-right-pulse 1.3s infinite ease-in-out; }
 
-        /* Light Theme Movie Collection Styles */
+        /* Light Theme Movie Collection Styles - Height set to half (approx 150px) */
         .movie-light-card {
             background-color: #f8fafc;
             color: #0f172a;
@@ -299,7 +299,7 @@
             box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.03);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
-            min-height: 280px;
+            min-height: 160px; /* Cut half from previous 280px */
         }
         .movie-light-card:hover {
             transform: translateY(-4px) scale(1.005);
@@ -307,15 +307,15 @@
             border-color: rgba(203, 213, 225, 0.9);
         }
         .movie-light-poster {
-            flex: 0 0 180px;
-            margin: 24px 0 24px 24px; /* Equalized padding layout within card */
+            flex: 0 0 110px; /* Scaled down width */
+            margin: 12px 0 12px 12px; /* Equalized padding layout within card */
             object-fit: cover;
-            border-radius: 1rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
             z-index: 10;
         }
         .movie-light-info {
-            padding: 24px;
+            padding: 12px 20px; /* Symmetrical padding */
             flex-grow: 1;
             max-width: 60%;
             z-index: 10;
@@ -324,38 +324,39 @@
             justify-content: center;
         }
         .movie-light-info h3 {
-            font-size: 1.8rem;
-            margin: 0 0 8px 0;
+            font-size: 1.3rem; /* Scaled down title size */
+            margin: 0 0 4px 0;
             font-weight: 850;
             color: #0f172a;
             letter-spacing: -0.025em;
+            line-height: 1.1;
         }
         .movie-light-info p {
-            margin: 6px 0;
+            margin: 2px 0;
             color: #475569;
-            font-size: 0.9rem;
-            line-height: 1.5;
+            font-size: 0.8rem;
+            line-height: 1.4;
         }
         .movie-light-info .release-date {
             color: #64748b;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 600;
         }
         .movie-light-info .runtime {
-            padding: 3px 8px;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 6px;
+            padding: 2px 6px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
             display: inline-block;
             font-weight: 700;
-            margin-top: 6px;
-            font-size: 0.75rem;
+            margin-top: 2px;
+            font-size: 0.7rem;
             color: #334155;
             background: #ffffff;
         }
         .movie-light-info .genre {
-            margin-left: 10px;
+            margin-left: 8px;
             color: #64748b;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 600;
         }
         .movie-light-cover-fade {
@@ -363,25 +364,26 @@
             right: 0;
             top: 0;
             bottom: 0;
-            width: 55%; /* Increased from 45% to fill more space */
+            width: 55%; /* Fills more space */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            opacity: 0.32; /* Increased from 0.15 to make backdrop much more visible */
+            opacity: 0.32; /* Richly visible */
             pointer-events: none;
             z-index: 1;
+            /* Static background backdrop without animation shimmer to prevent moving */
             mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
             -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
         }
         .movie-light-buttons {
-            margin-top: 18px;
+            margin-top: 8px; /* Symmetrical reduction */
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
         .movie-light-buttons a {
-            padding: 8px 22px;
+            padding: 6px 16px;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             text-decoration: none;
             border-radius: 9999px;
             transition: all 0.3s ease;
@@ -408,31 +410,36 @@
         }
         @media screen and (max-width: 768px) {
             .movie-light-card {
-                flex-direction: column;
+                flex-direction: row; /* Keep horizontal flex on mobile for half height layout */
                 align-items: stretch;
-                padding: 16px;
-                min-height: auto;
+                padding: 0;
+                min-height: 130px;
             }
             .movie-light-poster {
-                height: 220px;
-                width: 100%;
-                margin-left: 0;
-                border-radius: 1rem;
+                flex: 0 0 80px;
+                margin: 8px 0 8px 8px;
+                border-radius: 0.5rem;
             }
             .movie-light-info {
                 max-width: 100%;
-                padding: 16px 0 0 0;
+                padding: 8px 12px;
+            }
+            .movie-light-info h3 {
+                font-size: 1.1rem;
+            }
+            .movie-light-info p.overview {
+                display: none; /* Hide overview on mobile to match half height space constraints */
             }
             .movie-light-cover-fade {
-                display: none;
+                display: none; /* Hide cover overlay on small portrait viewports */
             }
             .movie-light-buttons {
-                flex-direction: row;
-                justify-content: stretch;
+                margin-top: 6px;
+                gap: 8px;
             }
             .movie-light-buttons a {
-                flex: 1;
-                text-align: center;
+                padding: 4px 12px;
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -1153,14 +1160,14 @@
                                     <span className="runtime">{runtimeHours} Minutes</span>
                                     <span className="genre">{movieGenres}</span>
                                 </div>
-                                <p className="mt-4 line-clamp-3 md:line-clamp-none text-slate-500 text-xs md:text-sm leading-relaxed max-w-xl overview">{movie.overview}</p>
+                                <p className="mt-2 line-clamp-2 text-slate-500 text-xs md:text-sm leading-relaxed max-w-xl overview">{movie.overview}</p>
                                 <div className="movie-light-buttons">
                                     <a href={movie.trailer} target="_blank" rel="noreferrer" className="btn-trailer">Trailer</a>
                                     <a href={movie.download} target="_blank" rel="noreferrer" className="btn-download">Download</a>
                                 </div>
                             </div>
                             <div 
-                                className="movie-light-cover-fade animate-shimmer" 
+                                className="movie-light-cover-fade" 
                                 style={{ backgroundImage: `url('https://image.tmdb.org/t/p/w780${movie.backdrop_path}')` }}
                             ></div>
                         </div>
@@ -1675,7 +1682,7 @@
                       <h1 className="text-[3.5rem] md:text-[5.5rem] font-black tracking-tighter leading-[1.1] md:leading-[0.95] mb-4 md:mb-6">
                         {["Jasa", "Desain", "Grafis,"].map((word, i) => (
                           <Reveal key={`w1-${i}`} delay={100 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
-                            <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
+                            <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.05)] transition-all duration-100 cursor-default">{word}</span>
                             {word === "Jasa" && (<div className={`hidden md:block absolute top-1/2 -translate-y-1/2 right-full mr-6 transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">⚡ Presisi & Cepat</div></div>)}
                             {word === "Grafis," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 left-full ml-1 transition-all duration-[1200ms] delay-700 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}><div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-[10px] font-bold border border-blue-200 animate-float-2 whitespace-nowrap tracking-normal font-sans leading-normal">✨ Bernilai Tinggi</div></div>)}
                           </Reveal>
@@ -1684,7 +1691,7 @@
                         <span className="text-gray-400">
                           {["Website", "Professional,"].map((word, i) => (
                             <Reveal key={`w2-${i}`} delay={550 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4 relative">
-                              <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100 cursor-default">{word}</span>
+                              <span className="inline-block hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.05)] transition-all duration-100 cursor-default">{word}</span>
                               {word === "Professional," && (<div className={`md:hidden absolute top-1/2 -translate-y-1/2 right-full -mr-[32px] -mt-[6px] transition-all duration-[1200ms] delay-500 z-10 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
                                   <div className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-[10px] font-bold border border-orange-200 animate-float-1 whitespace-nowrap tracking-normal font-sans leading-normal">
                                     ⚡ Modern & Clean
@@ -1703,7 +1710,7 @@
                             const is3D = word === "3D.";
                             return (
                               <Reveal key={`w3-${i}`} delay={850 + (i * 150)} direction="up" className="inline-block mr-2 md:mr-4">
-                                <span className={`inline-block cursor-default ${is3D ? 'hover-3d-text' : 'hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-100'}`}>
+                                <span className={`inline-block cursor-default ${is3D ? 'hover-3d-text' : 'hover:-translate-y-1 hover:[text-shadow:0_10px_10px_rgba(0,0,0,0.05)] transition-all duration-100'}`}>
                                   {word}
                                 </span>
                               </Reveal>
@@ -2589,6 +2596,7 @@
             </footer>
 
             {/* --- LIGHTBOX MODAL PREVIEW --- */}
+            {}
             {lightboxIndex !== -1 && lightboxList[lightboxIndex] && (
               <div 
                 className="fixed inset-0 z-[9999] flex flex-col items-center justify-center p-4 md:p-8 select-none overflow-hidden bg-black/95"
